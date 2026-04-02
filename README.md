@@ -7,6 +7,7 @@
 
 An interactive, data-driven web application designed to visualize and compare professional competency frameworks. The **SkillMap Portal** allows users to traverse complex skill ecosystems, identify "Skill Portability" across industry sectors, and generate professional, customized career reports.
 
+Live Demo:  https://huggingface.co/spaces/Miqqie/skillsmap
 -----
 
 ## 📋 Table of Contents
@@ -14,10 +15,10 @@ An interactive, data-driven web application designed to visualize and compare pr
 1.  [The Motivation](https://www.google.com/search?q=%23-the-motivation)
 2.  [Objective](https://www.google.com/search?q=%23-objective)
 3.  [Data Architecture & Pipeline](https://www.google.com/search?q=%23-data-architecture--pipeline)
-4.  [Special Features](https://www.google.com/search?q=%23-special-features)
-5.  [Customizable User Experience](https://www.google.com/search?q=%23-customizable-user-experience)
-6.  [Automated PDF Report Engine](https://www.google.com/search?q=%23-automated-pdf-report-engine)
-7.  [Technical Stack](https://www.google.com/search?q=%23-technical-stack)
+4.  [Technical Stack](https://www.google.com/search?q=%23-technical-stack)
+5.  [Special Features](https://www.google.com/search?q=%23-special-features)
+6.  [Customizable User Experience](https://www.google.com/search?q=%23-customizable-user-experience)
+7.  [Automated PDF Report Engine](https://www.google.com/search?q=%23-automated-pdf-report-engine)
 8.  [VS Code Setup & Extensions](https://www.google.com/search?q=%23-vs-code-setup--extensions)
 9.  [How to Use](https://www.google.com/search?q=%23-how-to-use)
 
@@ -64,6 +65,34 @@ To move from fragmented Excel sheets to a high-performance web portal, the data 
   * **Relational Efficiency**: JSON allows for complex "Many-to-Many" relationships (e.g., one skill appearing in many roles) that are cumbersome to navigate in flat CSV worksheets.
   * **Payload Reduction**: Large competency datasets can exceed 5MB+ in plain text. Gzip compression reduces this footprint by **70–80%**, ensuring the app loads instantly even on mobile networks.
   * **Client-Side Speed**: Browsers can parse JSON into JavaScript objects natively. By delivering pre-structured JSON, the application avoids the performance "tax" of parsing raw CSV strings every time a user filters a role.
+
+[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+
+-----
+
+## 🛠️ Technical Stack
+
+The SkillMap Portal utilizes a "Modern Vanilla" architecture.
+
+### 1\. The Engine: Vanilla JavaScript (ES6+)
+
+JavaScript provides the **behavior** of the portal. "Vanilla" refers to using the language in its purest form without external frameworks like React or Angular.
+
+  * **Why Vanilla?** It eliminates "framework overhead," ensuring the app remains lightweight and loads nearly instantly.
+  * **Asynchronous Logic:** Uses `async/await` patterns to decompress and process data in the background.
+
+### 2\. Performance: Pako (zlib)
+
+To handle the large-scale data, the portal uses **Pako**. It fetches the compressed `.gz` data and decompresses it instantly in the browser's memory.
+
+### 3\. Document Logic: jsPDF & jspdf-autotable
+
+Used for professional documentation, manually calculating coordinates to place headers, footers, and intersection highlights.
+
+### 4\. UI Architecture: Custom CSS & Responsive Design
+
+  * **Custom CSS Variables:** Allows **Larger Text Mode** and **Compact View** to work by swapping single values that update the entire UI instantly.
+  * **Flexbox & CSS Grid:** Ensures alignment regardless of screen size.
 
 [⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
 
@@ -122,34 +151,6 @@ The application features a sophisticated PDF generation engine powered by **jsPD
   * **Executive Branding:** Styled with a clean, modern color palette (**Slate & Emerald**) and professional headers/footers.
   * **Visual Scannability:** Uses color-coded pills for proficiency levels and zebra-striping to prevent eye fatigue.
   * **Intelligent Layout:** Includes **Smart Page-Break Logic** to ensure multi-line descriptions are never split across pages.
-
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
-
------
-
-## 🛠️ Technical Stack
-
-The SkillMap Portal utilizes a "Modern Vanilla" architecture.
-
-### 1\. The Engine: Vanilla JavaScript (ES6+)
-
-JavaScript provides the **behavior** of the portal. "Vanilla" refers to using the language in its purest form without external frameworks like React or Angular.
-
-  * **Why Vanilla?** It eliminates "framework overhead," ensuring the app remains lightweight and loads nearly instantly.
-  * **Asynchronous Logic:** Uses `async/await` patterns to decompress and process data in the background.
-
-### 2\. Performance: Pako (zlib)
-
-To handle the large-scale data, the portal uses **Pako**. It fetches the compressed `.gz` data and decompresses it instantly in the browser's memory.
-
-### 3\. Document Logic: jsPDF & jspdf-autotable
-
-Used for professional documentation, manually calculating coordinates to place headers, footers, and intersection highlights.
-
-### 4\. UI Architecture: Custom CSS & Responsive Design
-
-  * **Custom CSS Variables:** Allows **Larger Text Mode** and **Compact View** to work by swapping single values that update the entire UI instantly.
-  * **Flexbox & CSS Grid:** Ensures alignment regardless of screen size.
 
 [⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
 
