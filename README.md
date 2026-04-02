@@ -13,15 +13,16 @@ Live Demo:  https://huggingface.co/spaces/Miqqie/
 
 ## 📋 Table of Contents
 
-1.  [The Motivation](#the-motivation)
-2.  [Objective](#objective)
-3.  [Data Architecture & Pipeline](#data-architecture--pipeline)
-4.  [Technical Stack](#technical-stack)
-5.  [Special Features](#special-features)
-6.  [Customizable User Experience](#customizable-user-experience)
-7.  [Automated PDF Report Engine](#automated-pdf-report-engine)
-8.  [VS Code Setup & Extensions](#vs-code-setup--extensions)
-9.  [How to Use](#how-to-use)
+## 💡 The Motivation <a id="the-motivation"></a>
+## 🎯 Objective <a id="objective"></a>
+## 🗂️ Data Architecture & Pipeline <a id="data-architecture--pipeline"></a>
+## 🛠️ Technical Stack <a id="technical-stack"></a>
+## ✨ Special Features <a id="special-features"></a>
+## 🎛️ Customizable User Experience <a id="customizable-user-experience"></a>
+## 📄 Automated PDF Report Engine <a id="automated-pdf-report-engine"></a>
+## 💻 VS Code Setup & Extensions <a id="vs-code-setup--extensions"></a>
+## 🚀 How to Use <a id="how-to-use"></a>
+
 -----
 
 ## 💡 The Motivation
