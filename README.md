@@ -7,7 +7,8 @@
 
 An interactive, data-driven web application designed to visualize and compare professional competency frameworks. The **SkillMap Portal** allows users to traverse complex skill ecosystems, identify "Skill Portability" across industry sectors, and generate professional, customized career reports.
 
-Live Demo:  https://huggingface.co/spaces/Miqqie/skillsmap
+Live Demo:  https://huggingface.co/spaces/Miqqie/
+
 -----
 
 ## 📋 Table of Contents
