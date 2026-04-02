@@ -13,8 +13,6 @@ Live Demo:  https://huggingface.co/spaces/Miqqie/
 
 ## 📋 Table of Contents
 
-## 📋 Table of Contents
-
 1.  [The Motivation](#the-motivation)
 2.  [Objective](#objective)
 3.  [Data Architecture & Pipeline](#data-architecture--pipeline)
