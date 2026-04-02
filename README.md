@@ -122,7 +122,7 @@ Every skill displayed in the grid table is **dynamically hyperlinked**. Clicking
 The interface acts as a flexible workspace, allowing users to shape exactly what data they see:
 
   * **Information Filtering**: Toggle specific data layers
-  * **Compact Mode**: Designed for power users, this mode strips away decorative padding for high-density side-by-side comparisons.
+  * **Compact Mode**: Switches the table to a condensed layout, enabling more columns to be viewed simultaneously for efficient side-by-side comparison.
   * **Larger Text Mode**: Re-scales the entire UI for accessibility or group presentations.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
@@ -131,23 +131,32 @@ The interface acts as a flexible workspace, allowing users to shape exactly what
 
 ## 📄 Automated PDF Report Engine <a id="automated-pdf-report-engine"></a>
 
-The application features a sophisticated PDF generation engine powered by **jsPDF** and **autoTable**, employing two distinct rendering logic paths:
+The application features a sophisticated PDF generation engine powered by **jsPDF** and **autoTable**, designed to translate complex, interactive UI states into clean, professional, and print-ready reports. It employs two distinct rendering logic paths depending on the user’s intent:
 
-### 1\. The Dynamic Matrix Export (Pivot Grid)
+### 1. The Dynamic Matrix Export (Pivot Grid)
 
-  * **Matrix Logic:** Preserves the complex row/column relationships established in the web UI.
-  * **Contextual Headers:** Automatically applies "(CONTINUED)" labels on subsequent pages for data continuity.
+This mode captures the exact analytical state of the interactive grid and reproduces it faithfully in PDF form.
 
-### 2\. The Comprehensive Job Comparison Report
+  * **Matrix Preservation:** Retains the full row/column structure configured in the UI, including dynamically selected dimensions (e.g., Roles, Skills, Proficiency Levels).
+  * **Dynamic Column Handling:** Automatically calculates column widths and scaling to accommodate variable data density without breaking layout.
+  * **Pagination Intelligence:** Large matrices are split across multiple pages with structural continuity maintained.
+  * **Contextual Headers:** Repeats column headers on each page and applies "(CONTINUED)" indicators to preserve readability across page breaks.
+  * **Data Fidelity:** Ensures that no transformations or aggregations alter the original analytical view—what users see is exactly what gets exported.
 
-  * **Dual-Profile Synthesis:** Creates a side-by-side competency map, intelligently grouping **shared competencies**.
-  * **Intersection Analysis:** Visually quantifies "transferable experience" where a user's current skills meet the requirements of a target role.
+### 2. The Comprehensive Job Comparison Report
 
-### Aesthetic & Functional Highlights:
+This mode generates a structured, insight-driven document designed for decision-making and career planning.
 
-  * **Executive Branding:** Styled with a clean, modern color palette (**Slate & Emerald**) and professional headers/footers.
-  * **Visual Scannability:** Uses color-coded pills for proficiency levels and zebra-striping to prevent eye fatigue.
-  * **Intelligent Layout:** Includes **Smart Page-Break Logic** to ensure multi-line descriptions are never split across pages.
+  * **Dual-Profile Synthesis:** Merges two selected job roles into a unified report, aligning their respective competencies into a single comparative framework.
+  * **Shared Competency Detection:** Automatically identifies overlapping skills and groups them to highlight common ground between roles.
+  * **Gap Analysis:** Separates role-specific skills to clearly expose competency gaps and progression requirements.
+  * **Intersection Visualization:** Emphasizes transferable skills, enabling users to quickly assess how their current experience maps to a target role.
+  * **Narrative Structuring:** Organizes content into logically segmented sections (e.g., Shared Skills, Role-Specific Skills) for executive-level readability.
+
+### Aesthetic & Functional Highlights
+
+  * **Typography & Branding:** Maintains a clean, modern visual identity suitable for formal sharing (e.g., internal HR reviews, career consultations).
+  * **Smart Page-Break Logic:** Prevents row splitting and ensures multi-line descriptions remain intact, preserving semantic meaning and readability.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
