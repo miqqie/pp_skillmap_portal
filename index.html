@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMap Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --sidebar-width: 320px;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-500: #64748b;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --blue-600: #2563eb;
+            --blue-800: #1e40af;
+        }
+        body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: var(--slate-50); display: flex; height: 100vh; overflow: hidden; }
+        
+        aside { 
+            width: var(--sidebar-width); background: var(--slate-900); color: white; 
+            padding: 25px; display: flex; flex-direction: column; gap: 12px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1); z-index: 1000; overflow-y: auto;
+        }
+        aside h2 { font-size: 18px; margin: 0 0 10px 0; color: var(--primary); }
+        .filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .filter-group label { font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 800; letter-spacing: 0.05em; }
+        aside select { background: var(--slate-800); color: white; border: 1px solid #475569; padding: 8px; border-radius: 6px; font-size: 13px; }
+        .btn-download { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-download:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-reset { margin-top: auto; background: transparent; border: 1px solid #f87171; color: #f87171; padding: 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+        main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .breadcrumb-header { background: white; padding: 15px 30px; border-bottom: 1px solid var(--slate-200); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .bc-pill { font-weight: 700; color: var(--primary-dark); background: #ecfdf5; padding: 4px 12px; border-radius: 999px; border: 1px solid #d1fae5; font-size: 14px; white-space: nowrap; }
+        .bc-description { 
+            font-size: 13px; color: #1e3a8a; border-left: 2px solid var(--slate-200); 
+            padding-left: 15px; font-style: italic; font-weight: 500; cursor: help; 
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 600px;
+        }
+        body.large-text .bc-description:not(.expanded) { max-width: 400px; }
+        .bc-description.expanded { white-space: normal; max-width: 100%; overflow: visible; }
+        .cwf-wrapper { margin: 15px 30px 5px 30px; flex-shrink: 0; }
+        .cwf-toggle-btn { width: 100%; background: #eff6ff; border: 1px solid #dbeafe; padding: 10px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .cwf-toggle-label { font-size: 13px; text-transform: uppercase; font-weight: 800; color: var(--blue-600); letter-spacing: 0.025em; }
+        
+        .cwf-container { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: white; border: 0px solid #dbeafe; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+        .cwf-container.expanded { max-height: 300px; overflow-y: auto; padding: 15px; border-width: 1px; margin-top: -1px; }
+        .cwf-group { margin-bottom: 15px; }
+        .cwf-header { font-size: 13px; font-weight: 700; color: var(--blue-800); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .cwf-header::before { content: "▶"; font-size: 9px; color: var(--blue-600); }
+        .task-list { list-style: none; padding-left: 20px; margin: 0; }
+        .task-item { font-size: 12.5px; color: var(--slate-700); position: relative; padding-left: 15px; line-height: 1.6; margin-bottom: 4px; }
+        .task-item::before { content: "•"; position: absolute; left: 0; color: var(--slate-500); font-weight: bold; }
+        .stats-bar { padding: 5px 30px; display: flex; justify-content: flex-end; align-items: center; }
+        .count-badge { background: var(--slate-800); color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .count-val { color: var(--primary); font-weight: 800; margin-left: 4px; }
+        .table-viewport {
+    flex: 1;
+    overflow: auto;
+    padding: 0 40px 40px 20px; /* Increased right and bottom padding */
+}
+        #grid {
+    border-collapse: collapse;
+    background: white;
+    width: 100%;
+    font-size: 13px;
+    border: 1px solid var(--slate-200);
+    margin-right: 400px; /* Adds extra scrollable space at the end */
+}
+/* Ensure the header and rows still look right for the main grid */
+#grid th {
+    background: var(--slate-100);
+    padding: 12px;
+    border: 1px solid var(--slate-200);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+        th { background: var(--slate-100); padding: 12px; border: 1px solid var(--slate-200); text-align: left; position: sticky; top: 0; z-index: 10; }
+        td { padding: 12px; border: 1px solid var(--slate-200); vertical-align: top; min-width: 280px; line-height: 1.4; color: var(--slate-900); }
+        
+        .row-header { background: white; font-weight: 700; position: sticky; left: 0; z-index: 15; border-right: 3px solid var(--primary); width: 320px; line-height: 1.2; color: var(--slate-900); }
+        .skill-link { color: var(--primary-dark); text-decoration: underline; cursor: pointer; display: inline-block; }
+        .skill-link:hover { color: var(--blue-600); }
+        .tier-2 { display: block; font-size: 11px; color: #475569; font-weight: 500; margin-top: 8px; line-height: 1.5; } 
+        .tier-3 { display: block; font-size: 10px; color: #555e6a; font-weight: 400; font-style: italic; margin-top: 3px; } 
+        .bullet { margin-bottom: 8px; padding-left: 10px; border-left: 2px solid #3b82f6; color: #334155; }
+        #toast { visibility: hidden; min-width: 250px; background-color: #334155; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        body.large-text aside select { font-size: 16px; }
+        body.large-text .bc-pill { font-size: 18px; }
+        body.large-text .bc-description { font-size: 17px; }
+        body.large-text table { font-size: 17px; }
+        body.large-text .row-header { width: 380px; font-size: 17px; }
+        body.large-text .tier-2 { font-size: 15px; }
+        body.large-text .tier-3 { font-size: 14px; }
+        body.large-text .task-item { font-size: 16.5px; }
+        body.large-text .cwf-header { font-size: 17px; }
+        body.large-text td, 
+        body.large-text td div,
+        body.large-text .bullet,
+        body.large-text .tier-2,
+        body.large-text .tier-3,
+        body.large-text .skill-link {
+            font-size: 17px !important;
+            line-height: 1.5 !important;
+        }
+        body.large-text .row-header {
+            width: 380px !important;
+        }
+        body.large-text .tier-3 {
+            font-size: 15px !important;
+        }
+        .btn-download:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .btn-reset:hover {
+            background: rgba(248,113,113,0.1);
+        }
+        .skill-link {
+            transition: color 0.2s ease, transform 0.15s ease;
+        }
+        .skill-link:hover {
+            transform: translateX(2px);
+        }
+        tbody tr:hover td,
+        tbody tr:hover th,
+        tbody tr:hover .row-header {
+            background: #f0fdf4;
+        }
+        button:focus,
+        select:focus,
+        .skill-link:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        .breadcrumb-header,
+        .cwf-container,
+        table {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        aside {
+            box-shadow: 6px 0 16px rgba(0,0,0,0.15);
+        }
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+        .cwf-container.expanded {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+        tbody tr:hover td {
+            background: #f0fdf4;
+        }
+        tbody tr:hover .row-header {
+            background: #f0fdf4;
+        }
+        .proficiency-link {
+    color: var(--blue-600);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    cursor: pointer;
+    font-weight: 600;
+}
+.proficiency-link:hover {
+    color: var(--blue-800);
+    background: #dbeafe;
+}
+/* Base Peer Item styles */
+.peer-item { font-size: 13px; color: #1e293b; }
+.modal-title { font-size: 18px; }
+.section-label { font-size: 12px; }
+.sector-subheader { font-size: 11px; }
+/* Large Text Overrides for Modal */
+.modal-large {
+    width: 650px !important; /* Increase width for better reading */
+}
+.modal-large .modal-title { font-size: 24px !important; }
+.modal-large .section-label { font-size: 16px !important; }
+.modal-large .sector-subheader { font-size: 15px !important; }
+.modal-large .peer-item { font-size: 18px !important; line-height: 1.8 !important; }
+.modal-large .modal-close-btn { font-size: 18px !important; padding: 16px !important; }
+.bc-pill#final-sector {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.bc-pill#final-sector:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+    }
+
+
+#final-role:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+}
+#cwf-count-tag {
+    /* Inherit everything from the parent label */
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    
+    /* Reset opacity to full visibility */
+    opacity: 1 !important;
+    
+    
+    
+    /* Ensure it behaves like normal text */
+    display: inline-block;
+}
+      /* MOBILE MENU BUTTON */
+#mobile-menu-btn{
+    display:none;
+    position:sticky;
+    top:0px;
+    left:10px;
+    z-index:1000;
+    background:var(--primary);
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:0px;
+    font-weight:700;
+  /* Alignment */
+    text-align: right; 
+    padding: 12px 20px; /* Added 20px right padding so text isn't flush against the edge */
+}
+/* RESPONSIVE LAYOUT */
+@media (max-width: 900px){
+    body{
+        flex-direction:column;
+        overflow:auto;
+        height:auto;
+    }
+    aside{
+        position:fixed;
+        left:-100%;
+        top:0;
+        height:100%;
+        width:280px;
+        transition:0.3s;
+    }
+    body.sidebar-open aside{
+        left:0;
+    }
+    #mobile-menu-btn{
+        display:block;
+    }
+    main{
+        width:100%;
+        margin-top:0px;
+    }
+    .breadcrumb-header{
+        flex-wrap:wrap;
+        gap:8px;
+        padding:12px 16px;
+    }
+    .bc-description{
+        max-width:100%;
+        white-space:normal;
+    }
+    .cwf-wrapper{
+        margin:10px 16px;
+    }
+    .stats-bar{
+        padding:5px 16px;
+    }
+    .table-viewport {
+    flex: 1;
+    overflow: auto;
+    padding: 0 10px 10px 10px; 
+}
+    table{
+        min-width:700px;
+    }
+    td{
+        min-width:200px;
+    }
+    .row-header{
+        width:200px;
+        color: var(--slate-900);
+    }
+}
+/* Update this existing rule to include #final-track */
+.bc-pill#final-sector:hover, 
+.bc-pill#final-track:hover {
+    background: var(--primary); /* Darker green background */
+    color: white;               /* White text */
+    transform: translateY(-1px);
+    border-color: var(--primary-dark);
+}
+/* Glow effect on hover */
+.cwf-toggle-btn {
+    transition: all 0.3s ease; /* Smooth transition for the glow */
+}
+
+.cwf-toggle-btn:hover {
+    background: #d1e0ff;
+    border-color: var(--blue-600);
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); /* Soft blue glow */
+    transform: translateY(-1px); /* Subtle lift effect */
+}
+/* Update these rules in your <style> tag */
+
+/* FORCE DESCRIPTION TO NEW LINE IN LARGE TEXT MODE */
+body.large-text .breadcrumb-header {
+    flex-wrap: wrap;       /* Allow items to wrap to next line */
+    align-items: flex-start; /* Better alignment for multi-line layout */
+}
+/* 1. Base style: ensure the description is clickable and has a "reveal" cursor */
+.bc-description {
+    cursor: pointer; /* Changed from 'help' to 'pointer' for better UX */
+    transition: max-height 0.3s ease;
+}
+/* 2. Large Text Mode: Truncate by default */
+body.large-text .bc-description:not(.expanded) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; 
+    max-width: 450px; /* Adjust width to your preference for the 'preview' */
+    border-right: 2px solid var(--primary); /* Optional: visual hint there is more text */
+    background: rgba(16, 185, 129, 0.05);   /* Optional: light tint to show it is interactive */
+    padding-right: 10px;
+}
+/* COMPACT VIEW OVERRIDES */
+#grid tr.compact-row td, 
+#grid tr.compact-row th {
+    padding: 6px 12px !important; /* Reduces vertical padding */
+    font-size: 12px !important;
+}
+
+#grid tr.compact-row .tier-2,
+#grid tr.compact-row .tier-3 {
+    display: none; /* Hides secondary info in compact mode */
+}
+
+#grid tr.compact-row .row-header {
+    width: 250px !important; /* Shrinks the sticky header width */
+}
+
+
+/* Make the comparison container flexible */
+.comparison-container {
+    display: flex;
+    gap: 20px;
+    flex: 1; /* Takes up available vertical space */
+    min-height: 0; /* Critical for inner scrolling to work in Flexbox */
+}
+
+.comparison-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    min-height: 0;
+}
+
+/* Force individual scrolling for each role's list */
+.comparison-content {
+    padding: 15px;
+    overflow-y: auto; /* Individual scrollbars if list is too long */
+    flex: 1;
+}
+
+/* Force both headers to have the same height */
+.comparison-header {
+    background: var(--slate-50);
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--slate-200);
+    font-weight: 700;
+    color: var(--slate-900);
+    min-height: 65px; /* Fixed height to keep contents aligned */
+    display: flex;
+    align-items: center; /* Vertically center the text/dropdown */
+}
+
+.comparison-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.compare-select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--slate-200);
+    font-size: 13px;
+    background: white;
+}
+
+/* Styling for common functions */
+.cwf-item {
+    margin-bottom: 12px; 
+    padding: 12px; 
+    background: #f0fdf4; /* Default Green */
+    border-radius: 6px; 
+    border-left: 4px solid var(--primary);
+}
+
+.cwf-item.is-common {
+    background: #fff7ed; /* Light Orange background */
+    border-left-color: #f97316; /* Bright Orange border */
+}
+
+.cwf-item.is-common .cwf-label {
+    color: #9a3412; /* Darker orange text */
+}
+
+/* Styling for the Skill Comparison section */
+.skill-common-badge {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.skill-overlap-tag {
+    background: #10b981;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+/* If these are inside a "pop-up" selection window */
+#sector-popup, #track-popup {
+    max-width: 400px;               /* Constrain the overall window width */
+    padding: 12px;                  /* Reduce inner whitespace */
+    max-height: 300px;              /* Prevent it from taking over the screen */
+    overflow-y: auto;
+}
+
+/* Ensure links in modals/pop-ups scale with large text mode */
+body.large-text .modal-large a,
+body.large-text .modal-large .skill-link {
+    font-size: 18px !important;
+    line-height: 1.8 !important;
+}
+
+/* Base layout (Desktop first) */
+.comparison-container{
+    display:flex;
+    gap:20px;
+}
+
+.comparison-column{
+    flex:1;
+}
+
+/* Shared competencies grid */
+.skills-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+/* Critical Work Functions list */
+.cwf-grid{
+    display:block;
+}
+
+/* Mobile layout */
+@media (max-width:768px){
+
+    /* Stack role columns */
+    .comparison-container{
+        flex-direction:column;
+    }
+
+    /* Critical Work Functions -> 2 columns */
+    .cwf-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    /* Shared competencies -> 1 column */
+    .skills-grid{
+        grid-template-columns:1fr;
+    }
+
+    /* Modal full width */
+    #peer-modal{
+        width:95vw !important;
+        max-height:92vh !important;
+        padding:18px !important;
+    }
+}
+    </style>
+</head>
+<body>
+<button id="mobile-menu-btn" onclick="toggleSidebar()">☰ Filters</button>
+<div id="toast">Skill copied! Paste it in the search bar.</div>
+
+<aside>
+    <h2 style="display: flex; align-items: center; gap: 12px; color: var(--primary);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        <span style="letter-spacing: -0.5px; font-weight: 700;">SkillMap Portal</span>
+    </h2>
+    <div class="filter-group"><label>Sector <span id="sector-count-label" style="color: var(--primary); margin-left: 2px;"></span></label><select id="sel-sector" onchange="updateRoles()"></select></div>
+    <div class="filter-group"><label>Job Role in Selected Sector <span id="role-count-label" style="color: var(--primary); margin-left: 2px;"></span></label><select id="sel-role" onchange="render()"></select></div>
+    <hr style="border: 0; border-top: 1px solid #334155; margin: 5px 0;">
+    <div class="filter-group"><label>Row 1</label><select id="row1" onchange="render()"></select></div>
+    <div class="filter-group"><label>Row 2</label><select id="row2" onchange="render()"></select></div>
+    <div class="filter-group"><label>Row 3</label><select id="row3" onchange="render()"></select></div>
+    <hr style="border: 0; border-top: 1px solid #334155; margin: 5px 0;">
+    <div class="filter-group"><label>Cols 1</label><select id="col1" onchange="render()"></select></div>
+    <div class="filter-group"><label>Cols 2</label><select id="col2" onchange="render()"></select></div>
+    
+    <div class="filter-group"><label>Content</label><select id="val" onchange="render()"></select></div>
+    <div class="filter-group" style="flex-direction: row; align-items: center; gap: 8px; margin: 5px 0; background: var(--slate-800); padding: 8px; border-radius: 6px;">
+        <input type="checkbox" id="view-toggle" onchange="render()" style="width: 18px; height: 18px; cursor: pointer;">
+        <label for="view-toggle" style="font-size: 13px; cursor: pointer; color: white; text-transform: none; letter-spacing: normal;">Compact View </label>
+    </div>
+    <div class="filter-group" style="flex-direction: row; align-items: center; gap: 8px; margin: 10px 0; background: var(--slate-800); padding: 8px; border-radius: 6px;">
+        <input type="checkbox" id="font-toggle" onchange="toggleAccessibility()" style="width: 18px; height: 18px; cursor: pointer;">
+        <label for="font-toggle" style="font-size: 15px; cursor: pointer; color: white; text-transform: none; letter-spacing: normal;">Larger Text Mode</label>
+    </div>
+
+    <button id="btn-pdf" class="btn-download" onclick="downloadPDF()" disabled>💾 Export PDF</button>
+    <button class="btn-reset" onclick="location.reload()">↺ Reset</button>
+</aside>
+
+<main>
+    <div id="welcome-msg" style="display:flex; justify-content:center; align-items:center; height:100%; color:#94a3b8;">Select a Sector and Role to begin.</div>
+    <div id="app-content" style="display:none; height: 100%; flex-direction: column;">
+        <div class="breadcrumb-header">
+    <span id="final-sector" class="bc-pill" onclick="showSectorAnalytics(this.innerText)"></span>
+    <span id="final-track" class="bc-pill" style="display:none; cursor:pointer;" onclick="showTrackAnalytics(this.innerText)"></span>
+    <span id="final-role" class="bc-pill" style="cursor:pointer;" onclick="showRoleComparison()"></span>
+    <span id="final-desc" class="bc-description" onclick="this.classList.toggle('expanded')"></span>
+</div>
+
+        <div id="cwf-wrapper" class="cwf-wrapper" style="display:none;">
+    <div id="cwf-toggle" class="cwf-toggle-btn" onclick="toggleCWF()">
+        <div class="cwf-toggle-label">
+            Critical Work Functions <span id="cwf-count-tag"></span>
+        </div>
+        <div id="cwf-icon">▼</div>
+    </div>
+            <div id="cwf-container" class="cwf-container"><div id="cwf-content"></div></div>
+        </div>
+
+        <div class="stats-bar"><div class="count-badge">UNIQUE <span id="val-label"></span>:<span id="unique-count" class="count-val">0</span></div></div>
+        <div class="table-viewport"><table id="grid"><thead id="h"></thead><tbody id="b"></tbody></table></div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+<script>
+    let skillData=[], jobData=[], jobDescData=[], cwfData=[];
+    let skillHeaders=[], jobHeaders=[], descHeaders=[], cwfHeaders=[];
+ 
+function toggleSidebar(){
+    document.body.classList.toggle("sidebar-open");
+}
+    function cleanText(str) {
+        if (!str) return "";
+        let filtered = "";
+        for (let i = 0; i < str.length; i++) {
+            let code = str.charCodeAt(i);
+            if (code === 32 || (code >= 33 && code <= 126)) filtered += str[i];
+        }
+        let clean = filtered;
+        if (clean.match(/(\b\w\s){3,}/g)) {
+            clean = clean.replace(/(\b\w)\s(?=\w\b)/g, '$1');
+        }
+        return clean.replace(/\s+/g, ' ').trim();
+    }
+    function searchSkill(skillName) {
+    // We still copy to clipboard as a backup/convenience for the user
+    navigator.clipboard.writeText(skillName).then(() => {
+        const toast = document.getElementById("toast");
+        toast.innerText = `Searching portal for: ${skillName}`;
+        toast.className = "show";
+        
+        // Construct the direct search URL
+        const searchUrl = `https://courses.myskillsfuture.gov.sg/search?q=${encodeURIComponent(skillName)}&termOrigin=ORGANIC`;
+        
+        setTimeout(() => { 
+            toast.className = ""; 
+            window.open(searchUrl, "_blank");
+        }, 500);
+    });
+}
+    // --- AMENDED: PEER DISCOVERY LOGIC WITH SECTOR SUBHEADERS ---
+    function showPeerRoles(title, level) {
+    const jt = jobHeaders.find(h => h.toLowerCase().includes('title'));
+    const jl = jobHeaders.find(h => h.toLowerCase().includes('level'));
+    const jr = jobHeaders.find(h => h.toLowerCase().includes('role'));
+    const js = jobHeaders.find(h => h.toLowerCase().includes('sector'));
+    
+    const currentRole = document.getElementById('sel-role').value;
+    const currentSector = document.getElementById('sel-sector').value;
+    const isLargeText = document.body.classList.contains('large-text');
+    const accessibilityClass = isLargeText ? "modal-large" : "";
+    const allMatches = jobData.filter(d => 
+        d[jt].trim() === title.trim() && 
+        d[jl].trim() === level.toString().trim() &&
+        d[jr] !== currentRole
+    );
+    const sameSector = [...new Set(allMatches.filter(d => d[js] === currentSector).map(d => d[jr]))].sort();
+    const diffSectorGroups = {};
+    allMatches.filter(d => d[js] !== currentSector).forEach(d => {
+        const sec = d[js] || "Other Sectors";
+        if (!diffSectorGroups[sec]) diffSectorGroups[sec] = new Set();
+        diffSectorGroups[sec].add(d[jr]);
+    });
+    const renderSimpleList = (list) => list.length > 0 
+        ? `<ul style="margin:0;padding-left:18px;line-height:1.6;">${list.map(p => `<li class="peer-item" style="margin-bottom:4px;">${p}</li>`).join('')}</ul>`
+        : `<p style="font-size:12px;font-style:italic;color:#94a3b8;margin:0;">No roles found.</p>`;
+    let diffSectorsHtml = "";
+    const sortedSectorNames = Object.keys(diffSectorGroups).sort();
+    
+    if (sortedSectorNames.length === 0) {
+        diffSectorsHtml = `<p style="font-size:12px;font-style:italic;color:#94a3b8;margin:0;">No roles found in other sectors.</p>`;
+    } else {
+        sortedSectorNames.forEach(secName => {
+            const roles = Array.from(diffSectorGroups[secName]).sort();
+            // --- AMENDED SECTOR HEADER (Bigger, No Bullet) ---
+            const sectorHeaderSize = isLargeText ? "18px" : "12px";
+            diffSectorsHtml += `
+                <div style="margin-bottom:14px;">
+                    <div class="sector-subheader" style="font-size:${sectorHeaderSize}; font-weight:700; color:#059669; text-transform:uppercase; margin-bottom:6px; border-bottom: 1px solid #ecfdf5; display:inline-block; padding-bottom:2px;">
+                        ${secName}
+                    </div>
+                    ${renderSimpleList(roles)}
+                </div>`;
+        });
+    }
+    // ... inside showPeerRoles function ...
+    const modalHtml = `
+        <div id="peer-overlay" onclick="closeModal()" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);z-index:9998;backdrop-filter:blur(2px);"></div>
+        <div id="peer-modal" class="${accessibilityClass}" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:25px;border-radius:12px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);z-index:9999;width:520px;max-width:90vw;border:1px solid #e2e8f0;display:flex;flex-direction:column;max-height:85vh;">
+            
+            <h3 class="modal-title" style="margin: 0 0 8px 0; color:#10b981; display:flex; align-items:center; gap:8px; flex-shrink:0; line-height:1.2;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Skill Portability: ${title} (L${level})
+            </h3>
+            
+            <div style="overflow-y:auto; margin-top:4px; padding-right:8px; border-top:1px solid #f1f5f9; padding-top:10px;">
+                <div style="margin-bottom:10px;">
+                    <h4 class="section-label" style="text-transform:uppercase; color:#64748b; letter-spacing:0.05em; margin: 0 0 8px 0; background:#f8fafc; padding:6px 10px; border-radius:4px; font-weight:700; font-size: 0.85rem;">Within ${currentSector}</h4>
+                    ${renderSimpleList(sameSector)}
+                </div>
+                
+                <div>
+                    <h4 class="section-label" style="text-transform:uppercase; color:#64748b; letter-spacing:0.05em; margin: 0 0 8px 0; background:#f8fafc; padding:6px 10px; border-radius:4px; font-weight:700; font-size: 0.85rem;">Across Other Sectors</h4>
+                    <div style="padding-left:4px;">
+                        ${diffSectorsHtml}
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="modal-close-btn" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;">Close</button>
+        </div>`;
+    
+    const div = document.createElement('div');
+    div.id = "modal-wrapper";
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div);
+}
+    function closeModal() {
+        const m = document.getElementById('modal-wrapper');
+        if(m) m.remove();
+    }
+    function handlePeerClick(el) {
+        const level = el.getAttribute('data-level').replace(/\D/g, ''); 
+        const row = el.closest('tr');
+        const titleEl = row.querySelector('.skill-header-text') || row.querySelector('.skill-link');
+        if(titleEl) {
+            const title = titleEl.innerText.replace(' ↗', '').trim();
+            showPeerRoles(title, level);
+        }
+    }
+    function toggleAccessibility() {
+        const isChecked = document.getElementById('font-toggle').checked;
+        if (isChecked) {
+            document.body.classList.add('large-text');
+        } else {
+            document.body.classList.remove('large-text');
+            document.getElementById('final-desc').classList.remove('expanded');
+        }
+        if(document.getElementById('sel-role').value) {
+            render();
+        }
+    }
+    fetch("skillmap_data.json.gz")
+.then(response => response.arrayBuffer())
+.then(buffer => {
+
+    // Decompress gzip
+    const decompressed = pako.inflate(new Uint8Array(buffer), { to: "string" });
+
+    // Parse JSON
+    const data = JSON.parse(decompressed);
+
+    skillData = data.job_roles.records;
+    skillHeaders = data.job_roles.columns;
+    // Function to safely swap two headers by name
+const swapHeaders = (headers, name1, name2) => {
+    const idx1 = headers.indexOf(name1);
+    const idx2 = headers.indexOf(name2);
+    if (idx1 !== -1 && idx2 !== -1) {
+        [headers[idx1], headers[idx2]] = [headers[idx2], headers[idx1]];
+    }
+};
+
+// 1. Swap K/A Items and Classification (Classification First)
+swapHeaders(skillHeaders, "Knowledge / Ability Items", "Knowledge / Ability Classification");
+
+// 2. Swap TSC_CCS Code and Category (Code First)
+swapHeaders(skillHeaders, "TSC_CCS Category", "TSC_CCS Code");
+    jobData = data.skills_map.records;
+    jobHeaders = data.skills_map.columns;
+    jobDescData = data.descriptions.records;
+    descHeaders = data.descriptions.columns;
+    cwfData = data.cwf.records;
+    cwfHeaders = data.cwf.columns;
+
+    const sKey = jobHeaders.find(h => h.toLowerCase().includes('sector')) || jobHeaders[0];
+
+    const sectors = [...new Set(jobData.map(d => d[sKey]))].filter(Boolean).sort();
+
+    const sSelect = document.getElementById('sel-sector');
+
+    sSelect.add(new Option("-- Select Sector --", ""));
+
+    sectors.forEach(s => sSelect.add(new Option(s, s)));
+
+    document.getElementById('sector-count-label').innerText = `(${sectors.length})`;
+
+    const fH = skillHeaders.filter(h => !h.toLowerCase().includes('sector'));
+
+    ['row1','row2','row3','col1','col2','val'].forEach(id => {
+        const s = document.getElementById(id);
+
+        if(id.match(/[23]/))
+            s.add(new Option("-- None --", "none"));
+
+        fH.forEach(h => s.add(new Option(h, h)));
+    });
+
+    document.getElementById('row1').value =
+        fH.find(h => h.toLowerCase().includes("title")) || fH[0];
+
+    document.getElementById('row2').value =
+        fH.find(h => h.toLowerCase().includes("tsc_ccs") && h.toLowerCase().includes("desc")) || "none";
+
+    document.getElementById('col1').value =
+        fH.find(h => h.toLowerCase().includes("level")) || fH[1];
+
+    document.getElementById('val').value =
+        fH.find(h => h.toLowerCase().includes("proficiency") && h.toLowerCase().includes("desc")) || fH[2];
+
+})
+.catch(error => console.error("Error loading skillmap data:", error));
+
+    function toggleCWF() {
+        const c = document.getElementById('cwf-container');
+        const i = document.getElementById('cwf-icon');
+        c.classList.toggle('expanded');
+        i.innerText = c.classList.contains('expanded') ? '▲' : '▼';
+    }
+    function updateRoles() {
+        const sVal = document.getElementById('sel-sector').value;
+        const sKey = jobHeaders.find(h => h.toLowerCase().includes('sector')) || jobHeaders[0];
+        const rKey = jobHeaders.find(h => h.toLowerCase().includes('role') || h.toLowerCase().includes('job')) || jobHeaders[1];
+        const rSelect = document.getElementById('sel-role');
+        const roleCountLabel = document.getElementById('role-count-label');
+        if(!sVal) {
+            rSelect.innerHTML = '<option value="">-- Select Job Role --</option>';
+            roleCountLabel.innerText = "";
+            return;
+        }
+        const roles = [...new Set(jobData.filter(d => d[sKey] === sVal).map(d => d[rKey]))].filter(Boolean).sort();
+        rSelect.innerHTML = '<option value="">-- Select Job Role --</option>';
+        roles.forEach(r => rSelect.add(new Option(r, r)));
+        roleCountLabel.innerText = `(${roles.length})`;
+    }
+function showSectorAnalytics(sectorName) {
+    const jt = jobHeaders.find(h => h.toLowerCase().includes('title'));
+    const jr = jobHeaders.find(h => h.toLowerCase().includes('role'));
+    const js = jobHeaders.find(h => h.toLowerCase().includes('sector'));
+    
+    const isLargeText = document.body.classList.contains('large-text');
+    const accessibilityClass = isLargeText ? "modal-large" : "";
+
+    const skillToRolesMap = {};
+    jobData.forEach(d => {
+        if (d[js] === sectorName) {
+            let rawTitle = (d[jt] || "").toString().trim();
+            let baseSkillName = rawTitle
+                .replace(/\s*level\s*\d+/gi, "")
+                .replace(/\s*\(.*?\)\s*/g, "")
+                .trim();
+            
+            const roleName = d[jr];
+            if (baseSkillName && baseSkillName !== "-" && roleName) {
+                if (!skillToRolesMap[baseSkillName]) skillToRolesMap[baseSkillName] = new Set();
+                skillToRolesMap[baseSkillName].add(roleName);
+            }
+        }
+    });
+
+    const allSkills = Object.entries(skillToRolesMap)
+        .map(([name, roleSet]) => ({ name: name, count: roleSet.size }))
+        .filter(s => s.count > 0)
+        .sort((a, b) => b.count - a.count);
+
+    const uniqueCounts = [...new Set(allSkills.map(s => s.count))].slice(0, 3);
+    const topSkills = allSkills.slice(0, 10);
+
+    const modalHtml = `
+        <div id="peer-overlay" onclick="closeModal()" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);z-index:9998;backdrop-filter:blur(2px);"></div>
+        <div id="peer-modal" class="${accessibilityClass}" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:25px;border-radius:12px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);z-index:9999;width:520px;max-width:90vw;display:flex;flex-direction:column;max-height:85vh;border:1px solid #e2e8f0;">
+            
+            <h3 class="modal-title" style="margin: 0 0 12px 0; color:#10b981; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                Top 10 In-Demand Skills: ${sectorName}
+            </h3>
+            
+            <div style="overflow-y:auto; padding-right:8px;">
+                ${topSkills.map((skill) => {
+                    const isTopTier = uniqueCounts.includes(skill.count);
+                    
+                    const accentColor = isTopTier ? '#10b981' : '#cbd5e1'; 
+                    const linkColor = isTopTier ? '#059669' : '#000000';   
+                    
+                    // Crown Icon for Top 3
+                    const crownIcon = isTopTier 
+                        ? `<span style="color: #f59e0b; margin-right: 6px; font-size: 16px;">👑</span>` 
+                        : '';
+
+                    const skillDisplayName = `${crownIcon}<a href="#" onclick="showSkillDetails('${skill.name.replace(/'/g, "\\'")}'); return false;" style="color: ${linkColor}; font-weight: 700; text-decoration: underline;">${skill.name}</a>`;
+
+                    return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0; border-left: 4px solid ${accentColor};">
+                        <span style="flex:1; font-size:13px; display: flex; align-items: center;">${skillDisplayName}</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; font-size:14px; font-weight:900; border:1px solid #10b981;">
+                                ${skill.count}
+                            </span>
+                            <span style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase;">Roles</span>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+            <button onclick="closeModal()" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;">Close</button>
+        </div>`;
+
+    const div = document.createElement('div');
+    div.id = "modal-wrapper";
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div);
+}
+
+function showTrackAnalytics(trackName) {
+    const jt = jobHeaders.find(h => h.toLowerCase().includes('title'));
+    const jr = jobHeaders.find(h => h.toLowerCase().includes('role'));
+    const tt = jobHeaders.find(h => h.toLowerCase().includes('track'));
+    
+    const isLargeText = document.body.classList.contains('large-text');
+    const accessibilityClass = isLargeText ? "modal-large" : "";
+    
+    const skillToRolesMap = {};
+    
+    jobData.forEach(d => {
+        if (d[tt] === trackName) {
+            let rawTitle = (d[jt] || "").toString().trim();
+            let baseSkillName = rawTitle
+                .replace(/\s*level\s*\d+/gi, "")
+                .replace(/\s*\(.*?\)\s*/g, "")
+                .trim();
+            
+            const roleName = d[jr];
+            if (baseSkillName && baseSkillName !== "-" && roleName) {
+                if (!skillToRolesMap[baseSkillName]) {
+                    skillToRolesMap[baseSkillName] = new Set();
+                }
+                skillToRolesMap[baseSkillName].add(roleName);
+            }
+        }
+    });
+
+    const topSkills = Object.entries(skillToRolesMap)
+        .map(([name, roleSet]) => ({
+            name: name,
+            count: roleSet.size
+        }))
+        .filter(s => s.count > 0)
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 20);
+
+    const modalHtml = `
+        <div id="peer-overlay" onclick="closeModal()" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);z-index:9998;backdrop-filter:blur(2px);"></div>
+        <div id="peer-modal" class="${accessibilityClass}" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:25px;border-radius:12px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);z-index:9999;width:520px;max-width:90vw;display:flex;flex-direction:column;max-height:85vh;border:1px solid #e2e8f0;">
+            
+            <h3 class="modal-title" style="margin: 0 0 12px 0; color:#10b981; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                    <path d="M9 20l-5-5 5-5M20 4v7a4 4 0 01-4 4H4"></path>
+                </svg>
+                Top 20 In-Demand Skills: ${trackName}
+            </h3>
+            
+            <div style="overflow-y:auto; padding-right:8px;">
+                ${topSkills.length > 0 ? topSkills.map((skill) => {
+                    // Hyperlink with black text (to match non-top-3 sector style)
+                    const skillDisplayName = `<a href="#" onclick="showSkillDetails('${skill.name.replace(/'/g, "\\'")}'); return false;" style="color: #000000; font-weight: 700; text-decoration: underline;">${skill.name}</a>`;
+
+                    return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0; border-left: 4px solid #cbd5e1;">
+                        <span style="flex:1; font-size:13px;">${skillDisplayName}</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; font-size:14px; font-weight:900; border:1px solid #10b981;">
+                                ${skill.count}
+                            </span>
+                            <span style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase;">Roles</span>
+                        </div>
+                    </div>
+                `;}).join('') : `<p style="text-align:center; padding:20px; color:#94a3b8; font-style:italic;">No data found for this track.</p>`}
+            </div>
+            <button onclick="closeModal()" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;">Close</button>
+        </div>`;
+
+    const div = document.createElement('div');
+    div.id = "modal-wrapper";
+    div.innerHTML = modalHtml;
+    document.body.appendChild(div);
+}
+
+function showSkillDetails(baseSkillName) {
+    // 1. Find relevant columns
+    const titleCol = skillHeaders.find(h => h.toLowerCase().includes('title'));
+    const levelCol = skillHeaders.find(h => h.toLowerCase().includes('level'));
+    const descCol = skillHeaders.find(h => h.toLowerCase().includes('proficiency') && h.toLowerCase().includes('desc'));
+
+    // 2. Filter and de-duplicate levels using a Map (Key = Level)
+    // 2. Filter and de-duplicate levels using a Map (Key = Level)
+const levelMap = new Map();
+skillData.forEach(d => {
+    let rawTitle = (d[titleCol] || "").toString().trim();
+    let cleanTitle = rawTitle.replace(/\s*level\s*\d+/gi, "").replace(/\s*\(.*?\)\s*/g, "").trim();
+
+    if (cleanTitle === baseSkillName) {
+        const lvl = d[levelCol];
+        let desc = (d[descCol] || "No description available.").toString().trim();
+
+        // --- ROBUST DUPLICATE REMOVAL LOGIC ---
+        if (desc && desc !== "-" && desc !== "No description available.") {
+            // 1. Split by periods or newlines
+            const rawParts = desc.split(/[.\n]/);
+            
+            const uniqueSentences = [];
+            const seenNormalized = new Set();
+
+            rawParts.forEach(part => {
+                const trimmed = part.trim();
+                if (trimmed.length > 2) {
+                    // 2. Normalize: Remove EVERYTHING except letters and numbers
+                    // This catches duplicates even if one has a dot and the other doesn't
+                    const normalized = trimmed.toLowerCase().replace(/[^a-z0-9]/g, "");
+                    
+                    if (!seenNormalized.has(normalized)) {
+                        seenNormalized.add(normalized);
+                        uniqueSentences.push(trimmed);
+                    }
+                }
+            });
+            
+            // 3. Rebuild the description with unique sentences
+            desc = uniqueSentences.join('. ') + '.';
+        }
+        // -------------------------------------
+
+        // Only add to map if the level hasn't been seen yet
+        if (!levelMap.has(lvl)) {
+            levelMap.set(lvl, desc);
+        }
+    }
+});
+
+    // 3. Sort levels numerically
+    const sortedLevels = Array.from(levelMap.entries()).sort((a, b) => a[0] - b[0]);
+
+    // 4. Generate table rows
+    const tableRows = sortedLevels.map(([lvl, desc]) => {
+        const isNumeric = !isNaN(lvl) && lvl !== null && lvl !== "";
+        const displayLvl = isNumeric ? `Level ${lvl}` : lvl;
+
+        return `
+        <tr>
+            <td style="padding:10px 5px; border-bottom:1px solid #e2e8f0; font-weight:800; color:#059669; width:100px; text-align:center; background:#f0fdf4; font-size:12px;">
+                ${displayLvl}
+            </td>
+            <td style="padding:12px; border-bottom:1px solid #e2e8f0; font-size:12px; line-height:1.5; color:#334155;">
+                ${desc}
+            </td>
+        </tr>
+        `;
+    }).join('');
+
+    // 5. Build modal HTML with responsive styling
+    const detailHtml = `
+        <div id="detail-modal-wrapper">
+            <div id="detail-overlay" onclick="document.getElementById('detail-modal-wrapper').remove()" 
+                 style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.4);z-index:10000;backdrop-filter:blur(1px);"></div>
+
+            <div id="detail-modal" 
+                 style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                        background:white;padding:25px;border-radius:12px;
+                        box-shadow:0 20px 25px -5px rgba(0,0,0,0.2);z-index:10001;
+                        width:550px; max-width:95vw; max-height:75vh; display:flex;flex-direction:column;
+                        border:2px solid #10b981; overflow:hidden;">
+
+                <h3 style="margin:0 0 15px 0; color:#0f172a; border-bottom:2px solid #f1f5f9; padding-bottom:10px; font-size:16px;">
+                    ${baseSkillName}
+                </h3>
+
+                <div style="overflow-y:auto; flex:1; border:1px solid #e2e8f0; border-radius:8px;">
+                    <table style="width:100%; border-collapse:collapse; background:white; table-layout:fixed; font-size:12px;">
+                        <thead style="background:#f8fafc; position:sticky; top:0; z-index:1;">
+                            <tr>
+                                <th style="padding:10px 5px; border-bottom:2px solid #e2e8f0; text-align:center; text-transform:uppercase; color:#64748b; width:100px;">
+                                    Prof
+                                </th>
+                                <th style="padding:10px; border-bottom:2px solid #e2e8f0; text-align:left; text-transform:uppercase; color:#64748b;">
+                                    Proficiency Description
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </div>
+
+                <button onclick="document.getElementById('detail-modal-wrapper').remove()" 
+                        style="margin-top:20px; background:#0f172a; color:white; border:none; padding:12px; border-radius:6px; font-weight:700; cursor:pointer; transition: opacity 0.2s;">
+                    Back to Top Skills
+                </button>
+            </div>
+        </div>
+
+        <style>
+            /* MOBILE RESPONSIVE */
+            @media (max-width:768px){
+
+    #detail-modal{
+        width:100% !important;
+        max-width:100% !important;
+        height:100vh !important;
+        max-height:100vh !important;
+        top:0 !important;
+        left:0 !important;
+        transform:none !important;
+        border-radius:0 !important;
+        padding:16px !important;
+        box-sizing:border-box;
+        display:flex;
+        flex-direction:column;
+    }
+
+    /* Make table scrollable vertically without affecting button */
+    #detail-modal > div[style*="overflow-y"]{
+        flex:1;
+        overflow-y:auto;
+        overflow-x:auto;
+    }
+
+    /* Sticky button at bottom */
+    #detail-modal button{
+        position:sticky;
+        bottom:0;
+        margin-top:10px;
+        padding:10px;
+        background:#0f172a;
+        color:white;
+        border:none;
+        border-radius:6px;
+        font-weight:700;
+        cursor:pointer;
+        z-index:10;
+        border-top:1px solid #e2e8f0;
+    }
+
+    /* Table adjustments for mobile */
+    #detail-modal table{
+        width:100% !important;
+        table-layout:auto !important;
+    }
+
+    #detail-modal th:first-child,
+    #detail-modal td:first-child{
+        width:45px !important;
+        min-width:45px;
+        text-align:center;
+        white-space:nowrap;
+    }
+
+    #detail-modal td:last-child{
+        white-space:normal;
+        word-break:break-word;
+        overflow-wrap:anywhere;
+    }
+
+    #detail-modal th,
+    #detail-modal td{
+        padding:8px !important;
+        font-size:12px !important;
+    }
+    #detail-modal > div[style*="overflow-y"] {
+    padding-bottom:50px; /* leave room for sticky button */
+
+}
+        </style>
+    `;
+
+    const div = document.createElement('div');
+    div.id = "detail-modal-wrapper";
+    div.innerHTML = detailHtml;
+    document.body.appendChild(div);
+}
+/* =========================== 1. SHOW ROLE COMPARISON (RESTORED UI) =========================== */
+function showRoleComparison(){
+
+if(!document.getElementById("role-comparison-responsive")){
+
+const style=document.createElement("style");
+style.id="role-comparison-responsive";
+
+style.innerHTML=`
+
+.comparison-container{
+display:flex;
+gap:20px;
+width:100%;
+}
+
+.comparison-column{
+flex:1;
+min-width:0;
+}
+
+.comparison-header{
+min-height:80px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+border-bottom:1px solid #f1f5f9;
+margin-bottom:15px;
+}
+
+/* Competency columns */
+
+.skills-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.skills-columns > div {
+  /* prevent breaking across rows */
+  break-inside: avoid;
+}
+
+/* MOBILE: 1 column */
+@media (max-width: 768px) {
+  .skills-columns {
+    grid-template-columns: 1fr;
+  }
+}
+/* Critical Work Functions */
+
+.cwf-grid{
+display:block;
+width:100%;
+}
+
+#peer-modal{
+box-sizing:border-box;
+overflow-x:hidden;
+}
+
+#peer-modal *{
+max-width:100%;
+box-sizing:border-box;
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+#peer-modal{
+width:100vw !important;
+max-width:100vw !important;
+left:0 !important;
+top:0 !important;
+transform:none !important;
+border-radius:0 !important;
+height:100vh !important;
+max-height:100vh !important;
+padding:16px !important;
+}
+
+.comparison-container{
+flex-direction:column;
+gap:16px;
+}
+
+.cwf-grid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:8px;
+}
+
+.skills-columns{
+column-count:1;
+}
+
+/* Container for side-by-side buttons in comparison modal */
+.modal-footer-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-shrink: 0;
+}
+
+.modal-footer-actions button {
+    flex: 1; /* Makes both buttons equal width */
+    margin-top: 0 !important; /* Overrides any existing top margin */
+}
+/* Container for the filter toggle */
+.filter-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.filter-toggle-container:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: #fdba74; /* Orange-200 */
+}
+
+/* The actual checkbox styling */
+.track-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #f97316; /* Primary Orange */
+    vertical-align: middle;
+}
+
+/* Label text styling */
+.track-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569; /* Slate-600 */
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    cursor: pointer;
+    user-select: none;
+}
+}
+.track-label {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 14px;
+    font-weight: 600; /* Optional: adds a bit of weight for readability at small sizes */
+    color: var(--slate-700); /* Matches your existing color palette */
+    cursor: pointer;
+    user-select: none; /* Prevents text highlighting on double click */
+}
+`;
+
+document.head.appendChild(style);
+}
+
+/* --- AMENDED DATA EXTRACTION & MAPPING LOGIC --- */
+
+// ✅ GLOBAL STATE
+window.isTrackFilterOn = window.isTrackFilterOn || false;
+
+const currentRole = document.getElementById('sel-role').value;
+const currentSector = document.getElementById('sel-sector').value;
+
+const isTrackFilterOn = window.isTrackFilterOn === true;
+
+// 1. DYNAMIC HEADER MAPPING
+const rCol = cwfHeaders.find(h => h.toLowerCase().includes('role'));
+const fCol = cwfHeaders.find(h => h.toLowerCase().includes('function'));
+const sKey = jobHeaders.find(h => h.toLowerCase().includes('sector'));
+const rKey = jobHeaders.find(h => h.toLowerCase().includes('role'));
+const tscCol = jobHeaders.find(h => h.toLowerCase().includes('title'));
+const pLevelCol = jobHeaders.find(h => h.toLowerCase().includes('proficiency level'));
+const tCol = jobHeaders.find(h => h && h.toLowerCase().includes('track'));
+
+// ✅ GET FIRST VALID TRACK
+const currentRoleTrack = (
+    jobData.find(d => 
+        d[rKey] === currentRole &&
+        d[tCol] &&
+        d[tCol].toString().trim() !== ""
+    )?.[tCol] || ""
+).toString().toLowerCase().trim();
+
+const currentRoleTrackpc = (
+    jobData.find(d => 
+        d[rKey] === currentRole &&
+        d[tCol] &&
+        d[tCol].toString().trim() !== ""
+    )?.[tCol] || ""
+).toString().trim();
+
+// ✅ TRACK MATCHER
+const matchesTrack = (rowTrack) => {
+    // Look at the global state directly so it responds to clicks
+    if (!window.isTrackFilterOn) return true;
+
+    const value = (rowTrack || "").toString().toLowerCase().trim();
+    if (!currentRoleTrack) return true;
+
+    return value === currentRoleTrack;
+};
+
+// 2. SECTOR ROLES
+const sectorRoles = [...new Set(jobData
+    .filter(d => 
+        d[sKey] === currentSector &&
+        d[rKey] !== currentRole &&
+        matchesTrack(d[tCol])
+    )
+    .map(d => d[rKey])
+)].sort();
+
+// ✅ NEW: DROPDOWN REFRESH (no modal reload)
+window.refreshRoleDropdown = function() {
+    const select = document.getElementById('compare-role-select');
+    if (!select) return;
+
+    const selectedValue = select.value;
+
+    const newOptions = [
+        '<option value="">-- Select Role --</option>',
+        ...sectorRoles
+            .filter(r => r !== currentRole)
+            .map(r => `<option value="${r}">${r}</option>`)
+    ];
+
+    select.innerHTML = newOptions.join('');
+
+    if (sectorRoles.includes(selectedValue)) {
+        select.value = selectedValue;
+    }
+};
+window.handleTrackToggle = function(checkbox) {
+    // 1. Update the global state
+    window.isTrackFilterOn = checkbox.checked;
+
+    // 2. Get current context (Sector and Role)
+    const currentSector = document.getElementById('sel-sector').value;
+    const currentRole = document.getElementById('sel-role').value;
+    
+    // 3. Recalculate the filtered roles list
+    const filteredRoles = [...new Set(jobData
+        .filter(d => {
+            const isSameSector = d[sKey] === currentSector;
+            const isNotCurrentRole = d[rKey] !== currentRole;
+            // Use your existing matchesTrack logic
+            const trackMatch = matchesTrack(d[tCol]); 
+            return isSameSector && isNotCurrentRole && trackMatch;
+        })
+        .map(d => d[rKey])
+    )].sort();
+
+    // 4. Update the dropdown list in the modal
+    const select = document.getElementById('compare-role-select');
+    if (select) {
+        const previousValue = select.value;
+        const newOptions = [
+            '<option value="">-- Select Role --</option>',
+            ...filteredRoles.map(r => `<option value="${r}">${r}</option>`)
+        ];
+        select.innerHTML = newOptions.join('');
+        
+        // Keep previous selection if it's still valid under the new filter
+        if (filteredRoles.includes(previousValue)) {
+            select.value = previousValue;
+        } else {
+            // Clear comparison content if the previously selected role is filtered out
+            const contentArea = document.getElementById('comparison-content-area');
+            if (contentArea) contentArea.innerHTML = '<p style="color:#94a3b8; padding:20px;">Please select a role.</p>';
+        }
+    }
+};
+// 3. SKILL MAP GENERATOR
+const getSkillMapForRole = (roleName) => {
+    if (!roleName) return {};
+    
+    const roleRows = jobData.filter(d => 
+        d[rKey] === roleName &&
+        matchesTrack(d[tCol])
+    );
+
+    const skillMap = {};
+
+    roleRows.forEach(d => {
+        let rawSkill = (d[tscCol] || "").toString();
+        
+        let cleanSkill = rawSkill
+            .replace(/↗/g, "")
+            .replace(/\s*level\s*\d+/gi, "")
+            .trim();
+
+        let levelValue = d[pLevelCol] ? d[pLevelCol].toString().trim() : "";
+
+        if (levelValue === "") {
+            let match = rawSkill.match(/level\s*(\d+)/i);
+            levelValue = match ? match[1] : "0";
+        }
+
+        if (cleanSkill) {
+            skillMap[cleanSkill.toUpperCase()] = {
+                fullName: cleanSkill,
+                level: levelValue
+            };
+        }
+    });
+
+    return skillMap;
+};
+
+/* --- END AMENDMENT --- */
+
+
+const getCWFHtml=(roleName,referenceFunctions=[])=>{
+
+if(!roleName)
+return '<p style="color:#94a3b8;font-style:italic;text-align:center;margin-top:50px;">Select a role...</p>';
+
+const functions=[...new Set(
+cwfData
+.filter(d=>d[rCol]===roleName)
+.map(d=>d[fCol])
+)].filter(Boolean);
+
+functions.sort((a,b)=>{
+
+const aCommon=referenceFunctions.includes(a);
+const bCommon=referenceFunctions.includes(b);
+
+if(aCommon&&!bCommon)return -1;
+if(!aCommon&&bCommon)return 1;
+
+return a.localeCompare(b);
+});
+
+let html=`
+
+<div style="font-size:11px;text-transform:uppercase;color:var(--slate-500);font-weight:800;letter-spacing:0.05em;margin-bottom:12px;padding-bottom:4px;border-bottom:1px dashed var(--slate-200);">
+Critical Work Functions
+</div>
+
+<div class="cwf-grid">
+`;
+
+html+=functions.map(func=>{
+
+const isCommon=referenceFunctions.includes(func);
+
+return `
+<div class="cwf-item ${isCommon?'is-common':''}" style="font-family:'Inter',sans-serif;margin-bottom:8px;">
+<div class="cwf-label" style="font-weight:700;font-size:13.5px;color:var(--slate-800);">
+${isCommon?'<span style="color:#f97316;">● [Common] </span>':''}${func}
+</div>
+</div>
+`;
+
+}).join('');
+
+html+=`</div>`;
+
+return html;
+};
+
+
+window.updateComparisonContent=(selectedRole)=>{
+
+const currentCWF=[...new Set(
+cwfData.filter(d=>d[rCol]===currentRole).map(d=>d[fCol])
+)];
+
+if(!selectedRole){
+
+document.getElementById('current-content-target').innerHTML=getCWFHtml(currentRole);
+document.getElementById('compare-content-target').innerHTML=getCWFHtml("");
+document.getElementById('common-skills-target').innerHTML="";
+return;
+}
+
+const selectedCWF=[...new Set(
+cwfData.filter(d=>d[rCol]===selectedRole).map(d=>d[fCol])
+)];
+
+const mapA=getSkillMapForRole(currentRole);
+const mapB=getSkillMapForRole(selectedRole);
+
+const commonKeys=Object.keys(mapA).filter(k=>mapB.hasOwnProperty(k));
+
+const skillsHtml=commonKeys.length>0
+?commonKeys
+.map(k=>{
+
+const sA=mapA[k];
+const sB=mapB[k];
+
+const isNumericA=!isNaN(sA.level)&&sA.level!=="";
+const isNumericB=!isNaN(sB.level)&&sB.level!=="";
+
+const numA=isNumericA?parseInt(sA.level):0;
+const numB=isNumericB?parseInt(sB.level):0;
+
+const diffValue=numB-numA;
+
+const isExactMatch=sA.level===sB.level;
+const getNonNumeric=(val)=>String(val).replace(/\d/g,'').trim();
+
+const isSameCategory=getNonNumeric(sA.level)===getNonNumeric(sB.level);
+
+let sortWeight=4;
+if(isExactMatch) sortWeight=1;
+else if(isSameCategory&&!isNumericA) sortWeight=2;
+else if(isNumericA&&isNumericB) sortWeight=3;
+
+return {k,sA,sB,isNumericA,isNumericB,numA,diffValue,sortWeight,isExactMatch};
+
+})
+.sort((a,b)=>{
+
+if(a.sortWeight!==b.sortWeight) return a.sortWeight-b.sortWeight;
+
+if(a.sortWeight===1) return b.numA-a.numA;
+
+if(a.sortWeight===3) return b.diffValue-a.diffValue;
+
+return a.sA.fullName.localeCompare(b.sA.fullName);
+
+})
+.map(({sA,sB,isNumericA,isNumericB,isExactMatch,diffValue})=>{
+
+let diffLabel="-";
+let bgColor="#fff7ed";
+let borderColor="#fdba74";
+let textColor="#9a3412";
+
+const displayA=isNumericA?`Level ${sA.level}`:sA.level;
+const displayB=isNumericB?`Level ${sB.level}`:sB.level;
+const comparisonText=(sA.level===sB.level)?displayA:`${displayA} vs ${displayB}`;
+
+if(isExactMatch){
+diffLabel="Same";
+}
+
+else if(isNumericA&&isNumericB){
+
+diffLabel=diffValue>0?`+${diffValue}`:diffValue;
+
+if(diffValue>0){
+bgColor="#fffbeb"; borderColor="#fef3c7"; textColor="#92400e";
+}
+else if(diffValue<0){
+bgColor="#fafaf9"; borderColor="#f5f5f4"; textColor="#57534e";
+}
+
+}
+
+else if(!isNumericA&&!isNumericB&&!isExactMatch){
+bgColor="#fafaf9"; borderColor="#f5f5f4"; textColor="#57534e";
+}
+
+return `
+<div style="background:${bgColor};border:1px solid ${borderColor};color:${textColor};padding:8px 12px;border-radius:6px;font-size:12.5px;display:flex;align-items:center;justify-content:space-between; gap: 10px;">
+    <div style="font-weight:600; line-height: 1.4;">
+        <span style="background:#f97316;color:white;font-size:9px;padding:2px 5px;border-radius:4px;text-transform:uppercase;margin-right:6px;vertical-align:middle;display:inline-block;">Shared</span>
+        <span style="vertical-align:middle;">${sA.fullName}</span>
+        <span style="font-weight:400;color:${textColor};opacity:0.8;margin-left:4px;vertical-align:middle;">(${comparisonText})</span>
+    </div>
+    <div style="font-size:11px;font-weight:700;background:rgba(255,255,255,0.7);padding:2px 8px;border-radius:4px;border:1px solid rgba(0,0,0,0.08);white-space:nowrap;flex-shrink:0;">
+        ${diffLabel}
+    </div>
+</div>`;
+})
+.join('')
+:'<p style="font-style:italic;color:#94a3b8;padding:10px;">No identical TSC/CCS titles found.</p>';
+
+document.getElementById('current-content-target').innerHTML=getCWFHtml(currentRole,selectedCWF);
+document.getElementById('compare-content-target').innerHTML=getCWFHtml(selectedRole,currentCWF);
+
+document.getElementById('common-skills-target').innerHTML=`
+
+<div style="margin-top:20px;border-top:2px solid #f1f5f9;padding-top:15px;">
+
+<div style="font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;">
+Shared TSC/CCS Competencies (${commonKeys.length})
+</div>
+
+<div class="skills-columns">
+${skillsHtml}
+</div>
+
+</div>
+`;
+};
+
+window.exportComparisonPDF = function () {
+    try {
+        const currentRole = document.getElementById('sel-role')?.value;
+        const selectedRole = document.getElementById('compare-role-select')?.value;
+
+        if (!selectedRole) {
+            alert("Please select a role to compare.");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // 1. DYNAMIC COLUMN FINDING
+        const rKey = jobHeaders.find(h => h.toLowerCase().includes('role'));
+        const tscCol = jobHeaders.find(h => h.toLowerCase().includes('title'));
+        const pLevelCol = jobHeaders.find(h => h.toLowerCase().includes('proficiency level'));
+        const rCol = cwfHeaders.find(h => h.toLowerCase().includes('role'));
+        const fCol = cwfHeaders.find(h => h.toLowerCase().includes('function'));
+        
+        const profDescKey = skillHeaders.find(h => h.toLowerCase() === 'proficiency description') 
+                            || skillHeaders.find(h => h.toLowerCase().includes('proficiency description'));
+
+        // Helpers
+        const getCWF = (role) => [...new Set(cwfData.filter(d => d[rCol] === role).map(d => d[fCol]))];
+        const getRows = (role) => jobData.filter(d => d[rKey] === role);
+
+        // Skill Lookup Map
+        const skillLookup = new Map(
+            skillData.map(s => [
+                `${String(s[tscCol]).trim()}|${String(s[pLevelCol]).trim()}`,
+                s[profDescKey]
+            ])
+        );
+
+        // --- PAGE BUILDER FOR INDIVIDUAL ROLES ---
+        const buildPage = (role, isSecondPage = false) => {
+            if (isSecondPage) doc.addPage();
+
+            // HEADER (Blue Strip)
+            doc.setFillColor(37, 99, 235);
+            doc.rect(0, 0, 210, 20, 'F');
+            
+            // --- NEW: DYNAMIC FONT SIZE LOGIC ---
+            const roleTitle = role.toUpperCase();
+            let dynamicFontSize = 14; // Default size
+
+            if (roleTitle.length > 30) {
+                // Shrink font for long titles (Minimum 8pt)
+                dynamicFontSize = Math.max(10, 14 - Math.floor((roleTitle.length - 30) / 5));
+            }
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(dynamicFontSize);
+            doc.setTextColor(255, 255, 255);
+            
+            // Vertically center text based on dynamic font size
+            // (13 is the default Y for 14pt; we adjust slightly if font is tiny)
+            const textY = dynamicFontSize < 10 ? 12 : 13; 
+            doc.text(roleTitle, 14, textY);
+
+            let y = 30;
+
+            // JOB ROLE DESCRIPTION
+            const roleKeyInDesc = descHeaders.find(h => h.toLowerCase().includes('role') || h.toLowerCase().includes('job'));
+            const descContentKey = descHeaders.find(h => h.toLowerCase().includes('job role description')) || descHeaders[1];
+            const roleDescObj = jobDescData.find(d => String(d[roleKeyInDesc]).trim() === String(role).trim());
+            const roleDesc = roleDescObj ? roleDescObj[descContentKey] : "Description not found.";
+
+            doc.setFont("helvetica", "italic");
+            doc.setFontSize(10);
+            doc.setTextColor(71, 85, 105);
+            const splitRoleDesc = doc.splitTextToSize(roleDesc, 182);
+            doc.text(splitRoleDesc, 14, y);
+            y += (splitRoleDesc.length * 4.5) + 1;
+
+            // CRITICAL WORK FUNCTIONS
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(37, 99, 235);
+            doc.text("CRITICAL WORK FUNCTIONS", 14, y);
+            y += 5;
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+            getCWF(role).forEach(f => {
+                const bullet = `•  ${f}`;
+                const splitF = doc.splitTextToSize(bullet, 180);
+                if (y > 275) { doc.addPage(); y = 20; }
+                doc.text(splitF, 16, y);
+                y += (splitF.length * 5);
+            });
+
+            y += 5;
+
+            // COMPETENCIES TABLE
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(37, 99, 235);
+            doc.text("TSC", 14, y);
+
+            const sortedRows = getRows(role).sort((a, b) => {
+                const titleA = (a[tscCol] || "").toString().toLowerCase();
+                const titleB = (b[tscCol] || "").toString().toLowerCase();
+                return titleA.localeCompare(titleB);
+            });
+
+            const tableRows = sortedRows.map(d => {
+                const tscValue = String(d[tscCol] || "").trim();
+                const pLevelValue = String(d[pLevelCol] || "").trim();
+                const lookupKey = `${tscValue}|${pLevelValue}`;
+                const skillMatchDesc = skillLookup.get(lookupKey);
+
+                return [
+                    d[tscCol] || "-",
+                    d[pLevelCol] || "-",
+                    skillMatchDesc !== undefined ? skillMatchDesc : "-"
+                ];
+            });
+
+            doc.autoTable({
+                startY: y + 4,
+                head: [['Competency', 'Level', 'Proficiency Description']],
+                body: tableRows,
+                theme: 'striped',
+                headStyles: { fillColor: [37, 99, 235], fontSize: 9, cellPadding: 2 },
+                styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak', lineColor: [226, 232, 240], lineWidth: 0.1 },
+                columnStyles: { 0: { cellWidth: 40, fontStyle: 'bold' }, 1: { cellWidth: 15, halign: 'center' }, 2: { cellWidth: 'auto' } },
+                margin: { left: 14, right: 14, bottom: 15 },
+                pageBreak: 'auto'
+            });
+        };
+
+        // --- SHARED COMPETENCIES PAGE BUILDER ---
+        const buildSharedPage = (role1, role2) => {
+            doc.addPage();
+            
+            // Header (Blue Strip)
+            doc.setFillColor(37, 99, 235);
+            doc.rect(0, 0, 210, 20, 'F');
+            
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.setTextColor(255, 255, 255);
+            doc.text("SHARED COMPETENCIES", 14, 13);
+
+            const rows1 = getRows(role1);
+            const rows2 = getRows(role2);
+            
+            const role1Map = new Map(rows1.map(r => [String(r[tscCol]).trim(), String(r[pLevelCol]).trim()]));
+            
+            let sameLevelRows = [];
+            let diffLevelRows = [];
+
+            rows2.forEach(d => {
+                const tscValue = String(d[tscCol] || "").trim();
+                const r2Level = String(d[pLevelCol] || "").trim();
+                
+                if (role1Map.has(tscValue)) {
+                    const r1Level = role1Map.get(tscValue);
+
+                    if (r1Level === r2Level) {
+                        const sharedDesc = skillLookup.get(`${tscValue}|${r1Level}`) || "-";
+                        sameLevelRows.push([tscValue, r1Level, sharedDesc]);
+                    } else {
+                        // FETCH BOTH DESCRIPTIONS
+                        const r1Desc = skillLookup.get(`${tscValue}|${r1Level}`) || "Description not found.";
+                        const r2Desc = skillLookup.get(`${tscValue}|${r2Level}`) || "Description not found.";
+
+                        diffLevelRows.push([
+                            tscValue, 
+                            `Level ${r1Level}:\n${r1Desc}`, 
+                            `Level ${r2Level}:\n${r2Desc}`
+                        ]);
+                    }
+                }
+            });
+
+            const sortFn = (a, b) => a[0].localeCompare(b[0]);
+            sameLevelRows.sort(sortFn);
+            diffLevelRows.sort(sortFn);
+
+            let currentY = 30;
+
+            if (sameLevelRows.length === 0 && diffLevelRows.length === 0) {
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(11);
+                doc.setTextColor(71, 85, 105);
+                doc.text("No shared competencies identified.", 14, currentY);
+                return;
+            }
+
+            // TABLE 1: Identical Levels
+            if (sameLevelRows.length > 0) {
+                doc.setFontSize(11);
+                doc.setTextColor(16, 120, 80);
+                doc.text(`Identical Proficiency Levels (${sameLevelRows.length})`, 14, currentY);
+                
+                doc.autoTable({
+                    startY: currentY + 4,
+                    head: [['Shared Competency', 'Level', 'Shared Description']],
+                    body: sameLevelRows,
+                    theme: 'striped',
+                    headStyles: { fillColor: [16, 120, 80], fontSize: 8.5 },
+                    styles: { fontSize: 8.5, cellPadding: 2, lineColor: [226, 232, 240], lineWidth: 0.1 },
+                    columnStyles: { 0: { cellWidth: 40, fontStyle: 'bold' }, 1: { cellWidth: 15, halign: 'center' } },
+                    margin: { left: 14, right: 14 }
+                });
+                currentY = doc.lastAutoTable.finalY + 12;
+            }
+
+            // TABLE 2: Differing Levels (Amended)
+            if (diffLevelRows.length > 0) {
+                if (currentY > 240) { doc.addPage(); currentY = 25; }
+                
+                doc.setFontSize(11);
+                doc.setTextColor(190, 18, 60); 
+                doc.text(`Differing Proficiency Levels (${diffLevelRows.length})`, 14, currentY);
+
+                doc.autoTable({
+                    startY: currentY + 4,
+                    head: [['Competency', `(R1) ${currentRole}`, `(R2) ${selectedRole}`]],
+                    body: diffLevelRows,
+                    theme: 'striped',
+                    headStyles: { fillColor: [190, 18, 60], fontSize: 8.5 },
+                    styles: { 
+                        fontSize: 8.5, 
+                        cellPadding: 3, 
+                        lineColor: [226, 232, 240], 
+                        lineWidth: 0.1,
+                        overflow: 'linebreak' 
+                    },
+                    columnStyles: { 
+                        0: { cellWidth: 35, fontStyle: 'bold' }, 
+                        1: { cellWidth: 73 }, 
+                        2: { cellWidth: 73 } 
+                    },
+                    margin: { left: 14, right: 14 }
+                });
+            }
+        };
+
+        // Execution Flow
+        buildPage(currentRole, false);
+        buildPage(selectedRole, true);
+        buildSharedPage(currentRole, selectedRole);
+
+        // Global Footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for(let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(9);
+            doc.setTextColor(148, 163, 184);
+            doc.text(`Page ${i} of ${pageCount} | Role Comparison Report`, 105, 290, { align: 'center' });
+        }
+
+        doc.save(`Comparison_${currentRole}_vs_${selectedRole}.pdf`);
+
+    } catch (err) {
+        console.error("PDF Export Error:", err);
+        alert("Failed to generate PDF. Check console for details.");
+    }
+};
+
+/* ===========================
+   MODAL
+=========================== */
+
+/* ===========================
+   MODAL
+=========================== */
+
+const modalHtml=`
+
+<div id="peer-overlay" onclick="closeModal()" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);z-index:9998;backdrop-filter:blur(2px);"></div>
+
+<div id="peer-modal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:25px;border-radius:12px;z-index:9999;width:950px;max-width:95vw;display:flex;flex-direction:column;max-height:90vh;border:1px solid #e2e8f0;font-family:'Inter', sans-serif;">
+
+<h3 style="margin:0 0 15px 0; color:var(--primary); display:flex; align-items:center; gap:10px; flex-shrink:0; font-weight:800;">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+         stroke-width="2" stroke="currentColor" width="25" height="25">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM8 11c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zM2 20v-1c0-2.21 3.58-4 6-4h8c2.42 0 6 1.79 6 4v1H2z" />
+    </svg>
+    Job Role Comparison in ${currentSector}
+</h3>
+
+<div class="filter-toggle-container">
+    <input 
+        type="checkbox" 
+        id="comp-filter-track" 
+        class="track-checkbox"
+        /* 1. Stop the modal from closing */
+        onclick="event.stopPropagation()"
+        /* 2. Update state and trigger the refresh function you wrote */
+        onchange="window.handleTrackToggle(this)"
+        /* 3. Ensure it stays checked if it was already on */
+        ${window.isTrackFilterOn ? 'checked' : ''}
+    >
+    <label for="comp-filter-track" class="track-label">
+        Same Track Only
+    </label>
+</div>
+
+<div style="overflow-y:auto;padding-right:10px;flex:1;">
+<div class="comparison-container">
+
+<div class="comparison-column">
+<div class="comparison-header">
+<div style="font-size:11px;text-transform:uppercase;color:var(--slate-500);font-weight:800;margin-bottom:4px;">Current Role</div>
+<div style="font-size:14px;font-weight:700;">${currentRole}</div>
+</div>
+<div id="current-content-target"></div>
+</div>
+
+<div class="comparison-column">
+<div class="comparison-header">
+<div style="font-size:11px;text-transform:uppercase;color:var(--slate-500);font-weight:800;margin-bottom:4px;">
+Select role for comparison
+</div>
+
+<select id="compare-role-select" onchange="updateComparisonContent(this.value)" style="width:100%;padding:8px;border-radius:6px;border:1px solid #cbd5e1;font-family:'Inter', sans-serif;">
+<option value="">-- Select Role --</option>
+${sectorRoles.filter(r=>r!==currentRole).map(r=>`<option value="${r}">${r}</option>`).join('')}
+</select>
+
+</div>
+
+<div id="compare-content-target"></div>
+</div>
+
+</div>
+
+<div id="common-skills-target"></div>
+
+<div class="modal-footer-actions" style="display: flex; gap: 12px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+    <button onclick="exportComparisonPDF()" 
+            style="flex: 1; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+        💾 Export PDF
+    </button>
+    <button onclick="closeModal()" 
+            style="flex: 1; background: #0f172a; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;">
+        Close Comparison
+    </button>
+</div>
+`;
+
+const div=document.createElement('div');
+div.id="modal-wrapper";
+div.innerHTML=modalHtml;
+
+document.body.appendChild(div);
+
+// ✅ RESTORE CHECKBOX STATE AFTER RENDER
+const checkbox = document.getElementById('comp-filter-track');
+if (checkbox) {
+    checkbox.checked = window.isTrackFilterOn;
+}
+
+document.getElementById('current-content-target').innerHTML=getCWFHtml(currentRole);
+
+
+}
+
+function render() {
+    const sVal = document.getElementById('sel-sector').value, rVal = document.getElementById('sel-role').value;
+    if(!sVal || !rVal) return;
+    
+    document.getElementById('welcome-msg').style.display = 'none';
+    document.getElementById('app-content').style.display = 'flex';
+    document.getElementById('btn-pdf').disabled = false;
+    
+    const finalSectorEl = document.getElementById('final-sector');
+    finalSectorEl.innerText = sVal;
+    finalSectorEl.style.cursor = "pointer";
+    finalSectorEl.onclick = () => showSectorAnalytics(sVal);
+    
+    document.getElementById('final-role').innerText = rVal;
+    const isFlatView = document.getElementById('view-toggle').checked;
+    const tscTitleKey = skillHeaders.find(h => h.toLowerCase().includes("title"));
+    const classKey = skillHeaders.find(h => h.toLowerCase().includes('classification'));
+    const v = document.getElementById('val').value;
+    const isLargeText = document.body.classList.contains('large-text');
+    const rowClass = isLargeText ? "large-text-row" : "";
+    const isClassificationView = v.toLowerCase().includes('knowledge') || v.toLowerCase().includes('ability');
+
+    // Identifiers for rows and columns
+    const r1=document.getElementById('row1').value, r2=document.getElementById('row2').value, r3=document.getElementById('row3').value,
+          c1=document.getElementById('col1').value, c2=document.getElementById('col2').value;
+
+    // CHECK: If classification is used as a column, we hide sub-headers inside cells
+    const isClassInCols = [c1, c2].includes(classKey);
+
+    const getFriendlyLabel = (label) => {
+        const l = label ? label.trim() : "";
+        if (l.toUpperCase().startsWith("TSC")) return "Competencies";
+        if (l.toUpperCase().startsWith("PROFICIENCY")) return "Proficiency";
+        return "K&A";
+    };
+
+    const formatValue = (val, colKey, isHeader = false) => {
+        if (!val || val === 'none' || val === '-') return "";
+        let str = val.toString().trim();
+        let display = str;
+        const isNumeric = /^\d+$/.test(str);
+        const isLevelCol = colKey.toLowerCase().includes('level') || (colKey.toLowerCase().includes('proficiency') && !colKey.toLowerCase().includes('desc'));
+        if (isNumeric) display = `Proficiency Level ${str}`;
+        else {
+            display = str.replace(/\btsc\b/gi, "TSC").replace(/\bccs\b/gi, "CCS")
+                         .replace(/\bknowledge\b/gi, "Knowledge").replace(/\bability\b/gi, "Ability");
+        }
+        if (colKey === tscTitleKey) {
+            return `<span class="skill-link skill-header-text" onclick="searchSkill('${str.replace(/'/g, "\\'")}')">${display} ↗</span>`;
+        }
+        if (!isHeader && isNumeric && isLevelCol) {
+            const isTscTitleActive = (r1 === tscTitleKey || r2 === tscTitleKey || r3 === tscTitleKey || v === tscTitleKey);
+            if (isTscTitleActive) {
+                return `<span class="skill-link" style="color:#2563eb;text-decoration:underline dotted;cursor:pointer;" onclick="handlePeerClick(this)" data-level="${str}">${display}</span>`;
+            }
+        }
+        return display;
+    };
+
+    const formatContentItem = (text, classification = "") => {
+        let baseStyle = isLargeText ? "font-size: 18px; padding: 8px 12px; margin-bottom: 8px;" : "font-size: 13px; padding: 4px 8px; margin-bottom: 6px;";
+        if (!isClassificationView) return `<div class="bullet" style="${baseStyle}">${text}</div>`;
+        const category = (classification || "").toLowerCase();
+        let typeStyle = "border-radius:4px; line-height:1.4; display:block; border-left:4px solid;";
+        if (category.includes("knowledge")) typeStyle += "background:#eff6ff; color:#1e40af; border-color:#3b82f6;";
+        else if (category.includes("ability")) typeStyle += "background:#f0fdf4; color:#166534; border-color:#22c55e;";
+        else typeStyle += "background:#f8fafc; color:#0f172a; border-color:#cbd5e1;";
+        return `<div class="bullet" style="${baseStyle} ${typeStyle}">${text}</div>`;
+    };
+
+    // Data Filtering and Setup
+    const rKey = jobHeaders.find(h => h.toLowerCase().includes('role') || h.toLowerCase().includes('job')),
+          sKey = jobHeaders.find(h => h.toLowerCase().includes('sector')),
+          tKey = jobHeaders.find(h => h.toLowerCase().includes('track'));
+    const roleData = jobData.find(d => d[rKey] === rVal && d[sKey] === sVal);
+
+    if (roleData && roleData[tKey]) {
+        const trackPill = document.getElementById('final-track');
+        trackPill.innerText = roleData[tKey];
+        trackPill.style.display = 'inline-block';
+    } else {
+        document.getElementById('final-track').style.display = 'none';
+    }
+
+    const dR = descHeaders.find(h => h.toLowerCase().includes('role')), dD = descHeaders.find(h => h.toLowerCase().includes('desc'));
+    const descRow = jobDescData.find(d => d[dR] === rVal);
+    document.getElementById('final-desc').innerText = descRow ? descRow[dD] : "";
+
+    const cR = cwfHeaders.find(h => h.toLowerCase().includes('role')), 
+          cF = cwfHeaders.find(h => h.toLowerCase().includes('func')), 
+          cT = cwfHeaders.find(h => h.toLowerCase().includes('task'));
+    
+    const matchedCWF = cwfData.filter(d => d[cR] === rVal);
+    const cont = document.getElementById('cwf-content'); 
+    cont.innerHTML = "";
+    
+    if(matchedCWF.length > 0) {
+        document.getElementById('cwf-wrapper').style.display = "block";
+        const groups = {};
+        matchedCWF.forEach(d => {
+            const f = (d[cF] || "General Functions").trim(), t = (d[cT] || "").trim();
+            if(!groups[f]) groups[f] = new Set(); 
+            if(t) groups[f].add(t);
+        });
+        let totalTasks = 0;
+        Object.values(groups).forEach(taskSet => { totalTasks += taskSet.size; });
+        const functionCount = Object.keys(groups).length;
+        const countTag = document.getElementById('cwf-count-tag');
+        if (countTag) countTag.innerText = `(${functionCount}) & Key Tasks (${totalTasks})`;
+        for(const [fn, ts] of Object.entries(groups)) {
+            const g = document.createElement('div'); 
+            g.className = "cwf-group";
+            g.innerHTML = `<div class="cwf-header">${fn}</div><ul class="task-list"></ul>`;
+            ts.forEach(t => { 
+                const li = document.createElement('li'); 
+                li.className = "task-item"; li.innerText = t; 
+                g.querySelector('ul').appendChild(li); 
+            });
+            cont.appendChild(g);
+        }
+    } else {
+        document.getElementById('cwf-wrapper').style.display = "none";
+    }
+
+    const jt=jobHeaders.find(h=>h.toLowerCase().includes('title')), jl=jobHeaders.find(h=>h.toLowerCase().includes('level')), 
+          js=jobHeaders.find(h=>h.toLowerCase().includes('sector')), jr=jobHeaders.find(h=>h.toLowerCase().includes('role')),
+          st=skillHeaders.find(h=>h.toLowerCase().includes('title')), sl=skillHeaders.find(h=>h.toLowerCase().includes('level')), 
+          ss=skillHeaders.find(h=>h.toLowerCase().includes('sector'));
+    
+    const pairs = new Set(jobData.filter(d => d[js]===sVal && d[jr]===rVal).map(d => `${d[jt].trim()}|${d[jl].trim()}`));
+    const filtered = skillData.filter(d => d[ss]===sVal && pairs.has(`${(d[st]||"").trim()}|${(d[sl]||"").trim()}`));
+    
+    document.getElementById('val-label').innerText = v.toUpperCase().replace(/\bTSC\b/gi, "TSC").replace(/\bCCS\b/gi, "CCS");
+    const uniqueCountEl = document.getElementById('unique-count');
+    const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val !== '-'))];
+    uniqueCountEl.style.fontSize = isLargeText ? "1.4em" : "1.1em";
+    uniqueCountEl.style.display = "inline-flex";
+    uniqueCountEl.style.alignItems = "baseline"; 
+    uniqueCountEl.style.gap = "8px"; 
+
+    if (isClassificationView) {
+        const counts = { knowledge: 0, ability: 0 };
+        const uniqueSet = new Set();
+        filtered.forEach(d => {
+            const val = d[v], cls = (d[classKey] || "").toLowerCase();
+            if (val && val !== '-' && !uniqueSet.has(val)) {
+                uniqueSet.add(val);
+                if (cls.includes('knowledge')) counts.knowledge++;
+                else if (cls.includes('ability')) counts.ability++;
+            }
+        });
+        uniqueCountEl.innerHTML = `<span>${uniqueSet.size}</span><span style="font-weight:800; color:#64748b; display:inline-flex; gap:4px;">(<span style="color:#2563eb;">K:${counts.knowledge}</span>, <span style="color:#16a34a;">A:${counts.ability}</span>)</span>`;
+    } else if (v.toLowerCase().includes('proficiency')) {
+        const levelCounts = {};
+        filtered.forEach(d => {
+            const lvl = (d[sl] || "N/A").toString().trim(); // Ensure it's a clean string
+            if (d[v] && d[v] !== '-') {
+                if (!levelCounts[lvl]) levelCounts[lvl] = new Set();
+                levelCounts[lvl].add(d[v]);
+            }
+        });
+
+        // ✅ Updated breakdown logic: Only add 'L' if the level is numeric
+        const breakdown = Object.entries(levelCounts)
+            .sort((a, b) => {
+                // Numeric sort if possible, otherwise alphabetical
+                if (!isNaN(a[0]) && !isNaN(b[0])) return a[0] - b[0];
+                return a[0].localeCompare(b[0]);
+            })
+            .map(([l, s]) => {
+                const isNumeric = /^\d+$/.test(l);
+                const label = isNumeric ? `L${l}` : l; // No 'L' if it's "Advanced", "Core", etc.
+                return `${label}:${s.size}`;
+            })
+            .join(', ');
+
+        uniqueCountEl.innerHTML = `<span>${uniqueItems.length}</span><span style="color:var(--primary); font-weight:800; display:inline-flex;">(${breakdown})</span>`;
+    } else {
+        uniqueCountEl.innerText = uniqueItems.length;
+        uniqueCountEl.style.display = "inline-block"; 
+    }
+    const rSelect = document.getElementById('row1'), cSelect = document.getElementById('col1');
+    const rowFriendly = getFriendlyLabel(rSelect.options[rSelect.selectedIndex]?.text || "");
+    const colFriendly = getFriendlyLabel(cSelect.options[cSelect.selectedIndex]?.text || "");
+    let hHtml = "", bHtml = "";
+
+    if (isFlatView) {
+        hHtml = `<tr><th>${rowFriendly}</th><th>Attributes</th><th>${v}</th></tr>`;
+        const groupedMap = new Map();
+        filtered.forEach(d => {
+            const groupKey = JSON.stringify({ r: [d[r1], d[r2], d[r3]], c: [d[c1], d[c2]] });
+            if (!groupedMap.has(groupKey)) groupedMap.set(groupKey, []);
+            if (d[v] && d[v] !== '-') groupedMap.get(groupKey).push({ text: d[v], type: d[classKey] });
+        });
+        const sortedEntries = [...groupedMap.entries()].sort((a, b) => (JSON.parse(a[0]).r[0] || "").localeCompare(JSON.parse(b[0]).r[0] || ""));
+        
+        sortedEntries.forEach(([keyJson, contents]) => {
+            const key = JSON.parse(keyJson);
+            const skillHtml = [formatValue(key.r[0], r1), key.r[1]!=='none'?`<div class="tier-2">${formatValue(key.r[1], r2)}</div>`:'', key.r[2]!=='none'?`<div class="tier-3">${formatValue(key.r[2], r3)}</div>`:''].join('');
+            const attrLabel = key.c.filter(x => x && x!=='none').map((x, idx) => formatValue(x, idx === 0 ? c1 : c2, false)).join(' — ');
+            
+            let itemsToRender = [];
+            if (!isClassificationView) {
+                const uniqueTexts = [...new Set(contents.map(i => i.text))];
+                itemsToRender = uniqueTexts.map(t => ({ text: t }));
+            } else {
+                const sortedContents = contents.sort((a,b) => (a.type||"").toLowerCase().includes('knowledge') ? -1 : 1);
+                const seen = new Set();
+                let hasK = false, hasA = false;
+                sortedContents.forEach(item => {
+                    const id = `${item.text}|${item.type}`;
+                    if (!seen.has(id)) {
+                        const cat = (item.type || "").toLowerCase();
+                        // Only add header items if classification is NOT in columns
+                        if (!isClassInCols) {
+                            if (cat.includes('knowledge') && !hasK) { 
+                                itemsToRender.push({ isHeader: true, label: "Knowledge", isFirst: (itemsToRender.length === 0) }); 
+                                hasK = true; 
+                            } else if (cat.includes('ability') && !hasA) { 
+                                itemsToRender.push({ isHeader: true, label: "Ability", isFirst: (itemsToRender.length === 0) }); 
+                                hasA = true; 
+                            }
+                        }
+                        itemsToRender.push(item);
+                        seen.add(id);
+                    }
+                });
+            }
+            const contentHtml = itemsToRender.map(item => {
+                if (item.isHeader) {
+                    const topMargin = item.isFirst ? "0px" : "8px";
+                    return `<div style="font-weight:bold; color:#64748b; font-size:11px; margin: ${topMargin} 0 4px 4px; text-transform:uppercase;">${item.label}</div>`;
+                }
+                return formatContentItem(formatValue(item.text, v, false), item.type);
+            }).join('');
+            bHtml += `<tr class="${rowClass}"><td class="row-header">${skillHtml}</td><td class="attr-col">${attrLabel}</td><td>${contentHtml}</td></tr>`;
+        });
+    } else {
+        const cornerText = `${rowFriendly} / ${colFriendly}`;
+        const rows = [...new Set(filtered.map(d => JSON.stringify([d[r1], r2!=='none'?d[r2]:'', r3!=='none'?d[r3]:''])))].map(s=>JSON.parse(s)).sort((a,b)=>(a[0]||"").localeCompare(b[0]||""));
+        const cols = [...new Set(filtered.map(d => JSON.stringify([d[c1], c2!=='none'?d[c2]:''])))].map(s=>JSON.parse(s)).sort();
+        
+        hHtml = `<tr><th style="background: #f1f5f9; color: #475569; font-size: 0.95em; text-align: left;">${cornerText}</th>` + 
+                cols.map(c => `<th>${formatValue(c[0], c1, true)}${c[1]!=='none'?`<br><small>${formatValue(c[1], c2, true)}</small>`:''}</th>`).join('') + `</tr>`;
+        
+        rows.forEach(rp => {
+            bHtml += `<tr class="${rowClass}"><td class="row-header">${formatValue(rp[0], r1)}${rp[1]&&rp[1]!=='none'?`<br><span class="tier-2">${formatValue(rp[1], r2)}</span>`:''}${rp[2]&&rp[2]!=='none'?`<br><span class="tier-3">${formatValue(rp[2], r3)}</span>`:''}</td>`;
+            cols.forEach(cp => {
+                const cellData = filtered.filter(d => d[r1] === rp[0] && (r2 === 'none' || d[r2] === rp[1]) && (r3 === 'none' || d[r3] === rp[2]) && d[c1] === cp[0] && (c2 === 'none' || d[c2] === cp[1]));
+                let cellContent = "";
+                if (isClassificationView) {
+                    const sortedCell = cellData.filter(d => d[v] && d[v] !== '-').sort((a,b) => (a[classKey]||"").toLowerCase().includes('knowledge') ? -1 : 1);
+                    let hasK = false, hasA = false;
+                    const seenInCell = new Set();
+                    sortedCell.forEach(d => {
+                        const type = (d[classKey] || "").toLowerCase();
+                        const id = `${d[v]}|${type}`;
+                        if (!seenInCell.has(id)) {
+                            // Suppress headers if classification is already used as a column
+                            if (!isClassInCols) {
+                                if (type.includes('knowledge') && !hasK) { 
+                                    cellContent += `<div style="font-weight:bold; font-size:10px; color:#64748b; margin:0 0 4px 0; text-transform:uppercase;">Knowledge</div>`; 
+                                    hasK = true; 
+                                } else if (type.includes('ability') && !hasA) { 
+                                    const topM = hasK ? "8px" : "0px";
+                                    cellContent += `<div style="font-weight:bold; font-size:10px; color:#64748b; margin:${topM} 0 4px 0; text-transform:uppercase;">Ability</div>`; 
+                                    hasA = true; 
+                                }
+                            }
+                            cellContent += formatContentItem(formatValue(d[v], v, false), d[classKey]);
+                            seenInCell.add(id);
+                        }
+                    });
+                } else {
+                    const uniqueTexts = [...new Set(cellData.map(d => d[v]))].filter(i => i && i !== '-');
+                    cellContent = uniqueTexts.map(txt => formatContentItem(formatValue(txt, v, false))).join('');
+                }
+                bHtml += `<td>${cellContent || '-'}</td>`;
+            });
+            bHtml += `</tr>`;
+        });
+    }
+    document.getElementById('h').innerHTML = hHtml;
+    document.getElementById('b').innerHTML = bHtml;
+}
+async function downloadPDF() {
+    let isFooterPhase = false;
+    try {
+        const { jsPDF } = window.jspdf;
+        if (!jsPDF) throw new Error("jsPDF library not found");
+        const doc = new jsPDF('l', 'mm', 'a4');
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const tableMargin = 14;
+        const availableWidth = pageWidth - (tableMargin * 2);
+        const primaryEmerald = [16, 185, 129];
+        const darkGreen = [16, 120, 80];
+        // 1. Helpers
+        const cleanText = (str) => {
+    if (!str) return "";
+    
+    // 1. Decode HTML entities (converts &nbsp; to space, &amp; to &, etc.)
+    const doc = new DOMParser().parseFromString(str, 'text/html');
+    let decoded = doc.body.textContent || "";
+    return decoded
+        .replace(/\u00a0/g, ' ')             // Remove hidden unicode spaces
+        .replace(/[↗\n\r\t]/g, '')           // Remove arrows, newlines, tabs
+        .replace(/\s+/g, ' ')                // Collapse multiple spaces
+        .trim();
+};
+        const selectedRole = document.getElementById('sel-role')?.value || "Role";
+        const selectedSector = document.getElementById('final-sector')?.innerText || "Sector";
+        const roleDescription = document.getElementById('final-desc')?.innerText || "";
+        
+        // AMENDED: Get Track directly from the UI pill (preferred) or data lookup (fallback)
+        let selectedTrack = document.getElementById('final-track')?.innerText;
+        
+        if (!selectedTrack || selectedTrack === "") {
+            const rKey = jobHeaders.find(h => h.toLowerCase().includes('role'));
+            const tKey = jobHeaders.find(h => h.toLowerCase().includes('track'));
+            const roleData = jobData.find(d => d[rKey] === selectedRole);
+            selectedTrack = roleData ? (roleData[tKey] || "N/A") : "N/A";
+        }
+
+        const tableEl = document.getElementById('grid');
+        // Check if table exists before proceeding
+        if (!tableEl) {
+            alert("Error: Could not find the table with ID 'grid'.");
+            return;
+        }
+
+        const renderHeader = () => {
+
+    let displayTrack = document.getElementById('final-track')?.innerText;
+
+    if (!displayTrack || displayTrack.trim() === "" || displayTrack === "Track") {
+        const rKey = jobHeaders.find(h => h.toLowerCase().includes('role'));
+        const tKey = jobHeaders.find(h => h.toLowerCase().includes('track'));
+        const roleData = jobData.find(d => d[rKey] === selectedRole);
+        displayTrack = roleData ? (roleData[tKey] || "N/A") : "N/A";
+    }
+
+    doc.setFillColor(...primaryEmerald);
+    doc.rect(0, 0, pageWidth, 20, 'F');
+
+    doc.setTextColor(255,255,255);
+
+    const titlePrefix = "Job Competency Map: ";
+    const fullTitle = titlePrefix + selectedRole;
+
+    const maxTitleWidth = pageWidth - 28;
+
+    let fontSize = 18;
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(fontSize);
+
+    while (doc.getTextWidth(fullTitle) > maxTitleWidth && fontSize > 10) {
+        fontSize -= 1;
+        doc.setFontSize(fontSize);
+    }
+
+    const titleY = fontSize > 14 ? 13 : 12;
+
+    doc.text(fullTitle, 14, titleY);
+
+    doc.setFont("helvetica","normal");
+
+    const headerString = `SECTOR: ${selectedSector.toUpperCase()} | TRACK: ${displayTrack.toUpperCase()}`;
+
+    let subFont = 10;
+    doc.setFontSize(subFont);
+
+    let split = doc.splitTextToSize(headerString, maxTitleWidth);
+
+    while (split.length > 1 && subFont > 7) {
+        subFont -= 0.5;
+        doc.setFontSize(subFont);
+        split = doc.splitTextToSize(headerString, maxTitleWidth);
+    }
+
+    doc.text(split[0], 14, 18);
+};
+        const handleManualPageBreak = (currentY, neededHeight) => {
+            if (currentY + neededHeight > pageHeight - 20) {
+                doc.addPage('l');
+                renderHeader();
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(12);
+                doc.setTextColor(30, 41, 59);
+                doc.text("CRITICAL WORK FUNCTIONS & KEY TASKS (CONTINUED)", 14, 32);
+                return 40;
+            }
+            return currentY;
+        };
+        // --- PAGE 1: START ---
+        renderHeader();
+        let y = 32;
+        if (roleDescription && roleDescription.trim() !== "") {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(30, 41, 59);
+            doc.text("JOB ROLE DESCRIPTION", 14, y);
+            y += 6;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(71, 85, 105);
+            
+            const splitDesc = doc.splitTextToSize(roleDescription, availableWidth - 4);
+            const descHeight = (splitDesc.length * 4) + 4;
+            doc.setFillColor(240, 253, 244);
+            doc.roundedRect(14, y - 4, availableWidth, descHeight, 2, 2, 'F');
+            doc.text(splitDesc, 16, y + 1);
+            y += descHeight + 10;
+        }
+       const groups = document.querySelectorAll('.cwf-group');
+if (groups.length > 0) {
+    let totalTasksCount = 0;
+    groups.forEach(g => { totalTasksCount += g.querySelectorAll('.task-item').length; });
+    
+    y = handleManualPageBreak(y, 10);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(30, 41, 59);
+    doc.text(`Critical Work Functions (${groups.length}) & Key Tasks (${totalTasksCount})`, 14, y);
+    y += 8;
+
+    groups.forEach(g => {
+        const headerEl = g.querySelector('.cwf-header');
+        if (!headerEl) return;
+        
+        const rawHeaderText = cleanText(headerEl.innerText);
+        
+        // 1. SPLIT THE TEXT INTO AN ARRAY OF LINES
+        // Width is pageWidth minus margins (28) and internal padding (10)
+        const maxTextWidth = pageWidth - 38; 
+        const splitHeader = doc.splitTextToSize(rawHeaderText, maxTextWidth);
+        const lineCount = splitHeader.length;
+        
+        // 2. CALCULATE BOX HEIGHT BASED ON LINE COUNT
+        // 5 units per line + 4 units of padding
+        const boxHeight = (lineCount * 5) + 3;
+
+        // Ensure header + box fit on page
+        y = handleManualPageBreak(y, boxHeight + 10);
+        
+        // 3. DRAW THE GREY BUBBLE
+        doc.setFillColor(241, 245, 249);
+        doc.roundedRect(14, y - 5, pageWidth - 28, boxHeight, 2, 2, 'F');
+        
+        // 4. DRAW THE WRAPPED TEXT
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10.5);
+        doc.setTextColor(...darkGreen);
+        
+        // IMPORTANT: Pass 'splitHeader' (the array), NOT 'rawHeaderText'
+        // This forces jsPDF to respect the line breaks
+        doc.text(splitHeader, 18, y); 
+
+        // 5. UPDATE Y POSITION FOR TASKS
+        // Move Y down by the box height we just used
+        y += boxHeight + 3; 
+        
+        g.querySelectorAll('.task-item').forEach(t => {
+            const text = "•  " + cleanText(t.innerText);
+            const split = doc.splitTextToSize(text, pageWidth - 40);
+            const blockHeight = split.length * 5.2;
+            
+            y = handleManualPageBreak(y, blockHeight);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(71, 85, 105);
+            doc.text(split, 20, y);
+            y += blockHeight;
+        });
+        y += 4;
+    });
+}
+// --- PAGE 2: SKILLS MATRIX ---
+doc.addPage('l');
+let tableStartPage = null;
+const rows = Array.from(tableEl.querySelectorAll('tr'));
+const colCount = (rows[0] && rows[0].cells) ? rows[0].cells.length : 0;
+let finalColumnStyles = {};
+
+if (colCount > 0) {
+    const firstColWidth = 100; 
+    let shortCols = [];
+
+    // Detect columns where ALL body cells have 5 words or less
+    for (let colIdx = 1; colIdx < colCount; colIdx++) {
+        let isColumnShort = true;
+        rows.forEach((row) => {
+            const cell = row.cells[colIdx];
+            if (cell) {
+                const txt = cleanText(cell.innerText);
+                const wordCount = txt ? txt.split(/\s+/).filter(w => w.length > 0).length : 0;
+                if (wordCount > 5) isColumnShort = false;
+            }
+        });
+        if (isColumnShort) shortCols.push(colIdx);
+    }
+
+    const totalShortWidth = shortCols.length * 35; 
+    const remainingWidth = Math.max(availableWidth - firstColWidth - totalShortWidth, 50);
+    const remainingColCount = colCount - 1 - shortCols.length;
+    const dynamicWidth = remainingColCount > 0 ? (remainingWidth / remainingColCount) : 0;
+    
+    finalColumnStyles[0] = { cellWidth: firstColWidth };
+    for (let i = 1; i < colCount; i++) {
+        finalColumnStyles[i] = { cellWidth: shortCols.includes(i) ? 35 : dynamicWidth };
+    }
+}
+
+// --- PAGE 2: SKILLS MATRIX ---
+doc.autoTable({
+    html: '#grid',
+    startY: 45,
+    margin: { top: 50, left: tableMargin, right: tableMargin },
+    theme: 'plain', 
+    tableWidth: 'fixed',
+    rowPageBreak: 'auto', 
+    columnStyles: finalColumnStyles,
+    styles: {
+        fontSize: 10,
+        cellPadding: { top: 5, right: 5, bottom: 5, left: 8 },
+        font: "helvetica",
+        lineColor: [240, 242, 245],
+        lineWidth: 0.1,
+        valign: 'top',
+        overflow: 'linebreak'
+    },
+    headStyles: {
+        fillColor: [255, 255, 255], 
+        textColor: [16, 120, 80],
+        fontSize: 10,
+        fontStyle: 'bold'
+    },
+
+    didParseCell: (data) => {
+    const cellRaw = data.cell.raw;
+    if (!cellRaw || data.section !== 'body') return;
+
+    // --- NEW: COLOR PERSISTENCE LOGIC ---
+    // Define your colors
+    const darkGreen = [16, 120, 80];
+    const lightGreen = [52, 211, 153];
+    
+    // Assign the color to the cell object based on row index
+    // This stays with the row even if it splits
+    data.cell.accentColor = (data.row.index % 2 === 0) ? darkGreen : lightGreen;
+
+    const isFirstCol = data.column.index === 0;
+    const rawHeader = data.table.head[0].cells[data.column.index].raw.innerText || "";
+    const headerText = cleanText(rawHeader).toLowerCase();
+    const isKnowledgeAbilityCol = headerText.includes('knowledge') && headerText.includes('ability');
+
+    // 1. Prepare HTML for splitting (handle line breaks and list items)
+    let htmlContent = cellRaw.innerHTML.replace(/<\/li>|<br\s*\/?>|<\/p>|<\/div>/g, '|SPLIT|');
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    const plainText = tempDiv.textContent || tempDiv.innerText || "";
+    let rawLines = plainText.split('|SPLIT|').map(l => l.trim()).filter(l => l.length > 0 && l !== "-");
+
+    // 2. Helper to strip weird hyperlink whitespace, tabs, and newlines
+    const sanitize = (str) => {
+        if (!str) return "";
+        // Uses your cleanText function + regex to collapse whitespace
+        return cleanText(str).replace(/\s+/g, ' ').trim();
+    };
+
+    let finalLines = [];
+
+    if (isFirstCol) {
+        // --- LOGIC FOR FIRST COLUMN (TIERS) ---
+        const t1 = sanitize(cellRaw.querySelector('.skill-link')?.innerText || cellRaw.childNodes[0]?.textContent);
+        const t2 = sanitize(cellRaw.querySelector('.tier-2')?.innerText);
+        const t3 = sanitize(cellRaw.querySelector('.tier-3')?.innerText);
+
+        // TIER 1: Uppercase Header
+        if (t1) { 
+            finalLines.push(t1.toUpperCase()); 
+            finalLines.push(""); 
+        } 
+        
+        // TIERS 2 & 3: Bullets and indentation
+        if (t2) { 
+            finalLines.push(t2); 
+            finalLines.push(""); 
+        }
+        if (t3) { 
+            finalLines.push(t3); 
+            finalLines.push(""); 
+        }
+
+        // Apply specific styling for the first column
+        data.cell.styles.halign = 'left'; 
+        data.cell.styles.fontStyle = 'bold';
+        data.cell.styles.textColor = [30, 41, 59];
+    } else {
+        // --- LOGIC FOR ALL OTHER COLUMNS ---
+        data.cell.styles.fontStyle = 'normal';
+        data.cell.styles.textColor = [71, 85, 105];
+
+        rawLines.forEach(line => {
+            // FIX: We now sanitize every line in the other columns too
+            const cleanedLine = sanitize(line);
+            
+            if (cleanedLine.length > 0) {
+                // If it's a Knowledge/Ability column, add a bullet point
+                finalLines.push(isKnowledgeAbilityCol ? "• " + cleanedLine : cleanedLine);
+                // Add an empty string to create spacing between items
+                finalLines.push(""); 
+            }
+        });
+    }
+
+    // 3. Final Cleanup: Remove the very last empty line so the cell doesn't have extra bottom padding
+    if (finalLines.length > 0 && finalLines[finalLines.length - 1] === "") {
+        finalLines.pop();
+    }
+
+    // 4. Overwrite the cell text with our cleaned array
+    data.cell.text = finalLines;
+},
+willDrawCell: (data) => {
+    if (data.section === 'body') {
+        // 1. Alternating Row Background
+        const isEven = data.row.index % 2 === 0;
+        const fillColor = isEven ? [255, 255, 255] : [249, 250, 251];
+        doc.setFillColor(...fillColor);
+        doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+
+        // 2. Accent Bar Logic (Retrieving the persistent color)
+        if (data.column.index === 0 && data.cell.accentColor) {
+            doc.setFillColor(...data.cell.accentColor);
+            
+            // Draw the bar
+            doc.roundedRect(
+                data.cell.x + 2, 
+                data.cell.y + 3, 
+                2.5, 
+                data.cell.height - 6, 
+                1, 1, 'F'
+            );
+        }
+        
+        // Ensure autoTable doesn't overwrite our manual background
+        data.cell.styles.fillColor = false;
+    }
+    
+    // Header logic (Keep as is)
+    if (data.section === 'head') {
+        const { x, y, width: w, height: h } = data.cell;
+        doc.setFillColor(209, 250, 229); 
+        doc.roundedRect(x + 1, y + 2, w - 2, h - 4, 3, 3, 'F');
+        data.cell.styles.fillColor = false;
+    }
+},
+
+    didDrawPage: (data) => {
+        renderHeader();
+        if (typeof tableStartPage === 'undefined' || tableStartPage === null) {
+            tableStartPage = data.pageNumber;
+        }
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(30, 41, 59);
+        const label = (data.pageNumber === tableStartPage) ? "SKILLS MATRIX" : "SKILLS MATRIX (CONTINUED)";
+        doc.text(label, 14, 40);
+    }
+});
+
+// --- ADD PAGE NUMBERS (FOOTER) ---
+isFooterPhase = true; // Turn the flag ON
+const totalPages = doc.internal.getNumberOfPages();
+
+for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i); 
+    // Now setPage(i) won't trigger the header logic recursively
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(148, 163, 184);
+
+    const footerText = `Page ${i} of ${totalPages}`;
+    const textWidth = doc.getTextWidth(footerText);
+    doc.text(footerText, (pageWidth / 2) - (textWidth / 2), pageHeight - 10);
+}
+
+        doc.save(`Map_${selectedRole.replace(/\s+/g, '_')}.pdf`);
+    } catch (error) {
+        console.error("PDF Export Error Detailed:", error);
+        alert("Critical Error: " + error.message);
+    }
+}
+</script>
+</body>
+</html>
