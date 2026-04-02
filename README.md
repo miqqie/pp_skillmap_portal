@@ -13,19 +13,21 @@ Live Demo:  https://huggingface.co/spaces/Miqqie/
 
 ## 📋 Table of Contents
 
+## 📋 Table of Contents
+
+1.  [The Motivation](#the-motivation)
+2.  [Objective](#objective)
+3.  [Data Architecture & Pipeline](#data-architecture--pipeline)
+4.  [Technical Stack](#technical-stack)
+5.  [Special Features](#special-features)
+6.  [Customizable User Experience](#customizable-user-experience)
+7.  [Automated PDF Report Engine](#automated-pdf-report-engine)
+8.  [VS Code Setup & Extensions](#vs-code-setup--extensions)
+9.  [How to Use](#how-to-use)
+
+----
+
 ## 💡 The Motivation <a id="the-motivation"></a>
-## 🎯 Objective <a id="objective"></a>
-## 🗂️ Data Architecture & Pipeline <a id="data-architecture--pipeline"></a>
-## 🛠️ Technical Stack <a id="technical-stack"></a>
-## ✨ Special Features <a id="special-features"></a>
-## 🎛️ Customizable User Experience <a id="customizable-user-experience"></a>
-## 📄 Automated PDF Report Engine <a id="automated-pdf-report-engine"></a>
-## 💻 VS Code Setup & Extensions <a id="vs-code-setup--extensions"></a>
-## 🚀 How to Use <a id="how-to-use"></a>
-
------
-
-## 💡 The Motivation
 
 The genesis of this project was a real-world data accessibility challenge. The original competency frameworks were stored in an **Excel workbook spread across several different worksheets**.
 
@@ -39,7 +41,7 @@ While the data was comprehensive, the format created a "Silo Effect":
 
 -----
 
-## 🎯 Objective
+## 🎯 Objective <a id="objective"></a>
  
 The SkillMap Portal bridges the gap between static competency documentation and dynamic career planning. By providing a multi-dimensional view of skills and job roles, the application helps:
 
@@ -51,7 +53,7 @@ The SkillMap Portal bridges the gap between static competency documentation and 
 
 -----
 
-## 🗂️ Data Architecture & Pipeline
+## 🗂️ Data Architecture & Pipeline <a id="data-architecture--pipeline"></a>
 
 To move from fragmented Excel sheets to a high-performance web portal, the data undergoes a specific transformation pipeline: **Excel/CSV → Hierarchical JSON → Gzip Compression**.
 
@@ -71,7 +73,7 @@ To move from fragmented Excel sheets to a high-performance web portal, the data 
 
 -----
 
-## 🛠️ Technical Stack
+## 🛠️ Technical Stack <a id="technical-stack"></a>
 
 The SkillMap Portal utilizes a "Modern Vanilla" architecture.
 
@@ -99,7 +101,7 @@ Used for professional documentation, manually calculating coordinates to place h
 
 -----
 
-## ✨ Special Features
+## ✨ Special Features  <a id="special-features"></a>
 
 ### 1\. Advanced Multi-Pivot Grid
 
@@ -121,7 +123,7 @@ Every skill displayed in the grid table is **dynamically hyperlinked**. Clicking
 
 -----
 
-## 🎛️ Customizable User Experience
+## 🎛️ Customizable User Experience <a id="customizable-user-experience"></a>
 
 The interface acts as a flexible workspace, allowing users to shape exactly what data they see:
 
@@ -133,7 +135,7 @@ The interface acts as a flexible workspace, allowing users to shape exactly what
 
 -----
 
-## 📄 Automated PDF Report Engine
+## 📄 Automated PDF Report Engine <a id="automated-pdf-report-engine"></a>
 
 The application features a sophisticated PDF generation engine powered by **jsPDF** and **autoTable**, employing two distinct rendering logic paths:
 
@@ -157,7 +159,7 @@ The application features a sophisticated PDF generation engine powered by **jsPD
 
 -----
 
-## 💻 VS Code Setup & Extensions
+## 💻 VS Code Setup & Extensions <a id="vs-code-setup--extensions"></a>
 
 To run the SkillMap Portal locally, you must use a local development server to bypass **CORS** security restrictions when fetching the data files.
 
@@ -173,7 +175,7 @@ To enable the **"Go Live"** functionality, install the following in VS Code:
 
 -----
 
-## 🚀 How to Use
+## 🚀 How to Use <a id="how-to-use"></a>
 
 1.  **Filter**: Select a **Sector** and **Job Role** from the sidebar.
 2.  **Analyze Demand**: Click on **Sector or Track pills** to identify the most in-demand skills in that area.
