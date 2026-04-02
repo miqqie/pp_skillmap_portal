@@ -1,13 +1,9 @@
 
 # 🗺️ SkillMap Portal
 
-[](https://www.google.com/search?q=https://opensource.org/licenses/MIT)
-[](https://www.google.com/search?q=https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[](https://www.google.com/search?q=https://github.com/parallax/jsPDF)
-
 An interactive, data-driven web application designed to visualize and compare professional competency frameworks. The **SkillMap Portal** allows users to traverse complex skill ecosystems, identify "Skill Portability" across industry sectors, and generate professional, customized career reports.
 
-Live Demo:  https://huggingface.co/spaces/Miqqie/
+🌐 Live Demo https://huggingface.co/spaces/Miqqie/
 
 -----
 
