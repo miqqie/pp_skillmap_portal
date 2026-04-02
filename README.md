@@ -14,15 +14,14 @@ Live Demo:  https://huggingface.co/spaces/Miqqie/
 ## 📋 Table of Contents
 
 1.  [The Motivation](#the-motivation)
-2.  [Objective](https://www.google.com/search?q=%23-objective)
-3.  [Data Architecture & Pipeline](https://www.google.com/search?q=%23-data-architecture--pipeline)
-4.  [Technical Stack](https://www.google.com/search?q=%23-technical-stack)
-5.  [Special Features](https://www.google.com/search?q=%23-special-features)
-6.  [Customizable User Experience](https://www.google.com/search?q=%23-customizable-user-experience)
-7.  [Automated PDF Report Engine](https://www.google.com/search?q=%23-automated-pdf-report-engine)
-8.  [VS Code Setup & Extensions](https://www.google.com/search?q=%23-vs-code-setup--extensions)
-9.  [How to Use](https://www.google.com/search?q=%23-how-to-use)
-
+2.  [Objective](#objective)
+3.  [Data Architecture & Pipeline](#data-architecture--pipeline)
+4.  [Technical Stack](#technical-stack)
+5.  [Special Features](#special-features)
+6.  [Customizable User Experience](#customizable-user-experience)
+7.  [Automated PDF Report Engine](#automated-pdf-report-engine)
+8.  [VS Code Setup & Extensions](#vs-code-setup--extensions)
+9.  [How to Use](#how-to-use)
 -----
 
 ## 💡 The Motivation
@@ -35,7 +34,7 @@ While the data was comprehensive, the format created a "Silo Effect":
   * **No Unified View**: There was no single interface that could aggregate this data into a cohesive "Career Profile."
   * **Barriers to Analysis**: Identifying skill overlaps between **different job roles** required significant manual effort and cross-tab referencing, making the data difficult for non-technical users to leverage for career planning.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -47,7 +46,7 @@ The SkillMap Portal bridges the gap between static competency documentation and 
   * **HR Professionals** analyze the density of specific competencies across an entire sector.
   * **Job Seekers** discover "hidden" portability between different job roles and industry sectors.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -67,7 +66,7 @@ To move from fragmented Excel sheets to a high-performance web portal, the data 
   * **Payload Reduction**: Large competency datasets can exceed 5MB+ in plain text. Gzip compression reduces this footprint by **70–80%**, ensuring the app loads instantly even on mobile networks.
   * **Client-Side Speed**: Browsers can parse JSON into JavaScript objects natively. By delivering pre-structured JSON, the application avoids the performance "tax" of parsing raw CSV strings every time a user filters a role.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -95,7 +94,7 @@ Used for professional documentation, manually calculating coordinates to place h
   * **Custom CSS Variables:** Allows **Larger Text Mode** and **Compact View** to work by swapping single values that update the entire UI instantly.
   * **Flexbox & CSS Grid:** Ensures alignment regardless of screen size.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -117,7 +116,7 @@ The **Peer Discovery** algorithm scans the entire database to find other roles�
 
 Every skill displayed in the grid table is **dynamically hyperlinked**. Clicking a skill name triggers a direct search on the `myskillsfuture.gov.sg` portal, connecting theoretical competencies to real-world training courses.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -129,7 +128,7 @@ The interface acts as a flexible workspace, allowing users to shape exactly what
   * **Compact Mode**: Designed for power users, this mode strips away decorative padding for high-density side-by-side comparisons.
   * **Larger Text Mode**: Re-scales the entire UI for accessibility or group presentations.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -153,7 +152,7 @@ The application features a sophisticated PDF generation engine powered by **jsPD
   * **Visual Scannability:** Uses color-coded pills for proficiency levels and zebra-striping to prevent eye fatigue.
   * **Intelligent Layout:** Includes **Smart Page-Break Logic** to ensure multi-line descriptions are never split across pages.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -169,7 +168,7 @@ To enable the **"Go Live"** functionality, install the following in VS Code:
       * **How to Install:** Search for "Live Server" in the Extensions tab (`Ctrl+Shift+X`) and click **Install**.
       * **How to Use:** Right-click `index.html` and select **"Open with Live Server"**, or click the **"Go Live"** button in the bottom status bar.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 -----
 
@@ -181,4 +180,4 @@ To enable the **"Go Live"** functionality, install the following in VS Code:
 4.  **Compare**: Click the Role pill to open the Comparison Modal and see skill transferability.
 5.  **Export**: Use the **Export PDF** button to save your view as a professional, shareable report.
 
-[⬆ Back to Table of Contents](https://www.google.com/search?q=%23-table-of-contents)
+[⬆ Back to Table of Contents](#-table-of-contents)
