@@ -1746,7 +1746,7 @@ window.exportComparisonPDF = function () {
             doc.setFont("helvetica", "bold");
             doc.setFontSize(12);
             doc.setTextColor(37, 99, 235);
-            doc.text("TSC", 14, y);
+            doc.text("TSC/CCS", 14, y);
 
             const sortedRows = getRows(role).sort((a, b) => {
                 const titleA = (a[tscCol] || "").toString().toLowerCase();
