@@ -13,7 +13,7 @@ Live Demo:  https://huggingface.co/spaces/Miqqie/
 
 ## 📋 Table of Contents
 
-1.  [The Motivation](https://www.google.com/search?q=%23-the-motivation)
+1.  [The Motivation](#the-motivation)
 2.  [Objective](https://www.google.com/search?q=%23-objective)
 3.  [Data Architecture & Pipeline](https://www.google.com/search?q=%23-data-architecture--pipeline)
 4.  [Technical Stack](https://www.google.com/search?q=%23-technical-stack)
