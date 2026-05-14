@@ -21,7 +21,7 @@ An interactive, data-driven web application designed to visualize and compare pr
 
 ----
 
-<img width="2752" height="1536" alt="unnamed (11)" src="https://github.com/user-attachments/assets/a01679ad-0b20-4a7c-a2ad-63090a9a3272" />
+![skillmap](skillmap.png)
 
 
 ## 💡 The Motivation <a id="the-motivation"></a>
