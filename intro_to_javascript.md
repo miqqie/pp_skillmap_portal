@@ -15,22 +15,193 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 
 ---
 
+## 🧱 The Building Blocks of JavaScript
+
+Before diving into any specific topic, it helps to understand what JavaScript is actually made of. Every JavaScript program — no matter how big or small — is built from just a handful of core ingredients. Once you recognise these, reading code starts to feel a lot less like a foreign language.
+
+Think of it like cooking. You don't need to know every recipe in the world. You just need to understand what an ingredient *is* and what it *does* — then you can follow any recipe.
+
+Here are the core building blocks:
+
+---
+
+### 📦 Values — The Raw Ingredients
+
+A **value** is simply a piece of information. It could be a number, a word, a true/false switch, or nothing at all.
+
+```javascript
+42              // a number
+"Hello"         // a piece of text (called a "string")
+true            // a yes/no switch (called a "boolean")
+null            // deliberately empty — "there is nothing here"
+undefined       // hasn't been given a value yet
+```
+
+You'll see these everywhere. For example, when the portal checks whether a dropdown has been filled in:
+
+```javascript
+// If sVal is empty (""), null, or undefined — all of these are "falsy"
+if (!sVal || !rVal) return;
+```
+
+---
+
+### 🏷️ Variables — Labels on Jars
+
+A **variable** is a named container that holds a value. You create one with `const` or `let`, give it a name, and assign a value to it. From then on, you can use that name anywhere instead of writing the raw value out every time.
+
+```javascript
+const roleName = "Software Engineer";   // a label stuck to a text value
+let pageNumber = 1;                      // a label that will move as pages increase
+```
+
+Variables make your code readable and reusable. Instead of writing `"Software Engineer"` twenty times, you write `roleName` — and if it ever changes, you only update it in one place.
+
+---
+
+### 📦 Data Structures — Jars That Hold Many Things
+
+Sometimes one value isn't enough. JavaScript gives you two ways to group values together:
+
+**Arrays** — an ordered list (like a numbered shelf of jars):
+```javascript
+const sectors = ["Healthcare", "Finance", "Technology"];
+sectors[0]; // "Healthcare" — counting starts at zero
+```
+
+**Objects** — a collection of named values (like a jar with labelled compartments):
+```javascript
+const skill = {
+    name: "Data Analysis",
+    level: 3,
+    required: true
+};
+skill.name; // "Data Analysis"
+```
+
+In the SkillMap Portal, the entire dataset is one giant object with arrays inside it — sectors, roles, skills, and work functions all stored as named lists.
+
+---
+
+### ⚙️ Functions — Reusable Instructions
+
+A **function** is a named set of steps that you can run whenever you need them. You write the instructions once, give them a name, and then call that name to run them.
+
+```javascript
+function showWelcome() {
+    document.getElementById('welcome-msg').style.display = 'flex';
+}
+
+showWelcome(); // runs those steps right now
+```
+
+Functions are how JavaScript avoids repeating itself. The SkillMap Portal has functions for rendering the table, opening modals, toggling panels, exporting PDFs — each one is a self-contained set of instructions with a clear name.
+
+---
+
+### 🔀 Control Flow — Decision Making and Repetition
+
+Code doesn't always run top to bottom. **Control flow** lets you make decisions and repeat steps.
+
+**Conditionals** let the code choose a path:
+```javascript
+if (isLargeText) {
+    fontSize = "18px";  // take this path
+} else {
+    fontSize = "12px";  // or take this one
+}
+```
+
+**Loops** let the code repeat a step multiple times:
+```javascript
+// Run this once for every page in the PDF
+for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.text(`Page ${i}`, 100, 290);
+}
+```
+
+---
+
+### 🌐 The DOM — The Live Page You Can Touch
+
+The **DOM (Document Object Model)** is the browser's internal map of your webpage. Every button, dropdown, heading, and table is a node in this map — and JavaScript can read or change any of it at any time.
+
+```javascript
+// Find the welcome message on the page and hide it
+document.getElementById('welcome-msg').style.display = 'none';
+
+// Write new text into the role pill
+document.getElementById('final-role').innerText = "Software Engineer";
+```
+
+The DOM is what makes JavaScript visual. Without it, JavaScript would just crunch numbers silently in the background. With it, every change you make shows up instantly on screen.
+
+---
+
+### 🎧 Events — Listening for the User
+
+An **event** is something the user does — clicking, typing, selecting from a dropdown, resizing the window. JavaScript can listen for these and respond with a function.
+
+```javascript
+// When the sector dropdown changes, run updateRoles()
+<select onchange="updateRoles()">
+
+// When the column header is clicked, collapse that column
+th.onclick = () => toggleColumn(idx);
+```
+
+Events are the bridge between the user and the code. Without events, nothing would ever happen — the page would just sit there.
+
+---
+
+### 🔄 How They All Fit Together
+
+Here's the big picture: **values** are the raw data. **Variables** give them names. **Data structures** group them. **Functions** do things with them. **Control flow** decides when and how many times. **The DOM** puts the results on screen. **Events** make it respond to the user.
+
+In the SkillMap Portal, every single interaction follows this same chain:
+
+> **User clicks a dropdown** *(event)* → **`render()` fires** *(function)* → **reads the selected values** *(variables)* → **filters through thousands of rows** *(data structures + control flow)* → **updates the table on screen** *(DOM)*
+
+Once you see that chain, the rest of the guide is just filling in the details of each step.
+
+---
+
+### 📋 Summary Table
+
+| Building Block | What It Is | Real-World Analogy |
+|---|---|---|
+| **Value** | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe |
+| **Variable** | A named label attached to a value | A sticky note on a jar |
+| **Array** | An ordered list of values | A numbered shelf of jars |
+| **Object** | A collection of named values grouped together | A jar with labelled compartments |
+| **Function** | A named set of reusable instructions | A named recipe you can follow any time |
+| **Conditional** | A decision — do this *or* do that depending on the situation | A fork in the road |
+| **Loop** | A repeated instruction — do this *for every item* or *until done* | An assembly line |
+| **DOM** | The live map of everything visible on the page | The stage that the audience sees |
+| **Event** | Something the user does that triggers a response | Pressing a doorbell — the chime is the function |
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+---
+
 ## 📋 Table of Contents
 
-1. [The Naming Confusion: Java vs JavaScript](#-the-naming-confusion-java-vs-javascript)
-2. [JavaScript vs Python: Syntax & Element Management](#-javascript-vs-python-syntax--element-management)
-3. [Variables: Jars and Labels](#-variables-jars-and-labels)
-4. [Functions: Reusable Rules](#-functions-reusable-rules)
-5. [DOM Interaction: Reading and Updating the Page](#-dom-interaction-reading-and-updating-the-page)
-6. [Arrays & Array Methods: Working with Lists](#-arrays--array-methods-working-with-lists)
-7. [Objects: Named Jars with Multiple Compartments](#-objects-named-jars-with-multiple-compartments)
-8. [Loops: Repeating Rules Across Jars](#-loops-repeating-rules-across-jars)
-9. [Conditionals: Decision Making](#-conditionals-decision-making)
-10. [Asynchronous JavaScript: Fetching & Loading Data](#-asynchronous-javascript-fetching--loading-data)
-11. [Template Literals: Building HTML Strings](#-template-literals-building-html-strings)
-12. [Events: Listening for User Actions](#-events-listening-for-user-actions)
-13. [Data Transformation & Regular Expressions](#-data-transformation--regular-expressions)
-14. [Quick Reference: Key Commands](#-quick-reference-key-commands)
+1. [The Building Blocks of JavaScript](#-the-building-blocks-of-javascript)
+2. [The Naming Confusion: Java vs JavaScript](#-the-naming-confusion-java-vs-javascript)
+3. [JavaScript vs Python: Syntax & Element Management](#-javascript-vs-python-syntax--element-management)
+4. [Variables: Jars and Labels](#-variables-jars-and-labels)
+5. [Functions: Reusable Rules](#-functions-reusable-rules)
+6. [DOM Interaction: Reading and Updating the Page](#-dom-interaction-reading-and-updating-the-page)
+7. [Arrays & Array Methods: Working with Lists](#-arrays--array-methods-working-with-lists)
+8. [Objects: Named Jars with Multiple Compartments](#-objects-named-jars-with-multiple-compartments)
+9. [Loops: Repeating Rules Across Jars](#-loops-repeating-rules-across-jars)
+10. [Conditionals: Decision Making](#-conditionals-decision-making)
+11. [Asynchronous JavaScript: Fetching & Loading Data](#-asynchronous-javascript-fetching--loading-data)
+12. [Template Literals: Building HTML Strings](#-template-literals-building-html-strings)
+13. [Events: Listening for User Actions](#-events-listening-for-user-actions)
+14. [Data Transformation & Regular Expressions](#-data-transformation--regular-expressions)
+15. [Quick Reference: Key Commands](#-quick-reference-key-commands)
 
 ---
 
