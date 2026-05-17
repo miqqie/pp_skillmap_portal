@@ -15,6 +15,27 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 
 ---
 
+## 📋 Table of Contents
+
+1. [The Building Blocks of JavaScript](#-the-building-blocks-of-javascript)
+2. [The Naming Confusion: Java vs JavaScript](#-the-naming-confusion-java-vs-javascript)
+3. [JavaScript vs Python: Syntax & Element Management](#-javascript-vs-python-syntax--element-management)
+4. [Variables: Jars and Labels](#-variables-jars-and-labels)
+5. [Functions: Reusable Rules](#-functions-reusable-rules)
+6. [DOM Interaction: Reading and Updating the Page](#-dom-interaction-reading-and-updating-the-page)
+7. [Arrays & Array Methods: Working with Lists](#-arrays--array-methods-working-with-lists)
+8. [Objects: Named Jars with Multiple Compartments](#-objects-named-jars-with-multiple-compartments)
+9. [Loops: Repeating Rules Across Jars](#-loops-repeating-rules-across-jars)
+10. [Conditionals: Decision Making](#-conditionals-decision-making)
+11. [Asynchronous JavaScript: Fetching & Loading Data](#-asynchronous-javascript-fetching--loading-data)
+12. [Template Literals: Building HTML Strings](#-template-literals-building-html-strings)
+13. [Events: Listening for User Actions](#-events-listening-for-user-actions)
+14. [Data Transformation & Regular Expressions](#-data-transformation--regular-expressions)
+15. [Quick Reference: Key Commands](#-quick-reference-key-commands)
+16. [Extending the SkillMap Portal: Future Possibilities](#-extending-the-skillmap-portal-future-possibilities)
+
+---
+
 ## 🧱 The Building Blocks of JavaScript
 
 Before diving into any specific topic, it helps to understand what JavaScript is actually made of. Every JavaScript program — no matter how big or small — is built from just a handful of core ingredients. Once you recognise these, reading code starts to feel a lot less like a foreign language.
@@ -44,6 +65,8 @@ You'll see these everywhere. For example, when the portal checks whether a dropd
 if (!sVal || !rVal) return;
 ```
 
+Values are the foundation everything else is built on. Every variable holds a value, every array is a list of values, every function works with values.
+
 ---
 
 ### 🏷️ Variables — Labels on Jars
@@ -57,9 +80,11 @@ let pageNumber = 1;                      // a label that will move as pages incr
 
 Variables make your code readable and reusable. Instead of writing `"Software Engineer"` twenty times, you write `roleName` — and if it ever changes, you only update it in one place.
 
+→ *Deep dive: [Variables: Jars and Labels](#-variables-jars-and-labels)*
+
 ---
 
-### 📦 Data Structures — Jars That Hold Many Things
+### 📋 Data Structures — Jars That Hold Many Things
 
 Sometimes one value isn't enough. JavaScript gives you two ways to group values together:
 
@@ -81,6 +106,8 @@ skill.name; // "Data Analysis"
 
 In the SkillMap Portal, the entire dataset is one giant object with arrays inside it — sectors, roles, skills, and work functions all stored as named lists.
 
+→ *Deep dive: [Arrays & Array Methods](#-arrays--array-methods-working-with-lists) · [Objects](#-objects-named-jars-with-multiple-compartments)*
+
 ---
 
 ### ⚙️ Functions — Reusable Instructions
@@ -96,6 +123,8 @@ showWelcome(); // runs those steps right now
 ```
 
 Functions are how JavaScript avoids repeating itself. The SkillMap Portal has functions for rendering the table, opening modals, toggling panels, exporting PDFs — each one is a self-contained set of instructions with a clear name.
+
+→ *Deep dive: [Functions: Reusable Rules](#-functions-reusable-rules)*
 
 ---
 
@@ -121,6 +150,8 @@ for (let i = 1; i <= totalPages; i++) {
 }
 ```
 
+→ *Deep dive: [Conditionals: Decision Making](#-conditionals-decision-making) · [Loops: Repeating Rules Across Jars](#-loops-repeating-rules-across-jars)*
+
 ---
 
 ### 🌐 The DOM — The Live Page You Can Touch
@@ -136,6 +167,8 @@ document.getElementById('final-role').innerText = "Software Engineer";
 ```
 
 The DOM is what makes JavaScript visual. Without it, JavaScript would just crunch numbers silently in the background. With it, every change you make shows up instantly on screen.
+
+→ *Deep dive: [DOM Interaction: Reading and Updating the Page](#-dom-interaction-reading-and-updating-the-page)*
 
 ---
 
@@ -153,6 +186,8 @@ th.onclick = () => toggleColumn(idx);
 
 Events are the bridge between the user and the code. Without events, nothing would ever happen — the page would just sit there.
 
+→ *Deep dive: [Events: Listening for User Actions](#-events-listening-for-user-actions)*
+
 ---
 
 ### 🔄 How They All Fit Together
@@ -169,39 +204,19 @@ Once you see that chain, the rest of the guide is just filling in the details of
 
 ### 📋 Summary Table
 
-| Building Block | What It Is | Real-World Analogy |
-|---|---|---|
-| **Value** | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe |
-| **Variable** | A named label attached to a value | A sticky note on a jar |
-| **Array** | An ordered list of values | A numbered shelf of jars |
-| **Object** | A collection of named values grouped together | A jar with labelled compartments |
-| **Function** | A named set of reusable instructions | A named recipe you can follow any time |
-| **Conditional** | A decision — do this *or* do that depending on the situation | A fork in the road |
-| **Loop** | A repeated instruction — do this *for every item* or *until done* | An assembly line |
-| **DOM** | The live map of everything visible on the page | The stage that the audience sees |
-| **Event** | Something the user does that triggers a response | Pressing a doorbell — the chime is the function |
+| Building Block | What It Is | Real-World Analogy | Go Deeper |
+|---|---|---|---|
+| **Value** | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe | [Variables](#-variables-jars-and-labels) |
+| **Variable** | A named label attached to a value | A sticky note on a jar | [Variables](#-variables-jars-and-labels) |
+| **Array** | An ordered list of values | A numbered shelf of jars | [Arrays & Array Methods](#-arrays--array-methods-working-with-lists) |
+| **Object** | A collection of named values grouped together | A jar with labelled compartments | [Objects](#-objects-named-jars-with-multiple-compartments) |
+| **Function** | A named set of reusable instructions | A named recipe you can follow any time | [Functions](#-functions-reusable-rules) |
+| **Conditional** | A decision — do this *or* do that depending on the situation | A fork in the road | [Conditionals](#-conditionals-decision-making) |
+| **Loop** | A repeated instruction — do this *for every item* or *until done* | An assembly line | [Loops](#-loops-repeating-rules-across-jars) |
+| **DOM** | The live map of everything visible on the page | The stage that the audience sees | [DOM Interaction](#-dom-interaction-reading-and-updating-the-page) |
+| **Event** | Something the user does that triggers a response | Pressing a doorbell — the chime is the function | [Events](#-events-listening-for-user-actions) |
 
 [⬆ Back to Table of Contents](#-table-of-contents)
-
----
-
-## 📋 Table of Contents
-
-1. [The Building Blocks of JavaScript](#-the-building-blocks-of-javascript)
-2. [The Naming Confusion: Java vs JavaScript](#-the-naming-confusion-java-vs-javascript)
-3. [JavaScript vs Python: Syntax & Element Management](#-javascript-vs-python-syntax--element-management)
-4. [Variables: Jars and Labels](#-variables-jars-and-labels)
-5. [Functions: Reusable Rules](#-functions-reusable-rules)
-6. [DOM Interaction: Reading and Updating the Page](#-dom-interaction-reading-and-updating-the-page)
-7. [Arrays & Array Methods: Working with Lists](#-arrays--array-methods-working-with-lists)
-8. [Objects: Named Jars with Multiple Compartments](#-objects-named-jars-with-multiple-compartments)
-9. [Loops: Repeating Rules Across Jars](#-loops-repeating-rules-across-jars)
-10. [Conditionals: Decision Making](#-conditionals-decision-making)
-11. [Asynchronous JavaScript: Fetching & Loading Data](#-asynchronous-javascript-fetching--loading-data)
-12. [Template Literals: Building HTML Strings](#-template-literals-building-html-strings)
-13. [Events: Listening for User Actions](#-events-listening-for-user-actions)
-14. [Data Transformation & Regular Expressions](#-data-transformation--regular-expressions)
-15. [Quick Reference: Key Commands](#-quick-reference-key-commands)
 
 ---
 
@@ -1154,6 +1169,187 @@ const key = JSON.parse(groupKey);
 | `navigator.clipboard.writeText(str)` | Copy text to the clipboard | `navigator.clipboard.writeText(skillName)` |
 | `encodeURIComponent(str)` | Make a string safe for use in a URL | `encodeURIComponent(skillName)` |
 | `doc.save(filename)` | Export and download the PDF | `doc.save("Map_SoftwareEngineer.pdf")` |
+
+---
+
+## 🌍 Extending the SkillMap Portal: Future Possibilities
+
+The SkillMap Portal is built entirely in **Vanilla JavaScript** — pure JS, no frameworks, no build tools. For a single-developer project loaded from a single HTML file, this is the right call. It's lean, fast, and has zero setup overhead.
+
+But as a product grows — more data, more users, more features, more collaborators — the tools you reach for change. This section imagines what the SkillMap Portal could become, and which technologies would make each future version possible.
+
+---
+
+### ⚛️ React.js — If the Portal Became a Multi-View App
+
+**The limitation today:** Every time a user changes a dropdown, the entire `render()` function fires and repaints the whole table from scratch. This works fine for a single view, but as soon as you want multiple panels open at once — say, a sidebar comparison, a live search, and an analytics chart all updating simultaneously — manually wiring up DOM updates becomes a tangled mess.
+
+**What React would change:** React lets you break the UI into self-contained **components** — a `RoleCard`, a `SkillGrid`, a `CompareModal` — each managing its own state. When data changes, only the affected component rerenders, not the whole page. The portal's entire `render()` function could be replaced by a component tree that updates itself intelligently.
+
+```javascript
+// Today — one big function repaints everything
+function render() {
+    document.getElementById('welcome-msg').style.display = 'none';
+    document.getElementById('final-role').innerText = rVal;
+    // ... 200 more lines ...
+}
+
+// With React — each piece updates itself when its data changes
+function RoleBadge({ role }) {
+    return <span className="role-pill">{role}</span>;
+}
+function SkillGrid({ sector, role }) {
+    const data = useSkillData(sector, role); // automatically rerenders when this changes
+    return <table>...</table>;
+}
+```
+
+**Why it would matter for the Portal:** If future versions added user accounts, saved comparisons, or real-time collaboration — features where different users see different states simultaneously — React's component model would make that manageable. It's also the most widely known framework, meaning it's easier to find collaborators.
+
+📖 Resources:
+- [Official React Docs (react.dev)](https://react.dev) — the best starting point, with interactive examples
+- [React in 100 Seconds — Fireship (YouTube)](https://www.youtube.com/watch?v=Tn6-PIqc4UM) — a fast visual overview
+- [Full React Tutorial — The Net Ninja (YouTube)](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gZD-Tvwfod2gaISzfRiP9d) — beginner-friendly, step by step
+
+---
+
+### 🟢 Node.js — If the Data Pipeline Moved to a Server
+
+**The limitation today:** The data pipeline is entirely manual. When the competency framework Excel files are updated, someone has to re-export the CSVs, run the conversion script, recompress the `.gz` file, and redeploy. The portal has no way to update its own data — it just loads whatever file is sitting on the server.
+
+**What Node.js would change:** Node.js would let you write a **server-side script** that watches for new Excel uploads, converts them to JSON automatically, and serves the freshest data to the portal without any manual steps. You could also expose an API — so instead of fetching one monolithic `.gz` file, the portal fetches only the sector or role it needs on demand.
+
+```javascript
+// A Node.js script that auto-converts Excel → JSON when a new file appears
+const chokidar = require('chokidar');
+const { convertExcelToJson } = require('./pipeline');
+
+chokidar.watch('./uploads/*.xlsx').on('add', (filePath) => {
+    console.log(`New file detected: ${filePath}`);
+    convertExcelToJson(filePath); // run the same pipeline logic, now automated
+});
+```
+
+**Why it would matter for the Portal:** The current `.gz` file loads the entire dataset on every visit. As the competency framework grows, that payload grows too. A Node.js API would let the portal fetch only what it needs — a specific sector, a specific role — making it faster and far more scalable for larger institutions managing hundreds of job roles.
+
+📖 Resources:
+- [Node.js Official Site (nodejs.org)](https://nodejs.org) — download and getting started guides
+- [Node.js Crash Course — Traversy Media (YouTube)](https://www.youtube.com/watch?v=fBNz5xF-Kx4) — practical intro, no fluff
+- [The Odin Project: NodeJS Path](https://www.theodinproject.com/paths/full-stack-javascript) — free, structured full curriculum
+
+---
+
+### 🔷 TypeScript — If the Portal Grew to a Team Project
+
+**The limitation today:** The portal currently uses a lot of dynamic column-key lookups — finding the right header by calling `.find(h => h.toLowerCase().includes('sector'))` and storing it in a variable like `sKey`. This works, but there's nothing stopping you from accidentally passing `sKey` where `rKey` was expected. The error only surfaces at runtime, when the table silently renders wrong.
+
+**What TypeScript would change:** TypeScript would let you define exactly what shape each piece of data is allowed to take. A `SkillRow` type would declare which fields exist and what type each is. If you tried to pass a string where a number was expected, TypeScript would flag it in your editor before you even ran the code.
+
+```typescript
+// Without TypeScript — silent runtime bugs possible
+function buildRow(data, key) {
+    return data[key]; // no idea if key is valid
+}
+
+// With TypeScript — errors caught immediately
+type SkillRow = {
+    sector: string;
+    role: string;
+    proficiencyLevel: number;
+};
+
+function buildRow(data: SkillRow, key: keyof SkillRow) {
+    return data[key]; // ✅ TypeScript ensures key is a valid field name
+}
+```
+
+**Why it would matter for the Portal:** Right now one person wrote all the code and holds the context in their head. The moment a second developer joins, or you return to the code six months later, that implicit knowledge is gone. TypeScript acts as self-documenting code — the types tell you exactly what each function expects, making the codebase safer to extend and easier to hand off.
+
+📖 Resources:
+- [TypeScript Official Docs (typescriptlang.org)](https://www.typescriptlang.org/docs/) — includes a live playground in the browser
+- [TypeScript in 100 Seconds — Fireship (YouTube)](https://www.youtube.com/watch?v=zQnBQ4tB3ZA)
+- [Total TypeScript (totaltypescript.com)](https://www.totaltypescript.com/tutorials) — free interactive tutorials
+
+---
+
+### 🟨 Vue.js — A Lighter Path to a Framework
+
+**The limitation today:** The same as with React — as the portal's interactivity grows, manually orchestrating DOM updates becomes harder to maintain. But React has a steeper learning curve and requires a build tool setup.
+
+**What Vue.js would change:** Vue is designed to be adopted **incrementally**. You can drop a single `<script>` tag into the existing HTML — no build tool needed — and start making individual parts of the page reactive. The portal's sidebar filters, for example, could be converted to a Vue component without touching the rest of the code.
+
+```html
+<!-- Vue can be dropped into an existing HTML file — no build step needed -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<div id="filter-panel">
+    <!-- Vue handles the dropdown binding and re-render automatically -->
+    <select v-model="selectedSector" @change="updateRoles">
+        <option v-for="s in sectors" :value="s">{{ s }}</option>
+    </select>
+</div>
+```
+
+**Why it would matter for the Portal:** Vue's `@change` and `v-model` directly replace the portal's `onchange="render()"` and `document.getElementById(...).value` patterns — but with automatic two-way data binding. The transition would feel natural, and the portal could migrate one section at a time rather than doing a full rewrite.
+
+📖 Resources:
+- [Official Vue Docs (vuejs.org)](https://vuejs.org/guide/introduction) — widely praised as one of the clearest framework docs available
+- [Vue.js Crash Course — Traversy Media (YouTube)](https://www.youtube.com/watch?v=qZXt1Aom3Cs)
+
+---
+
+### 📦 npm & ⚡ Vite — If the Portal Split Into Multiple Files
+
+**The limitation today:** All 3,000+ lines of the portal live in a single `index.html`. That's manageable now, but as features are added — a user preferences module, a charting library, a data export engine — the file becomes unwieldy. Finding and editing a specific function starts to feel like searching a very long book with no chapters.
+
+**What npm and Vite would change:** npm would let you install libraries properly (`npm install jspdf`) instead of relying on CDN script tags that could change or go offline. Vite would let you split the code across logical files — `render.js`, `pdf.js`, `analytics.js`, `dom.js` — and import them cleanly.
+
+```javascript
+// Instead of one enormous index.html, the code lives in focused files:
+
+// pdf.js — all PDF export logic lives here
+export function downloadPDF(data) { ... }
+
+// analytics.js — sector and track analysis lives here
+export function showSectorAnalytics(sector) { ... }
+
+// main.js — the entry point just imports what it needs
+import { downloadPDF } from './pdf.js';
+import { showSectorAnalytics } from './analytics.js';
+```
+
+**Why it would matter for the Portal:** The current structure means any change to the PDF export risks accidentally breaking the render logic — they're inches apart in the same file. Splitting into modules creates clear boundaries. It also makes it far easier to test individual pieces in isolation, and to onboard a new contributor who only needs to understand one module at a time.
+
+📖 Resources:
+- [npmjs.com](https://www.npmjs.com) — search for any package and see its docs and download stats
+- [Vite Official Docs (vitejs.dev)](https://vitejs.dev/guide/) — get a project running in under a minute
+- [npm Crash Course — Traversy Media (YouTube)](https://www.youtube.com/watch?v=jHDhaSSKmB0)
+- [Vite Crash Course — Traversy Media (YouTube)](https://www.youtube.com/watch?v=89NJdbYTgJ8)
+
+---
+
+### 🗺️ A Possible Roadmap for the Portal
+
+If the SkillMap Portal were to evolve into a full-scale institutional platform, the technology upgrades might look something like this:
+
+| Version | What's New | Technology Added |
+|---|---|---|
+| **v1 (Today)** | Single HTML file, static data, Vanilla JS | — |
+| **v2** | Auto-updating data pipeline, on-demand API | Node.js backend |
+| **v3** | Codebase split into modules, npm packages | npm + Vite |
+| **v4** | Multi-view UI, saved comparisons, live filters | React or Vue |
+| **v5** | Multi-developer team, large codebase | TypeScript |
+
+Each step is an evolution, not a replacement. The Vanilla JavaScript you've learned in this guide is the foundation that every one of those versions is still built on.
+
+📖 General Learning Resources:
+- [MDN Web Docs (developer.mozilla.org)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) — the authoritative JavaScript reference, free and maintained by Mozilla
+- [javascript.info](https://javascript.info) — the best free written tutorial for JavaScript, from absolute basics to advanced
+- [The Odin Project (theodinproject.com)](https://www.theodinproject.com) — a completely free, project-based full-stack curriculum
+- [freeCodeCamp (freecodecamp.org)](https://www.freecodecamp.org) — free structured courses with certifications
+- [Fireship (YouTube)](https://www.youtube.com/@Fireship) — fast, high-quality videos on every modern JS tool and concept
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
