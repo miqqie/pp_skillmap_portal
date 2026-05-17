@@ -17,26 +17,29 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 
 ## 📋 Table of Contents
 
-1. [The Building Blocks of JavaScript](https://www.google.com/search?q=%23-the-building-blocks-of-javascript)
-2. [The Naming Confusion: Java vs JavaScript](https://www.google.com/search?q=%23-the-naming-confusion-java-vs-javascript)
-3. [JavaScript vs Python: Syntax & Element Management](https://www.google.com/search?q=%23-javascript-vs-python-syntax--element-management)
-4. [Variables: Jars and Labels](https://www.google.com/search?q=%23-variables-jars-and-labels)
-5. [Functions: Reusable Rules](https://www.google.com/search?q=%23-functions-reusable-rules)
-6. [DOM Interaction: Reading and Updating the Page](https://www.google.com/search?q=%23-dom-interaction-reading-and-updating-the-page)
-7. [Arrays & Array Methods: Working with Lists](https://www.google.com/search?q=%23-arrays--array-methods-working-with-lists)
-8. [Objects: Named Jars with Multiple Compartments](https://www.google.com/search?q=%23-objects-named-jars-with-multiple-compartments)
-9. [Loops: Repeating Rules Across Jars](https://www.google.com/search?q=%23-loops-repeating-rules-across-jars)
-10. [Conditionals: Decision Making](https://www.google.com/search?q=%23-conditionals-decision-making)
-11. [Asynchronous JavaScript: Fetching & Loading Data](https://www.google.com/search?q=%23-asynchronous-javascript-fetching--loading-data)
-12. [Template Literals: Building HTML Strings](https://www.google.com/search?q=%23-template-literals-building-html-strings)
-13. [Events: Listening for User Actions](https://www.google.com/search?q=%23-events-listening-for-user-actions)
-14. [Data Transformation & Regular Expressions](https://www.google.com/search?q=%23-data-transformation--regular-expressions)
-15. [Quick Reference: Key Commands](https://www.google.com/search?q=%23-quick-reference-key-commands)
-16. [Extending the SkillMap Portal: Future Possibilities](https://www.google.com/search?q=%23-extending-the-skillmap-portal-future-possibilities)
+1. [The Building Blocks of JavaScript](#1-the-building-blocks-of-javascript)
+2. [The Naming Confusion: Java vs JavaScript](#2-the-naming-confusion-java-vs-javascript)
+3. [JavaScript vs Python: Syntax & Element Management](#3-javascript-vs-python-syntax--element-management)
+4. [Variables: Jars and Labels](#4-variables-jars-and-labels)
+5. [Functions: Reusable Rules](#5-functions-reusable-rules)
+6. [DOM Interaction: Reading and Updating the Page](#6-dom-interaction-reading-and-updating-the-page)
+7. [Arrays & Array Methods: Working with Lists](#7-arrays--array-methods-working-with-lists)
+8. [Objects: Named Jars with Multiple Compartments](#8-objects-named-jars-with-multiple-compartments)
+9. [Loops: Repeating Rules Across Jars](#9-loops-repeating-rules-across-jars)
+10. [Conditionals: Decision Making](#10-conditionals-decision-making)
+11. [Asynchronous JavaScript: Fetching & Loading Data](#11-asynchronous-javascript-fetching--loading-data)
+12. [Template Literals: Building HTML Strings](#12-template-literals-building-html-strings)
+13. [Events: Listening for User Actions](#13-events-listening-for-user-actions)
+14. [Data Transformation & Regular Expressions](#14-data-transformation--regular-expressions)
+15. [Quick Reference: Key Commands](#15-quick-reference-key-commands)
+16. [Extending the SkillMap Portal: Future Possibilities](#16-extending-the-skillmap-portal-future-possibilities)
 
 ---
 
-## 🧱 The Building Blocks of JavaScript
+## 1. 🧱 The Building Blocks of JavaScript
+
+<details>
+<summary>Click to expand</summary>
 
 Before diving into any specific topic, it helps to understand what JavaScript is actually made of. Every JavaScript program — no matter how big or small — is built from just a handful of core ingredients. Once you recognise these, reading code starts to feel a lot less like a foreign language.
 
@@ -82,7 +85,7 @@ let pageNumber = 1;                      // a label that will move as pages incr
 
 Variables make your code readable and reusable. Instead of writing `"Software Engineer"` twenty times, you write `roleName` — and if it ever changes, you only update it in one place.
 
-→ *Deep dive: [Variables: Jars and Labels](#-variables-jars-and-labels)*
+→ *Deep dive: [Variables: Jars and Labels](#4-variables-jars-and-labels)*
 
 ---
 
@@ -108,7 +111,7 @@ skill.name; // "Data Analysis"
 
 In the SkillMap Portal, the entire dataset is one giant object with arrays inside it — sectors, roles, skills, and work functions all stored as named lists.
 
-→ *Deep dive: [Arrays & Array Methods](#-arrays--array-methods-working-with-lists) · [Objects](#-objects-named-jars-with-multiple-compartments)*
+→ *Deep dive: [Arrays & Array Methods](#7-arrays--array-methods-working-with-lists) · [Objects](#8-objects-named-jars-with-multiple-compartments)*
 
 ---
 
@@ -126,7 +129,7 @@ showWelcome(); // runs those steps right now
 
 Functions are how JavaScript avoids repeating itself. The SkillMap Portal has functions for rendering the table, opening modals, toggling panels, exporting PDFs — each one is a self-contained set of instructions with a clear name.
 
-→ *Deep dive: [Functions: Reusable Rules](#-functions-reusable-rules)*
+→ *Deep dive: [Functions: Reusable Rules](#5-functions-reusable-rules)*
 
 ---
 
@@ -152,7 +155,7 @@ for (let i = 1; i <= totalPages; i++) {
 }
 ```
 
-→ *Deep dive: [Conditionals: Decision Making](#-conditionals-decision-making) · [Loops: Repeating Rules Across Jars](#-loops-repeating-rules-across-jars)*
+→ *Deep dive: [Conditionals: Decision Making](#10-conditionals-decision-making) · [Loops: Repeating Rules Across Jars](#9-loops-repeating-rules-across-jars)*
 
 ---
 
@@ -170,7 +173,7 @@ document.getElementById('final-role').innerText = "Software Engineer";
 
 The DOM is what makes JavaScript visual. Without it, JavaScript would just crunch numbers silently in the background. With it, every change you make shows up instantly on screen.
 
-→ *Deep dive: [DOM Interaction: Reading and Updating the Page](#-dom-interaction-reading-and-updating-the-page)*
+→ *Deep dive: [DOM Interaction: Reading and Updating the Page](#6-dom-interaction-reading-and-updating-the-page)*
 
 ---
 
@@ -188,7 +191,7 @@ th.onclick = () => toggleColumn(idx);
 
 Events are the bridge between the user and the code. Without events, nothing would ever happen — the page would just sit there.
 
-→ *Deep dive: [Events: Listening for User Actions](#-events-listening-for-user-actions)*
+→ *Deep dive: [Events: Listening for User Actions](#13-events-listening-for-user-actions)*
 
 ---
 
@@ -208,21 +211,26 @@ Once you see that chain, the rest of the guide is just filling in the details of
 
 | Building Block | What It Is | Real-World Analogy | Go Deeper |
 |---|---|---|---|
-| **Value** | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe | [Variables](#-variables-jars-and-labels) |
-| **Variable** | A named label attached to a value | A sticky note on a jar | [Variables](#-variables-jars-and-labels) |
-| **Array** | An ordered list of values | A numbered shelf of jars | [Arrays & Array Methods](#-arrays--array-methods-working-with-lists) |
-| **Object** | A collection of named values grouped together | A jar with labelled compartments | [Objects](#-objects-named-jars-with-multiple-compartments) |
-| **Function** | A named set of reusable instructions | A named recipe you can follow any time | [Functions](#-functions-reusable-rules) |
-| **Conditional** | A decision — do this *or* do that depending on the situation | A fork in the road | [Conditionals](#-conditionals-decision-making) |
-| **Loop** | A repeated instruction — do this *for every item* or *until done* | An assembly line | [Loops](#-loops-repeating-rules-across-jars) |
-| **DOM** | The live map of everything visible on the page | The stage that the audience sees | [DOM Interaction](#-dom-interaction-reading-and-updating-the-page) |
-| **Event** | Something the user does that triggers a response | Pressing a doorbell — the chime is the function | [Events](#-events-listening-for-user-actions) |
+| **Value** | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe | [Variables](#4-variables-jars-and-labels) |
+| **Variable** | A named label attached to a value | A sticky note on a jar | [Variables](#4-variables-jars-and-labels) |
+| **Array** | An ordered list of values | A numbered shelf of jars | [Arrays & Array Methods](#7-arrays--array-methods-working-with-lists) |
+| **Object** | A collection of named values grouped together | A jar with labelled compartments | [Objects](#8-objects-named-jars-with-multiple-compartments) |
+| **Function** | A named set of reusable instructions | A named recipe you can follow any time | [Functions](#5-functions-reusable-rules) |
+| **Conditional** | A decision — do this *or* do that depending on the situation | A fork in the road | [Conditionals](#10-conditionals-decision-making) |
+| **Loop** | A repeated instruction — do this *for every item* or *until done* | An assembly line | [Loops](#9-loops-repeating-rules-across-jars) |
+| **DOM** | The live map of everything visible on the page | The stage that the audience sees | [DOM Interaction](#6-dom-interaction-reading-and-updating-the-page) |
+| **Event** | Something the user does that triggers a response | Pressing a doorbell — the chime is the function | [Events](#13-events-listening-for-user-actions) |
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 🛑 The "Naming Confusion": Java vs JavaScript
+## 2. 🛑 The "Naming Confusion": Java vs JavaScript
+
+<details>
+<summary>Click to expand</summary>
 
 One of the most frequent points of confusion for beginners is the nomenclature. Despite the similar branding, **Java and JavaScript are entirely different languages** with distinct architectures and purposes.
 
@@ -245,9 +253,14 @@ In the SkillMap Portal, JavaScript handles **everything the user can interact wi
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 🐍 JavaScript vs Python: Syntax & Element Management
+## 3. 🐍 JavaScript vs Python: Syntax & Element Management
+
+<details>
+<summary>Click to expand</summary>
 
 ### 1. The Grammar (Syntax) Gap
 
@@ -304,15 +317,35 @@ No external tool required — the code is *already on the page*, so access is in
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 📦 Variables: Jars and Labels
+## 4. 📦 Variables: Jars and Labels
 
-Variables define how labels attach to jars, and whether those labels can be moved to different jars later.
+<details>
+<summary>Click to expand</summary>
+
+### What Is a Variable?
+
+A **variable** is a named storage slot in your program's memory. Think of it as a jar with a label stuck to it — the label is the variable's name, and whatever is inside the jar is its value.
+
+You create a variable using either `const` or `let`, followed by a name you choose, then `=`, then the value to store:
+
+```javascript
+const myName = "Alex";   // the jar labelled "myName" holds the text "Alex"
+let score = 0;           // the jar labelled "score" holds the number 0
+```
+
+After that, whenever you write `myName` anywhere in your code, JavaScript knows to look inside that jar and use whatever's there. This means you don't have to keep rewriting `"Alex"` — and if the name ever changes, you only update it in one place.
+
+The key question is: which keyword do you use — `const` or `let`?
+
+---
 
 ### 🔒 `const` — Fixed Label
 
-The label **cannot be reassigned** to a different jar after creation. If the jar is an Object or Array, the *contents* can still change — but the label stays attached to the same jar.
+Use `const` when the label should **never be moved to a different jar**. Once you stick the label on, it stays.
 
 ```javascript
 // A primitive: the label '5' is stuck to the number jar
@@ -335,9 +368,13 @@ const pageHeight = doc.internal.pageSize.getHeight();
 const primaryEmerald = [16, 185, 129]; // RGB color — fixed config value
 ```
 
+> **What this shows:** All five variables are set up once and never reassigned. `doc` is the PDF document being built. `pageWidth` and `pageHeight` are the page dimensions (needed to center text and position content). `primaryEmerald` is the green colour used for headings — it's a fixed design value, so `const` is appropriate.
+
+---
+
 ### 🔄 `let` — Movable Label
 
-The label **can be reassigned** to a different jar over time. Use `let` when a value is expected to change: a counter, a running total, a cursor position.
+Use `let` when the label **might need to be reassigned** to a different jar over time — a counter, a running total, a cursor position that moves.
 
 ```javascript
 // From downloadPDF() — y tracks the current vertical pen position on the PDF
@@ -351,6 +388,8 @@ y += descHeight + 10; // label moves to the new position jar
 y += 8;               // moves again
 ```
 
+> **What this shows:** `y` starts at 32 (32mm from the top of the page). Each time a section is drawn, `y` increases by the height of that section plus a small gap. This is how the PDF knows where to place each new line of content — without `let`, you couldn't update `y` as you go.
+
 Another example — a running text string that grows:
 
 ```javascript
@@ -363,6 +402,10 @@ for (let i = 0; i < str.length; i++) {
     }
 }
 ```
+
+> **What this shows:** `filtered` begins as an empty string `""`. The loop goes through each character in `str` one by one, and if the character is a normal printable ASCII character (things like letters, numbers, punctuation), it gets added to `filtered`. By the end, `filtered` holds a clean version of the original string with any unusual characters removed.
+
+---
 
 ### 🧭 When to Use `const` vs `let`
 
@@ -386,11 +429,20 @@ In short: `const` is a label **glued** to the jar. `let` is a label on a **stick
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 🔧 Functions: Reusable Rules
+## 5. 🔧 Functions: Reusable Rules
 
-A function is a **named block of logic** that groups multiple steps into a single callable unit. Rather than repeating the same 10 lines of code in five places, you write them once inside a function and call it by name.
+<details>
+<summary>Click to expand</summary>
+
+### What Is a Function?
+
+A **function** is a named block of instructions that you can run whenever you need them. Instead of writing the same ten lines of code in five different places, you write them once inside a function, give the function a name, and then call that name to run all those steps instantly.
+
+Think of it like a recipe card. You write the instructions once: "preheat oven, mix ingredients, bake for 30 minutes." Then any time you want cake, you just say "make cake" — you don't rewrite the whole recipe.
 
 ```javascript
 // Basic shape of a function
@@ -399,6 +451,13 @@ function doSomething(input) {
     return result;
 }
 ```
+
+- The word `function` declares you're creating one.
+- The name (`doSomething`) is what you'll call to run it.
+- `input` in the parentheses is an **argument** — a value you pass *in* for the function to work with.
+- `return result` sends a value *back out* to whoever called the function.
+
+---
 
 ### From the Portal: `toggleCWF()`
 
@@ -413,7 +472,9 @@ function toggleCWF() {
 }
 ```
 
-One button click calls `toggleCWF()`. Without the function, you'd have to duplicate all four lines everywhere the toggle appears.
+> **What this shows:** When the user clicks the "Critical Work Functions" header, `toggleCWF()` runs. It finds the panel container (`c`) and the arrow icon (`i`). `.classList.toggle('expanded')` adds the CSS class `expanded` if it isn't there, or removes it if it is — this is what animates the panel sliding open or closed. The last line updates the arrow to point up (▲) when open or down (▼) when closed. Without the function, you'd have to copy-paste these four lines everywhere the toggle appears.
+
+---
 
 ### From the Portal: `toggleColumn(colIdx)`
 
@@ -439,7 +500,9 @@ function applyCollapsed(colIdx, collapse, table) {
 }
 ```
 
-Notice how `toggleColumn` doesn't do the visual work itself — it delegates to `applyCollapsed`. This **separation of concerns** is good practice: one function decides *what* to do, another decides *how*.
+> **What this shows:** `toggleColumn` takes a column number (`colIdx`) as its input — this tells it *which* column to act on. It first flips the column's stored state from collapsed to expanded (or vice versa) using `!` (the "not" operator). Then it hands off the visual work to a second function, `applyCollapsed`. That second function goes through every header cell and every body cell in that column and toggles the `col-collapsed` CSS class, which is what actually hides or shows the column visually. Notice how `toggleColumn` decides *what* to do and `applyCollapsed` handles *how* — this **separation of concerns** makes both functions easier to read and maintain.
+
+---
 
 ### Arrow Functions: The Shorthand Form
 
@@ -452,6 +515,8 @@ function double(n) { return n * 2; }
 // Equivalent arrow function
 const double = (n) => n * 2;
 ```
+
+> **What this shows:** Both versions do the same thing — take a number `n` and return it doubled. The arrow function is just shorter to write. The `=>` ("fat arrow") replaces `function` and `return` when there's a single expression. You'll see arrow functions used heavily inside array methods because they're quick to write inline.
 
 From the Portal, arrow functions appear constantly inside array methods:
 
@@ -468,13 +533,28 @@ const getFriendlyLabel = (label) => {
 };
 ```
 
+> **What this shows:** The first example uses a one-liner arrow function to search `jobData` for the row whose role and sector columns both match the currently selected values. The second example is a slightly longer arrow function that translates raw column header names (like `"TSC_CCS Code"`) into cleaner display labels (like `"Competencies"`) — this is how the portal shows friendly column names in the table instead of the raw internal names from the data file.
+
 [⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
 
 ---
 
-## 🌐 DOM Interaction: Reading and Updating the Page
+## 6. 🌐 DOM Interaction: Reading and Updating the Page
 
-The **DOM (Document Object Model)** is the browser's internal, live representation of the page. Every visible element — text, buttons, containers, tables — exists as a jar inside the DOM tree. JavaScript can reach in and read or change any of it at any time.
+<details>
+<summary>Click to expand</summary>
+
+### What Is the DOM?
+
+When a browser loads an HTML file, it doesn't just display it — it builds an internal, live **map** of every element on the page. This map is called the **DOM (Document Object Model)**. Every heading, button, dropdown, table, and paragraph becomes a "node" in this map.
+
+JavaScript can reach into this map at any time to **read** what's currently on the page or **change** it. When you change something in the DOM, the browser instantly updates what the user sees — no page reload needed.
+
+Think of the DOM like a stage set. The HTML file is the blueprint. The DOM is the actual stage with all the props in place. JavaScript is the stagehand who can move, swap, or hide props while the show is running.
+
+---
 
 ### Step 1 — Locating a Jar
 
@@ -482,7 +562,9 @@ The **DOM (Document Object Model)** is the browser's internal, live representati
 document.getElementById('welcome-msg');
 ```
 
-This searches the DOM shelf for the jar with the ID `welcome-msg`. It does not create a new one; it retrieves an existing one.
+> **What this does:** `document` refers to the whole page. `.getElementById('welcome-msg')` searches the DOM for the single element whose `id` attribute is `welcome-msg`. It returns that element so you can do something with it. It does **not** create a new one — it finds an existing one.
+
+---
 
 ### Step 2 — Attaching a Label
 
@@ -490,7 +572,9 @@ This searches the DOM shelf for the jar with the ID `welcome-msg`. It does not c
 const welcome = document.getElementById('welcome-msg');
 ```
 
-Attaching a `const` label gives you a direct, high-speed handle to that jar. You can now use `welcome` instead of calling `getElementById` repeatedly.
+> **What this does:** Stores the reference to that element in a variable called `welcome`. Now instead of calling `document.getElementById('welcome-msg')` every single time, you just write `welcome`. This is faster, cleaner, and means if the ID ever changes, you only update one line.
+
+---
 
 ### Step 3 — Modifying the Jar
 
@@ -498,7 +582,9 @@ Attaching a `const` label gives you a direct, high-speed handle to that jar. You
 welcome.style.display = 'none'; // hide the welcome message
 ```
 
-The jar still exists in memory — it's just invisible. Toggle it back with `'flex'` or `'block'`.
+> **What this does:** Sets the CSS `display` property of the element to `'none'`, which makes it invisible. The element still exists in memory — it's just not shown. You can bring it back any time with `'flex'` or `'block'`.
+
+---
 
 ### Types of DOM Interaction
 
@@ -510,6 +596,8 @@ The jar still exists in memory — it's just invisible. Toggle it back with `'fl
 | **Control** | `element.style.display = "none"` | Include or exclude from render |
 | **Class** | `element.classList.toggle('expanded')` | Switch CSS classes on/off |
 | **HTML** | `element.innerHTML = "<b>Bold</b>"` | Replace with rich HTML content |
+
+---
 
 ### From the Portal: The `render()` Function
 
@@ -537,7 +625,11 @@ function render() {
 }
 ```
 
+> **What this shows:** This function runs every time the user picks a sector or role. It first reads the current values of both dropdowns. If either is empty, it stops immediately (guard clause). Then it hides the welcome message and shows the main content area. It unlocks the PDF export button (which was disabled until a role was chosen). It updates the role name shown in the breadcrumb pill at the top. Finally, it looks up the job description for that role and displays it — or clears the field if no description is found.
+
 > **Key Idea:** The DOM is a **live system**. Updates appear instantly without a page refresh because the browser immediately recalculates the layout after each change.
+
+---
 
 ### From the Portal: Dynamically Building the CWF Panel
 
@@ -562,24 +654,41 @@ for (const [fn, ts] of Object.entries(groups)) {
 }
 ```
 
-This pattern — `createElement` → set content → `appendChild` — is a core DOM building block.
+> **What this shows:** Instead of writing HTML directly into the file, this code builds the Critical Work Functions panel entirely in JavaScript. For each function group (like "Manage Data" or "Analyse Requirements"), it creates a new `<div>`, gives it a heading, then loops through each task under that function and creates a `<li>` list item for it. Each item is attached to the list, and the whole group is then attached to the panel container on the page. This pattern — `createElement` → set content → `appendChild` — is a core DOM building block used any time content needs to be generated dynamically from data.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 📋 Arrays & Array Methods: Working with Lists
+## 7. 📋 Arrays & Array Methods: Working with Lists
 
-An array is an **ordered list of jars**. Arrays are one of JavaScript's most-used data structures, and they come with powerful built-in methods that can filter, transform, and reduce lists in one readable line.
+<details>
+<summary>Click to expand</summary>
+
+### What Is an Array?
+
+An **array** is an ordered list of values stored under a single variable name. Think of it as a numbered shelf of jars — each jar holds one value, and you access a specific jar by its position number (called an **index**).
+
+Indexes start at **0**, not 1. So the first item is at index `0`, the second at `1`, and so on.
 
 ```javascript
 const fruits = ["apple", "banana", "cherry"];
-fruits[0]; // "apple" — zero-indexed
+fruits[0]; // "apple"
+fruits[1]; // "banana"
+fruits[2]; // "cherry"
 ```
+
+Arrays become powerful when you use their built-in **methods** — tools that let you filter, transform, search, or iterate over the whole list in a single, readable line.
+
+---
 
 ### The "Big Four" Array Methods
 
 #### `.filter()` — Keep only matching jars
+
+`.filter()` goes through every item in an array and keeps only the ones where your test returns `true`. It returns a **new array** — the original is untouched.
 
 ```javascript
 // From render() — keep only the skill rows that belong to this role and sector
@@ -589,9 +698,13 @@ const filtered = skillData.filter(d =>
 );
 ```
 
-`.filter()` returns a **new array** of every element where the test returns `true`. The original array is untouched.
+> **What this shows:** `skillData` is a large array of rows — one for every skill in the framework. This `.filter()` keeps only the rows that (a) belong to the selected sector, and (b) match the selected skill title and level combination. The result, `filtered`, is a smaller array containing only the relevant rows to display in the table. If the user picks a different sector or role, `render()` reruns and `filtered` is rebuilt from scratch.
+
+---
 
 #### `.map()` — Transform every jar into a new shape
+
+`.map()` goes through every item in an array and replaces it with the return value of your function. It always returns a **new array of the same length**.
 
 ```javascript
 // From showSectorAnalytics() — convert the skill map object into an array of
@@ -602,9 +715,13 @@ const allSkills = Object.entries(skillToRolesMap)
     .sort((a, b) => b.count - a.count);
 ```
 
-`.map()` returns a **new array** of the same length, with each element replaced by the return value of your function.
+> **What this shows:** `skillToRolesMap` is an object where each key is a skill name and each value is a Set of roles that require it. `.map()` converts each entry into a simple `{name, count}` object — `name` is the skill name, `count` is how many roles need it. The chain then filters out any skills with zero roles, and sorts the rest from most common to least. The end result is an array of skills ranked by how many roles they appear in — ready to display in the analytics panel.
+
+---
 
 #### `.find()` — Get the first matching jar
+
+`.find()` searches through an array and returns the **first element** that matches your test, or `undefined` if nothing matches.
 
 ```javascript
 // From updateRoles() — find the header column whose name contains "sector"
@@ -614,9 +731,13 @@ const sKey = jobHeaders.find(h => h.toLowerCase().includes('sector'));
 const descRow = jobDescData.find(d => d[dR] === rVal);
 ```
 
-`.find()` returns the **first element** that matches, or `undefined` if none do. Notice how the portal uses `.find()` constantly to locate the right column key by name rather than by hardcoded index — making the code resilient to column reordering.
+> **What this shows:** The first example searches the array of column header names to find the one containing the word "sector" — this is how the portal locates the right column regardless of its exact name or position. Instead of hardcoding `jobHeaders[2]`, it finds the right column by name, making the code resilient to column reordering. The second example finds the job description row whose role column matches the currently selected role, so the portal can display the correct description text.
+
+---
 
 #### `.forEach()` — Run a rule for every jar (no return value)
+
+`.forEach()` runs a function once for every item in the array. Unlike `.map()` and `.filter()`, it doesn't return anything — it's for **side effects** like updating the DOM or building strings.
 
 ```javascript
 // From updateRoles() — add each role as an <option> in the dropdown
@@ -629,7 +750,9 @@ sortedSectorNames.forEach(secName => {
 });
 ```
 
-`.forEach()` is for **side effects** (updating the DOM, building strings) — it does not return a new array.
+> **What this shows:** The first example loops through every role name in `roles` and adds it as an `<option>` element to the role dropdown — this is how the dropdown gets populated after a sector is chosen. The second example loops through each sector name and builds a chunk of HTML for it, appending each chunk to `diffSectorsHtml`. This is the "side effect" pattern — `.forEach()` is used when the goal is to *do something* with each item, not to produce a new array.
+
+---
 
 ### Chaining Methods
 
@@ -649,7 +772,9 @@ const roles = [...new Set(
 )].filter(Boolean).sort();
 ```
 
-Each step is a separate, readable concern. This is far cleaner than writing a nested loop manually.
+> **What this shows:** This single chain does five things in sequence. It starts with `jobData` (thousands of rows). `.filter()` keeps only rows matching the selected sector. `.map()` extracts just the role name from each remaining row. `new Set(...)` removes duplicates (some roles appear many times across different skills). `[...new Set(...)]` spreads it back into an array. `.filter(Boolean)` removes any empty strings (rows where the role field was blank). `.sort()` alphabetises the list. The result is a clean, sorted, deduplicated list of roles for that sector.
+
+---
 
 ### Removing Duplicates with `Set`
 
@@ -663,13 +788,22 @@ const sectors = [...new Set(jobData.map(d => d[sKey]))].filter(Boolean).sort();
 const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val !== '-'))];
 ```
 
+> **What this shows:** The first line maps over all job data rows to extract the sector column, then deduplicates with `Set`, removes blanks, and sorts. Even if "Infocomm Technology" appears 500 times in the raw data, it appears only once in `sectors`. The second line does the same for table cell values — if a skill appears multiple times in the filtered rows, it only gets listed once in that cell.
+
 [⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
 
 ---
 
-## 🗃️ Objects: Named Jars with Multiple Compartments
+## 8. 🗃️ Objects: Named Jars with Multiple Compartments
 
-An object groups **related data under named keys**, like a jar with labeled sections inside.
+<details>
+<summary>Click to expand</summary>
+
+### What Is an Object?
+
+An **object** groups related data together under named keys. Where an array uses numbered positions to store values, an object uses **names** (called **keys** or **properties**) — like a jar with labelled compartments inside.
 
 ```javascript
 const skill = {
@@ -678,9 +812,13 @@ const skill = {
     sector: "Infocomm Technology"
 };
 
-skill.name;      // "Data Analysis"
-skill["level"];  // 3
+skill.name;      // "Data Analysis" — dot notation
+skill["level"];  // 3 — bracket notation (useful when the key is stored in a variable)
 ```
+
+Objects are the backbone of how data is structured in JavaScript. Nearly every piece of real-world data — a user account, a product listing, a row from a spreadsheet — is represented as an object.
+
+---
 
 ### From the Portal: JSON Data Structure
 
@@ -696,6 +834,10 @@ skillHeaders = data.job_roles.columns;    // the column names
 jobData      = data.skills_map.records;   // role-to-sector mapping
 cwfData      = data.cwf.records;          // Critical Work Functions
 ```
+
+> **What this shows:** `data` is one large object. It has several top-level keys: `job_roles`, `skills_map`, `cwf`, and so on. Each of those is itself an object with sub-keys like `records` (the actual rows) and `columns` (the header names). By pulling out `data.job_roles.records`, the portal gets the array of skills matrix rows it needs. This nested object structure mirrors how a spreadsheet with multiple sheets works — the outer object is the workbook, each key inside is a sheet.
+
+---
 
 ### Building Objects Dynamically
 
@@ -716,11 +858,13 @@ jobData.forEach(d => {
 });
 ```
 
-After this loop, `skillToRolesMap["Data Analysis"]` would be a `Set` of every role requiring that skill — ready to be counted and sorted.
+> **What this shows:** `skillToRolesMap` starts as an empty object `{}`. As the loop goes through each row of job data, it extracts the base skill name (stripping off level numbers like "Level 3"). If this skill name hasn't been seen before, a new `Set` is created as its value. The role from that row is then added to the Set. After the loop, `skillToRolesMap["Data Analysis"]` would be a Set containing every role that requires Data Analysis — e.g. `{"Data Analyst", "Business Analyst", "Data Engineer"}`. This is a common pattern: build a lookup object by processing a flat array of rows.
+
+---
 
 ### Destructuring Objects
 
-Rather than writing `const name = obj.name; const count = obj.count;`, JavaScript lets you **destructure** in one line:
+Rather than writing `const name = obj.name; const count = obj.count;`, JavaScript lets you **destructure** in one line — pulling multiple values out of an object at once:
 
 ```javascript
 // From the PDF engine — pull jsPDF out of the global window.jspdf object
@@ -730,15 +874,32 @@ const { jsPDF } = window.jspdf;
 // const jsPDF = window.jspdf.jsPDF;
 ```
 
+> **What this shows:** The PDF library attaches itself to the global `window.jspdf` object when loaded. Destructuring `{ jsPDF }` from it is shorthand for "give me the `jsPDF` property from `window.jspdf` and store it in a variable called `jsPDF`." Without destructuring, you'd have to write the full path every time you used it. This pattern appears constantly in modern JavaScript whenever libraries or data objects need to be unpacked.
+
 [⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
 
 ---
 
-## 🔄 Loops: Repeating Rules Across Jars
+## 9. 🔄 Loops: Repeating Rules Across Jars
 
-Loops automate a rule across a sequence of jars, replacing repetitive manual code.
+<details>
+<summary>Click to expand</summary>
+
+### What Is a Loop?
+
+A **loop** is a way to repeat a block of code multiple times — either a set number of times, or once for each item in a list. Without loops, you'd have to write the same instruction out manually for every item, which is impractical when you have hundreds or thousands of items.
+
+Think of it like an assembly line: the same action (stamp, fill, label) is applied to every box as it comes down the line, without anyone having to manually instruct each individual step.
+
+JavaScript has three main loop types, each suited to slightly different situations.
+
+---
 
 ### `for` Loop — Classic Counter
+
+The `for` loop runs a block of code a **specific number of times**, controlled by a counter variable.
 
 ```javascript
 // From downloadPDF() — add page numbers to every page
@@ -752,9 +913,13 @@ for (let i = 1; i <= totalPages; i++) {
 }
 ```
 
-`i` starts at 1, increments by 1 each loop, and stops when it exceeds `totalPages`. Every page gets a centered footer automatically.
+> **What this shows:** This loop runs once for every page in the PDF. `i` starts at `1`, and the loop continues as long as `i <= totalPages`, incrementing by `1` each time (`i++`). Inside the loop, `doc.setPage(i)` moves the "pen" to page `i`. Then it calculates the footer text (e.g. "Page 2 of 5"), measures its width, and draws it centered at the bottom of the page. Every page gets a footer automatically — without the loop, you'd need a separate block of code for each page.
+
+---
 
 ### `for...of` Loop — Iterate Over Values
+
+`for...of` loops over the **values** in an array or other iterable, one at a time. It's cleaner than a classic `for` loop when you don't need to track the index.
 
 ```javascript
 // From render() — populate every filter dropdown with the same headers
@@ -764,7 +929,13 @@ for (const id of ['row1', 'row2', 'row3', 'col1', 'col2', 'val']) {
 }
 ```
 
+> **What this shows:** The portal has six filter dropdowns (`row1`, `row2`, `row3`, `col1`, `col2`, `val`). They all need to be populated with the same list of column headers. Instead of repeating the `forEach` block six times — once per dropdown — the `for...of` loop iterates over the array of dropdown IDs, and for each one, finds the element and adds all the headers. Same result, far less repetition.
+
+---
+
 ### `for...in` / `Object.entries()` — Iterate Over Object Keys
+
+When you have an **object** (not an array), you can't use a regular `for...of` directly. `Object.entries()` converts the object into an array of `[key, value]` pairs, which you can then loop over cleanly.
 
 ```javascript
 // From render() — loop through CWF groups (an object keyed by function name)
@@ -778,17 +949,30 @@ for (const [fn, ts] of Object.entries(groups)) {
 }
 ```
 
-`Object.entries()` converts an object into an array of `[key, value]` pairs, which you can then loop over cleanly.
+> **What this shows:** `groups` is an object where each key is a Critical Work Function name (like `"Manage Data"`) and each value is a Set of task descriptions. `Object.entries(groups)` turns this into an array like `[["Manage Data", Set{...}], ["Analyse Requirements", Set{...}]]`. The `for...of` loop then steps through each pair, with `fn` holding the function name and `ts` holding the task Set. For each one, it creates a new `<div>` with the function name as a header and appends it to the panel. This is how the CWF panel is built dynamically from the data.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 🔀 Conditionals: Decision Making
+## 10. 🔀 Conditionals: Decision Making
 
-Conditionals allow the program to choose between outcomes based on the current state of a jar.
+<details>
+<summary>Click to expand</summary>
+
+### What Is a Conditional?
+
+A **conditional** tells the program to take different actions depending on whether something is true or false. Without conditionals, code would always run in exactly the same way regardless of what the user does or what the data contains.
+
+Think of it as a fork in the road: "if the light is green, go — otherwise, stop." The road your code takes depends on the current state of your data.
+
+---
 
 ### `if / else`
+
+The most fundamental conditional — check a condition, and run different code depending on the result.
 
 ```javascript
 // From render() — show or hide the Track pill based on whether data exists
@@ -801,9 +985,13 @@ if (roleData && roleData[tKey]) {
 }
 ```
 
+> **What this shows:** When a role is selected, the portal looks up whether that role has a "Track" value (e.g. "Software Track"). If `roleData` exists and has a non-empty track value, the Track pill is shown and filled with the text. If there's no track data — either because `roleData` wasn't found or `tKey` is empty — the pill is hidden. This prevents the UI from showing an empty or broken badge.
+
+---
+
 ### Ternary Operator `? :`
 
-A compact one-line `if/else` for simple decisions:
+A compact one-line `if/else` for simple decisions. The format is: `condition ? valueIfTrue : valueIfFalse`.
 
 ```javascript
 // condition ? valueIfTrue : valueIfFalse
@@ -820,9 +1008,13 @@ const label = (data.pageNumber === tableStartPage)
     : "SKILLS MATRIX (CONTINUED)";
 ```
 
+> **What this shows:** The first line checks if the panel currently has the `expanded` class — if yes, show the up arrow `▲`, otherwise show the down arrow `▼`. The second line sets a font size variable: `"18px"` in large-text (accessibility) mode, `"12px"` otherwise. The third line labels PDF pages: the first page of the table gets `"SKILLS MATRIX"`, while any continuation pages get `"SKILLS MATRIX (CONTINUED)"`. Ternaries are ideal for these short, binary decisions where writing a full `if/else` would feel unnecessarily verbose.
+
+---
+
 ### Guard Clauses (Early Return)
 
-Rather than deeply nesting `if` blocks, the portal uses **guard clauses** to exit early if a precondition isn't met:
+Rather than deeply nesting `if` blocks, the portal uses **guard clauses** to exit early if a precondition isn't met. This keeps functions flat and readable.
 
 ```javascript
 // From render() — don't do anything unless both dropdowns have values
@@ -841,7 +1033,9 @@ function applyCollapsed(colIdx, collapse, table) {
 }
 ```
 
-Guard clauses keep functions flat and readable — a good habit to develop early.
+> **What this shows:** The `render()` guard clause checks whether both the sector and role dropdowns have been filled. `!sVal` is `true` if `sVal` is empty, null, or undefined. If either dropdown is empty, `return` exits the function immediately — no point running the rest of the code. The `applyCollapsed` guard does the same: if the table element doesn't exist yet (e.g. the page just loaded), it returns early to avoid a crash. Guard clauses are a good habit — they make the "happy path" code easier to read by handling edge cases at the top.
+
+---
 
 ### Compact View Lock: A Real Conditional Example
 
@@ -866,21 +1060,38 @@ if (isCol2Active) {
 }
 ```
 
-One `if/else` block manages six DOM property changes simultaneously. This is what makes JavaScript powerful — a single conditional can reshape a visible section of the UI.
+> **What this shows:** When the user selects a second column grouping (`col2`), the portal forces the table into "Compact View" and locks the toggle so the user can't turn it off. The `isCol2Active` variable captures whether col2 has a real value selected. If it does, the checkbox is checked, disabled, visually dimmed to 50% opacity, and the cursor changes to a "not-allowed" icon. A small lock icon is also revealed. If col2 is cleared, everything is restored to normal. This is a great example of a single conditional managing multiple DOM property changes at once to produce a coherent UI state.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## ⏳ Asynchronous JavaScript: Fetching & Loading Data
+## 11. ⏳ Asynchronous JavaScript: Fetching & Loading Data
 
-Web apps often need to **wait** for something — a network request, a file load — without freezing the page. JavaScript handles this with asynchronous patterns.
+<details>
+<summary>Click to expand</summary>
+
+### What Is Asynchronous JavaScript?
+
+Most code runs **synchronously** — one line at a time, in order. But some tasks take time: fetching a file from a server, waiting for a database, reading from disk. If JavaScript stopped everything while waiting, the entire browser tab would freeze.
+
+**Asynchronous** JavaScript solves this by saying: "start this task, and when it finishes, run this function with the result — but don't pause everything else in the meantime." The rest of the page stays responsive while the slow operation completes in the background.
+
+Think of it like ordering food at a restaurant. You don't stand frozen at the counter waiting for the kitchen — you sit down, and a waiter brings the food when it's ready.
+
+---
 
 ### The Problem: Waiting Without Freezing
 
 If loading a 3MB file took 2 seconds and JavaScript stopped everything while waiting, the browser would hang. Instead, JavaScript says "go fetch this, and when it's done, run *this* function."
 
+---
+
 ### Promises and `.then()` Chaining
+
+A **Promise** represents a value that will be available in the future. `.then()` lets you chain steps that run one after another, each receiving the result of the previous step.
 
 ```javascript
 // From index.html — the full data loading pipeline
@@ -906,7 +1117,9 @@ fetch("skillmap_data.json.gz")           // 1. Request the compressed file
     .catch(error => console.error("Error loading skillmap data:", error));
 ```
 
-Each `.then()` receives the output of the previous step. The `.catch()` at the end handles any error in the entire chain — one safety net for all steps.
+> **What this shows:** This is the portal's entire data loading sequence, written as a Promise chain. Step 1 sends a network request for the compressed data file. When the response arrives (step 2), it reads the raw bytes into a buffer. Step 3 decompresses those bytes using the Pako library (gzip decompression). Step 4 parses the resulting JSON string into a real JavaScript object. Step 5 distributes the four datasets into module-level variables that the rest of the portal can use. Step 6 extracts unique sector names and populates the sector dropdown. The `.catch()` at the very end is a safety net — if anything in the chain fails (network error, bad JSON, etc.), the error is logged instead of crashing the page silently. Each `.then()` receives the output of the previous step as its input argument.
+
+---
 
 ### Header Reordering After Load
 
@@ -929,15 +1142,24 @@ swapHeaders(skillHeaders, "Knowledge / Ability Items", "Knowledge / Ability Clas
 swapHeaders(skillHeaders, "TSC_CCS Category", "TSC_CCS Code");
 ```
 
-The `[a, b] = [b, a]` pattern is a clean JavaScript trick for swapping two values without a temporary holding variable.
+> **What this shows:** `swapHeaders` is a helper function that reorders two columns in the headers array by swapping their positions. It first finds the index (position) of each named header using `.indexOf()`. If both are found (neither returns `-1`), it swaps them using the destructuring trick `[a, b] = [b, a]` — this swaps two values without needing a temporary variable. The function is then called twice to fix two column ordering issues: Classification should come before Items in the display, and Code should come before Category. This is done purely on the `skillHeaders` array — the underlying data is unchanged.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 📝 Template Literals: Building HTML Strings
+## 12. 📝 Template Literals: Building HTML Strings
 
-Template literals (backtick strings) allow you to **embed variables and expressions directly inside strings**, making dynamic HTML generation far more readable than string concatenation.
+<details>
+<summary>Click to expand</summary>
+
+### What Are Template Literals?
+
+A **template literal** is a special kind of string that uses backticks (`` ` ``) instead of quotes. The key feature: you can embed any JavaScript expression directly inside the string using `${}`.
+
+Before template literals, building strings with variables meant messy concatenation with `+` signs:
 
 ```javascript
 // Old way (concatenation — hard to read)
@@ -946,6 +1168,12 @@ const html = "<div class='" + myClass + "'>" + myText + "</div>";
 // New way (template literal — clear and clean)
 const html = `<div class='${myClass}'>${myText}</div>`;
 ```
+
+> **What this shows:** Both lines produce the same result — an HTML string with a dynamic class and text. But the template literal is far easier to read and write, especially as the string gets longer or more variables are involved. `${}` is a placeholder: whatever JavaScript expression you put inside gets evaluated and inserted at that exact spot in the string.
+
+Template literals are especially useful for building HTML dynamically, since HTML strings are often long and contain many variables.
+
+---
 
 ### From the Portal: Building the Skill Search URL
 
@@ -966,6 +1194,10 @@ function searchSkill(skillName) {
     });
 }
 ```
+
+> **What this shows:** When a user clicks a skill name, `searchSkill()` runs. It first copies the skill name to the clipboard. Then it shows a small toast notification using a template literal to embed `skillName` into the message text. It builds the search URL by embedding the encoded skill name into the URL string — `encodeURIComponent` makes the skill name URL-safe (replacing spaces with `%20`, etc.). After a brief 500ms pause (so the user can see the toast), the notification disappears and the search URL opens in a new tab. The two template literals keep the string construction clean — no `+` operators needed.
+
+---
 
 ### From the Portal: Building the Peer Roles Modal
 
@@ -992,15 +1224,26 @@ div.innerHTML = modalHtml;        // inject the built HTML into the page
 document.body.appendChild(div);  // attach to the live DOM
 ```
 
-The `${}` placeholders are evaluated at runtime — `accessibilityClass`, `title`, `level`, `currentSector` are all live JavaScript values embedded directly into the HTML string.
+> **What this shows:** The entire peer roles modal — overlay, container, heading, content, and close button — is built as a single template literal. All the `${}` placeholders are filled at runtime: `accessibilityClass` applies the right CSS class for large-text mode, `title` is the skill name, `level` is the proficiency level, `currentSector` is the currently selected sector, and `renderSimpleList(sameSector)` calls another function whose return value (more HTML) is inserted inline. Once built, `modalHtml` is assigned to a new `<div>`'s `innerHTML`, and that `<div>` is appended to `document.body`. This is a common pattern: build HTML as a string, inject it, mount it.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 🖱️ Events: Listening for User Actions
+## 13. 🖱️ Events: Listening for User Actions
 
-Events connect user actions (clicks, changes, key presses) to JavaScript functions.
+<details>
+<summary>Click to expand</summary>
+
+### What Are Events?
+
+An **event** is anything the user does on the page — clicking a button, selecting from a dropdown, pressing a key, resizing the window. By default, JavaScript does nothing when these things happen. You have to explicitly tell it to **listen** for an event and **respond** with a function.
+
+Think of events as doorbells. The doorbell (event) is wired up to a chime (function). When someone presses the button (user action), the chime plays (function runs).
+
+---
 
 ### Inline Event Handlers
 
@@ -1017,9 +1260,13 @@ The simplest approach — write the handler directly in the HTML attribute:
 <div id="cwf-toggle" onclick="toggleCWF()">Critical Work Functions</div>
 ```
 
+> **What this shows:** Each HTML element has an event attribute (`onchange`, `onclick`) set to the name of a JavaScript function as a string. When the user changes the sector dropdown, the browser calls `updateRoles()`. When the role dropdown changes, it calls `render()`. When the CWF header is clicked, it calls `toggleCWF()`. This is the most direct way to connect user actions to code — it's easy to read because the connection is visible right in the HTML.
+
+---
+
 ### Assigning Handlers in JavaScript
 
-You can also assign event handlers from the script side, which keeps HTML cleaner and allows dynamic targeting:
+You can also assign event handlers from the script side. This keeps HTML cleaner and allows you to target elements that don't exist yet when the page first loads (like dynamically created table headers):
 
 ```javascript
 // From initCollapsibleColumns() — clicking a column header collapses it
@@ -1029,6 +1276,10 @@ th.onclick = () => toggleColumn(idx);
 const finalSectorEl = document.getElementById('final-sector');
 finalSectorEl.onclick = () => showSectorAnalytics(sVal);
 ```
+
+> **What this shows:** The first example assigns an `onclick` handler to a table header cell (`th`) that was just created dynamically. Since the header didn't exist in the original HTML, you can't write `onclick=` directly in the HTML — so it's assigned from JavaScript instead. The arrow function `() => toggleColumn(idx)` captures the current value of `idx` (the column index) in a closure, so each header knows exactly which column it controls. The second example does the same for the sector pill — when clicked, it opens the sector analytics panel for the currently selected sector.
+
+---
 
 ### `DOMContentLoaded` — Run Code After the Page Loads
 
@@ -1043,7 +1294,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-This prevents errors from trying to access DOM elements before they exist.
+> **What this shows:** `DOMContentLoaded` fires when the browser has finished parsing all the HTML and the DOM is ready — but before images and stylesheets have fully loaded. Wrapping setup code inside this event ensures you're never trying to find a DOM element that doesn't exist yet. `initMobileDefaults()` sets appropriate initial values for mobile screen sizes. A `resize` listener is also registered here (reserved for future use) — it would fire any time the browser window is resized. Nesting the `resize` listener inside `DOMContentLoaded` ensures the `window` object is fully available before attaching to it.
+
+---
 
 ### `MutationObserver` — Watch for DOM Changes
 
@@ -1067,17 +1320,30 @@ const observer = new MutationObserver((mutations) => {
 observer.observe(document.body, { childList: true });
 ```
 
-This is an advanced pattern — a `MutationObserver` fires a callback whenever child nodes are added or removed from the watched element.
+> **What this shows:** A `MutationObserver` watches the DOM for changes and fires a callback when they happen. Here it's watching `document.body` for any new child elements being added (`childList: true`). When a new element is added and its `id` is `'modal-wrapper'` (the peer roles modal), and the screen is narrow (mobile, under 900px wide), it adds the `'active'` CSS class after a 10ms delay — this triggers the slide-up animation on mobile. The delay gives the browser time to render the modal before the animation class is applied. This is more advanced than a simple `onclick`, but it solves the specific problem of animating content that's added dynamically rather than already on the page.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 🔤 Data Transformation & Regular Expressions
+## 14. 🔤 Data Transformation & Regular Expressions
 
-Raw data is rarely in the exact shape needed for display. JavaScript provides string and regex tools to clean and reshape it.
+<details>
+<summary>Click to expand</summary>
+
+### What Is Data Transformation?
+
+Raw data is rarely in exactly the right shape for display. Column names might have inconsistent casing. Skill titles might include level numbers you want to strip. Text meant for a PDF might contain special characters that break the font renderer. **Data transformation** is the process of cleaning and reshaping data into the form you actually need.
+
+JavaScript provides two main toolkits for this: **string methods** for straightforward text manipulation, and **regular expressions** for pattern-based matching and replacement.
+
+---
 
 ### `String` Methods
+
+These are built-in tools you can call on any string. They're used constantly in the portal to normalise data before comparing or displaying it.
 
 ```javascript
 // Normalize column names to find them by partial match
@@ -1089,9 +1355,15 @@ str.replace(x, y) // replace occurrences of x with y
 str.split('.')    // split a string into an array by delimiter
 ```
 
+> **What this shows:** `.toLowerCase()` converts a string to all lowercase before comparing — this way "Sector", "SECTOR", and "sector" all match. `.includes()` checks whether a string contains a given substring anywhere inside it. These two are used together constantly in the portal to find the right column headers without needing to know their exact name. `.trim()` removes any accidental spaces at the start or end of a string — important when comparing values that came from raw data files. `.replace()` substitutes one pattern with another. `.split()` breaks a string into an array at each occurrence of a separator character.
+
+---
+
 ### Regular Expressions (Regex)
 
-Regex is a pattern-matching language embedded in JavaScript. It looks intimidating at first, but each piece has a specific meaning.
+A **regular expression** (regex) is a pattern that describes a set of strings. Instead of searching for one specific word, you can search for *anything matching a certain pattern* — "any number", "any whitespace", "any character that isn't printable ASCII".
+
+Regex looks intimidating at first, but each piece has a specific meaning — and once you learn a handful of symbols, you can read most real-world patterns.
 
 ```javascript
 // From showSectorAnalytics() — strip " Level 3" or " (Advanced)" from a skill title
@@ -1100,7 +1372,11 @@ const baseSkillName = rawTitle
     .replace(/\s*level\s*\d+/gi, "")   // remove " Level 3", " level 12", etc.
     .replace(/\s*\(.*?\)\s*/g, "")     // remove anything in parentheses
     .trim();
+```
 
+> **What this shows:** Skill titles in the raw data often include level indicators like "Data Analysis Level 3" or "Data Analysis (Advanced)". To group skills by their base name regardless of level, these suffixes need to be stripped. The first `.replace()` uses a regex to find and remove anything matching "optional spaces + 'level' + optional spaces + one or more digits" — case-insensitively (`i` flag) and globally (`g` flag, meaning all occurrences). The second `.replace()` removes anything inside parentheses. After both, `.trim()` cleans any remaining edge whitespace. Result: `"Data Analysis Level 3"` becomes `"Data Analysis"`.
+
+```javascript
 // From cleanText() inside downloadPDF() — sanitize strings for PDF output
 return decoded
     .replace(/\u00a0/g, ' ')           // replace non-breaking spaces with regular spaces
@@ -1110,6 +1386,10 @@ return decoded
     .replace(/\s+/g, ' ')             // collapse multiple spaces into one
     .trim();
 ```
+
+> **What this shows:** The PDF library (jsPDF with Helvetica font) can only render standard ASCII characters. Any special characters — non-breaking spaces, em-dashes, smart quotes, unicode symbols — will either show as garbled text or cause errors. This chain of replacements sanitises strings before they're written to the PDF. `\u00a0` is the unicode code for a non-breaking space. `—` and `–` are typographic dashes that Helvetica can't render, so they're replaced with plain hyphens. `[^\x20-\x7E]` matches any character *outside* the printable ASCII range (hex 20 to 7E) and replaces it with nothing — deleting it. Finally, `\s+` collapses any runs of multiple spaces into a single space.
+
+---
 
 **Reading the patterns:**
 
@@ -1122,7 +1402,11 @@ return decoded
 | `.*?` | Any characters, as few as possible (lazy match) |
 | `[^\x20-\x7E]` | Any character *not* in the printable ASCII range |
 
+---
+
 ### `JSON.parse()` and `JSON.stringify()`
+
+These two functions convert between JavaScript objects and their string representation.
 
 ```javascript
 // Unpack a compressed JSON string into a usable object
@@ -1135,13 +1419,18 @@ const groupKey = JSON.stringify({ r: [d[r1], d[r2], d[r3]], c: [d[c1], d[c2]] })
 const key = JSON.parse(groupKey);
 ```
 
-`JSON.stringify` is an elegant trick for using a complex object as a Map key — since Map keys are compared by reference, not value, turning an object into a string makes it safely comparable.
+> **What this shows:** `JSON.parse()` takes a JSON string (text that looks like `{"name":"Alex","age":30}`) and converts it into a real JavaScript object you can work with using dot notation and array methods. `JSON.stringify()` does the reverse — takes an object and turns it into a string. The portal uses `JSON.stringify` for a clever trick: it needs to group table rows by a combination of row values and column values. Since JavaScript `Map` keys are compared by reference (not value), two different objects `{a: 1}` and `{a: 1}` would be treated as different keys even though they're logically the same. By stringifying the object first, you get `'{"a":1}'` — a plain string — which compares correctly by value.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
+</details>
+
 ---
 
-## 📚 Quick Reference: Key Commands
+## 15. 📚 Quick Reference: Key Commands
+
+<details>
+<summary>Click to expand</summary>
 
 | Command | Purpose | SkillMap Portal Example |
 |---|---|---|
@@ -1172,9 +1461,16 @@ const key = JSON.parse(groupKey);
 | `encodeURIComponent(str)` | Make a string safe for use in a URL | `encodeURIComponent(skillName)` |
 | `doc.save(filename)` | Export and download the PDF | `doc.save("Map_SoftwareEngineer.pdf")` |
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
 ---
 
-## 🌍 Extending the SkillMap Portal: Future Possibilities
+## 16. 🌍 Extending the SkillMap Portal: Future Possibilities
+
+<details>
+<summary>Click to expand</summary>
 
 The SkillMap Portal is built entirely in **Vanilla JavaScript** — pure JS, no frameworks, no build tools. For a single-developer project loaded from a single HTML file, this is the right call. It's lean, fast, and has zero setup overhead.
 
@@ -1352,6 +1648,8 @@ Each step is an evolution, not a replacement. The Vanilla JavaScript you've lear
 - [Fireship (YouTube)](https://www.youtube.com/@Fireship) — fast, high-quality videos on every modern JS tool and concept
 
 [⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
 
 ---
 
