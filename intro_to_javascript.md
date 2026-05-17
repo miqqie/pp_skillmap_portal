@@ -44,6 +44,8 @@ Think of it like cooking. You don't need to know every recipe in the world. You 
 
 Here are the core building blocks:
 
+![JavaScript_Elements_Blueprint.png](JavaScript_Elements_Blueprint.png)
+
 ---
 
 ### 📦 Values — The Raw Ingredients
