@@ -17,22 +17,22 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 
 ## 📋 Table of Contents
 
-1. [The Building Blocks of JavaScript](#1-the-building-blocks-of-javascript)
-2. [The Naming Confusion: Java vs JavaScript](#2-the-naming-confusion-java-vs-javascript)
-3. [JavaScript vs Python: Syntax & Element Management](#3-javascript-vs-python-syntax--element-management)
-4. [Variables: Jars and Labels](#4-variables-jars-and-labels)
-5. [Functions: Reusable Rules](#5-functions-reusable-rules)
-6. [DOM Interaction: Reading and Updating the Page](#6-dom-interaction-reading-and-updating-the-page)
-7. [Arrays & Array Methods: Working with Lists](#7-arrays--array-methods-working-with-lists)
-8. [Objects: Named Jars with Multiple Compartments](#8-objects-named-jars-with-multiple-compartments)
-9. [Loops: Repeating Rules Across Jars](#9-loops-repeating-rules-across-jars)
-10. [Conditionals: Decision Making](#10-conditionals-decision-making)
-11. [Asynchronous JavaScript: Fetching & Loading Data](#11-asynchronous-javascript-fetching--loading-data)
-12. [Template Literals: Building HTML Strings](#12-template-literals-building-html-strings)
-13. [Events: Listening for User Actions](#13-events-listening-for-user-actions)
-14. [Data Transformation & Regular Expressions](#14-data-transformation--regular-expressions)
-15. [Quick Reference: Key Commands](#15-quick-reference-key-commands)
-16. [Extending the SkillMap Portal: Future Possibilities](#16-extending-the-skillmap-portal-future-possibilities)
+1. [The Building Blocks of JavaScript](#1--the-building-blocks-of-javascript)
+2. [The Naming Confusion: Java vs JavaScript](#2--the-naming-confusion-java-vs-javascript)
+3. [JavaScript vs Python: Syntax & Element Management](#3--javascript-vs-python-syntax--element-management)
+4. [Variables: Jars and Labels](#4--variables-jars-and-labels)
+5. [Functions: Reusable Rules](#5--functions-reusable-rules)
+6. [DOM Interaction: Reading and Updating the Page](#6--dom-interaction-reading-and-updating-the-page)
+7. [Arrays & Array Methods: Working with Lists](#7--arrays--array-methods-working-with-lists)
+8. [Objects: Named Jars with Multiple Compartments](#8--objects-named-jars-with-multiple-compartments)
+9. [Loops: Repeating Rules Across Jars](#9--loops-repeating-rules-across-jars)
+10. [Conditionals: Decision Making](#10--conditionals-decision-making)
+11. [Asynchronous JavaScript: Fetching & Loading Data](#11--asynchronous-javascript-fetching--loading-data)
+12. [Template Literals: Building HTML Strings](#12--template-literals-building-html-strings)
+13. [Events: Listening for User Actions](#13--events-listening-for-user-actions)
+14. [Data Transformation & Regular Expressions](#14--data-transformation--regular-expressions)
+15. [Quick Reference: Key Commands](#15--quick-reference-key-commands)
+16. [Extending the SkillMap Portal: Future Possibilities](#16--extending-the-skillmap-portal-future-possibilities)
 
 ---
 
