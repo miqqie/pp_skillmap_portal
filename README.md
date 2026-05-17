@@ -1,4 +1,3 @@
-
 # 🗺️ SkillMap Portal
 
 An interactive, data-driven web application designed to visualize and compare professional competency frameworks. The **SkillMap Portal** allows users to traverse complex skill ecosystems, identify "Skill Portability" across industry sectors, and generate professional, customized career reports.
@@ -57,8 +56,9 @@ To move from fragmented Excel sheets to a high-performance web portal, the data 
 ### The Conversion Process:
 
 1.  **Normalization**: Raw CSV exports from various worksheets are cleaned and normalized to ensure consistent Skill IDs and Role names.
-2.  **Hierarchical Mapping**: Unlike flat CSV rows, the data is structured into a nested JSON format. This allows a single "Job Role" object to contain its associated skills, work functions, and proficiency levels as sub-arrays.
-3.  **Compression**: The resulting JSON is compressed into a `.gz` (Gzip) file before being hosted on the server.
+2.  **Hierarchical Mapping**: Unlike flat CSV rows, the data is structured into a nested JSON format with four distinct collections: `job_roles` (the skills matrix), `skills_map` (role-to-sector mapping), `descriptions` (role descriptions), and `cwf` (Critical Work Functions). This allows a single "Job Role" object to contain its associated skills, work functions, and proficiency levels as sub-arrays.
+3.  **Header Reordering**: On load, specific column pairs are swapped for logical display order (e.g., Classification before Items, Code before Category) without altering the underlying data.
+4.  **Compression**: The resulting JSON is compressed into a `.gz` (Gzip) file before being hosted on the server.
 
 ### Why Convert & Compress?
 
@@ -93,6 +93,7 @@ Used for professional documentation, manually calculating coordinates to place h
 
   * **Custom CSS Variables:** Allows **Larger Text Mode** and **Compact View** to work by swapping single values that update the entire UI instantly.
   * **Flexbox & CSS Grid:** Ensures alignment regardless of screen size.
+  * **Mobile-First Sidebar:** On screens below 900px, the filter panel becomes a fixed off-canvas drawer toggled by a top bar button, with a dimmed overlay for focus management.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
@@ -106,13 +107,17 @@ The core engine allows users to pivot data dynamically. You can set Rows, Column
 
 ### 2\. Sector & Track Analytics
 
-The interface features interactive **Sector and Track pills**. Clicking these triggers an automated analysis across all roles within that category to identify and display the **most in-demand skills**.
+The interface features interactive **Sector and Track pills**. Clicking these triggers an automated analysis across all roles within that category to identify and display the **most in-demand skills**, each individually hyperlinked for deeper exploration.
 
 ### 3\. "Skill Portability" Discovery
 
-The **Peer Discovery** algorithm scans the entire database to find other roles—even those in completely different sectors—that require that exact skill at the same level.
+The **Peer Discovery** algorithm scans the entire database to find other roles—even those in completely different sectors—that require that exact skill at the same level. Results are grouped by sector with clear subheadings for quick orientation.
 
-### 4\. Integrated Training Discovery
+### 4\. Collapsible Columns
+
+On both desktop and mobile, any data column can be collapsed to a narrow indicator strip by clicking its header chevron (▼/▶). This lets users focus on the columns most relevant to them without losing context of the full matrix structure. Column collapse states persist across re-renders within the same session.
+
+### 5\. Integrated Training Discovery
 
 Every skill displayed in the grid table is **dynamically hyperlinked**. Clicking a skill name triggers a direct search on the `myskillsfuture.gov.sg` portal, connecting theoretical competencies to real-world training courses.
 
@@ -124,9 +129,10 @@ Every skill displayed in the grid table is **dynamically hyperlinked**. Clicking
 
 The interface acts as a flexible workspace, allowing users to shape exactly what data they see:
 
-  * **Information Filtering**: Toggle specific data layers
-  * **Compact Mode**: Switches the table to a condensed layout, enabling more columns to be viewed simultaneously for efficient side-by-side comparison.
-  * **Larger Text Mode**: Re-scales the entire UI for accessibility or group presentations.
+  * **Information Filtering**: Toggle specific data layers using the sidebar dropdowns for Rows, Columns, and Content.
+  * **Compact Mode**: Switches the table to a condensed layout, enabling more columns to be viewed simultaneously. Automatically locks on when a second column dimension (Cols 2) is active, with a visual lock indicator explaining why.
+  * **Larger Text Mode**: Re-scales the entire UI for accessibility or group presentations, including modal dialogs and tooltips.
+  * **Collapsible Description**: The role description in the breadcrumb header can be expanded or collapsed by clicking, useful in Large Text Mode where it may otherwise dominate the layout.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
@@ -134,7 +140,7 @@ The interface acts as a flexible workspace, allowing users to shape exactly what
 
 ## 📄 Automated PDF Report Engine <a id="automated-pdf-report-engine"></a>
 
-The application features a sophisticated PDF generation engine powered by **jsPDF** and **autoTable**, designed to translate complex, interactive UI states into clean, professional, and print-ready reports. It employs two distinct rendering logic paths depending on the user’s intent:
+The application features a sophisticated PDF generation engine powered by **jsPDF** and **autoTable**, designed to translate complex, interactive UI states into clean, professional, and print-ready reports. It employs two distinct rendering logic paths depending on the user's intent:
 
 ### 1. The Dynamic Matrix Export (Pivot Grid)
 
@@ -144,6 +150,7 @@ This mode captures the exact analytical state of the interactive grid and reprod
   * **Dynamic Column Handling:** Automatically calculates column widths and scaling to accommodate variable data density without breaking layout.
   * **Pagination Intelligence:** Large matrices are split across multiple pages with structural continuity maintained.
   * **Contextual Headers:** Repeats column headers on each page and applies "(CONTINUED)" indicators to preserve readability across page breaks.
+  * **Unicode Sanitization:** Header cells are stripped of non-ASCII characters (chevrons, special symbols) before rendering to ensure clean output in Helvetica, preserving em-dashes and en-dashes as ASCII equivalents.
   * **Data Fidelity:** Ensures that no transformations or aggregations alter the original analytical view—what users see is exactly what gets exported.
 
 ### 2. The Comprehensive Job Comparison Report
@@ -160,6 +167,7 @@ This mode generates a structured, insight-driven document designed for decision-
 
   * **Typography & Branding:** Maintains a clean, modern visual identity suitable for formal sharing (e.g., internal HR reviews, career consultations).
   * **Smart Page-Break Logic:** Prevents row splitting and ensures multi-line descriptions remain intact, preserving semantic meaning and readability.
+  * **Alternating Row Styling & Accent Bars:** Even/odd row backgrounds and a color-coded left accent bar on the first column are reproduced in the PDF, maintaining visual consistency with the on-screen grid.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
@@ -187,6 +195,7 @@ To enable the **"Go Live"** functionality, install the following in VS Code:
 2.  **Analyze Demand**: Click on **Sector or Track pills** to identify the most in-demand skills in that area.
 3.  **Explore**: Click on any **hyperlinked skill** to find relevant courses on MySkillsFuture.
 4.  **Compare**: Click the Role pill to open the Comparison Modal and see skill transferability.
-5.  **Export**: Use the **Export PDF** button to save your view as a professional, shareable report.
+5.  **Collapse Columns**: Click any column header to collapse it to a narrow strip, keeping the matrix focused on what matters.
+6.  **Export**: Use the **Export PDF** button to save your view as a professional, shareable report.
 
 [⬆ Back to Table of Contents](#-table-of-contents)
