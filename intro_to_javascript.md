@@ -55,6 +55,8 @@ In 1995, Java was the most prominent programming language globally. JavaScript w
 
 In the SkillMap Portal, JavaScript handles **everything the user can interact with**: loading data, building the table, opening modals, filtering dropdowns, and generating PDFs — all without a page refresh.
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
 ---
 
 ## 🐍 JavaScript vs Python: Syntax & Element Management
@@ -111,6 +113,8 @@ if (!sVal || !rVal) return;
 ```
 
 No external tool required — the code is *already on the page*, so access is instant.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
@@ -174,14 +178,25 @@ for (let i = 0; i < str.length; i++) {
 
 ### 🧭 When to Use `const` vs `let`
 
-> **Rule of thumb:** Use `const` by default. Switch to `let` only when you *know* the value needs to change.
+Think of it this way: **if you're going to stick a label on a jar and never move it, use `const`. If the label might need to move to a different jar later, use `let`.**
 
-| Use `const` for | Use `let` for |
-|---|---|
-| DOM element references | Counters and loop indices |
-| Configuration values and colors | Cursor/position trackers |
-| Data arrays loaded from a file | Accumulated HTML strings |
-| Function references | Flags that flip between true/false |
+> **Rule of thumb:** Start with `const` for everything. Only switch to `let` when JavaScript complains — or when you already know the value will change (like a score that goes up, or a position that moves).
+
+Here are some everyday examples to make it click:
+
+**Use `const` when the thing stays the same:**
+- A button on the page — it's always *that* button, you're just clicking it
+- A colour like `[16, 185, 129]` — it doesn't change mid-way through
+- The data you loaded from a file — the contents can update, but the container stays the same
+
+**Use `let` when the thing needs to change:**
+- A page counter that goes `1, 2, 3...` as you loop through PDF pages
+- A running Y position on the PDF that moves down as you draw each section
+- A piece of HTML text you're building up piece by piece
+
+In short: `const` is a label **glued** to the jar. `let` is a label on a **sticky note** — easy to peel off and move.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
@@ -264,6 +279,8 @@ const getFriendlyLabel = (label) => {
     return "K&A";
 };
 ```
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
@@ -358,6 +375,8 @@ for (const [fn, ts] of Object.entries(groups)) {
 ```
 
 This pattern — `createElement` → set content → `appendChild` — is a core DOM building block.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
@@ -456,6 +475,8 @@ const sectors = [...new Set(jobData.map(d => d[sKey]))].filter(Boolean).sort();
 const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val !== '-'))];
 ```
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
 ---
 
 ## 🗃️ Objects: Named Jars with Multiple Compartments
@@ -521,6 +542,8 @@ const { jsPDF } = window.jspdf;
 // const jsPDF = window.jspdf.jsPDF;
 ```
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
 ---
 
 ## 🔄 Loops: Repeating Rules Across Jars
@@ -568,6 +591,8 @@ for (const [fn, ts] of Object.entries(groups)) {
 ```
 
 `Object.entries()` converts an object into an array of `[key, value]` pairs, which you can then loop over cleanly.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
@@ -655,6 +680,8 @@ if (isCol2Active) {
 
 One `if/else` block manages six DOM property changes simultaneously. This is what makes JavaScript powerful — a single conditional can reshape a visible section of the UI.
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
 ---
 
 ## ⏳ Asynchronous JavaScript: Fetching & Loading Data
@@ -716,6 +743,8 @@ swapHeaders(skillHeaders, "TSC_CCS Category", "TSC_CCS Code");
 
 The `[a, b] = [b, a]` pattern is a clean JavaScript trick for swapping two values without a temporary holding variable.
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
 ---
 
 ## 📝 Template Literals: Building HTML Strings
@@ -776,6 +805,8 @@ document.body.appendChild(div);  // attach to the live DOM
 ```
 
 The `${}` placeholders are evaluated at runtime — `accessibilityClass`, `title`, `level`, `currentSector` are all live JavaScript values embedded directly into the HTML string.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
@@ -850,6 +881,8 @@ observer.observe(document.body, { childList: true });
 
 This is an advanced pattern — a `MutationObserver` fires a callback whenever child nodes are added or removed from the watched element.
 
+[⬆ Back to Table of Contents](#-table-of-contents)
+
 ---
 
 ## 🔤 Data Transformation & Regular Expressions
@@ -915,6 +948,8 @@ const key = JSON.parse(groupKey);
 ```
 
 `JSON.stringify` is an elegant trick for using a complex object as a Map key — since Map keys are compared by reference, not value, turning an object into a string makes it safely comparable.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
 
 ---
 
