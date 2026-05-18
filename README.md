@@ -81,6 +81,8 @@ JavaScript provides the **behavior** of the portal. "Vanilla" refers to using th
   * **Why Vanilla?** It eliminates "framework overhead," ensuring the app remains lightweight and loads nearly instantly.
   * **Asynchronous Logic:** Uses `async/await` patterns to decompress and process data in the background.
 
+For an introduction to Javascript, please refer to [intro_to_javascript](intro_to_javascript.md)
+
 ### 2\. Performance: Pako (zlib)
 
 To handle the large-scale data, the portal uses **Pako**. It fetches the compressed `.gz` data and decompresses it instantly in the browser's memory.
