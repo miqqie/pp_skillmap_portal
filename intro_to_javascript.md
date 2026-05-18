@@ -791,7 +791,7 @@ const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val
 
 ---
 
-## 8. 🗃️ Objects: Named Jars with Multiple Compartments
+## 8. Objects: Named Jars with Multiple Compartments
 
 <details>
 <summary>Click to expand</summary>
@@ -1227,7 +1227,7 @@ document.body.appendChild(div);  // attach to the live DOM
 
 ---
 
-## 13. 🖱️ Events: Listening for User Actions
+## 13. Events: Listening for User Actions
 
 <details>
 <summary>Click to expand</summary>
