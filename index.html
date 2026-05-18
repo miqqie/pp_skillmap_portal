@@ -28,19 +28,19 @@
         
         aside { 
             width: var(--sidebar-width); background: var(--slate-900); color: white; 
-            padding: 25px; display: flex; flex-direction: column; gap: 12px;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.1); z-index: 1000; overflow-y: auto;
+            padding: 0; display: flex; flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden;
         }
-        aside h2 { font-size: 18px; margin: 0 0 10px 0; color: var(--primary); }
+        aside h2 { font-size: 17px; margin: 0 0 8px 0; color: var(--primary); }
         .filter-group { display: flex; flex-direction: column; gap: 4px; }
-        .filter-group label { font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 800; letter-spacing: 0.05em; }
-        aside select { background: var(--slate-800); color: white; border: 1px solid #475569; padding: 8px; border-radius: 6px; font-size: 13px; }
+        .filter-group label { font-size: 10px; text-transform: uppercase; color: #555555; font-weight: 800; letter-spacing: 0.05em; }
+        aside select { background: var(--slate-800); color: white; border: 1px solid #475569; padding: 9px 8px; border-radius: 6px; font-size: 13px; width: 100%; box-sizing: border-box; max-width: 100%; }
         .btn-download { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 10px; }
         .btn-download:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-reset { margin-top: auto; background: transparent; border: 1px solid #f87171; color: #f87171; padding: 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
         main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .breadcrumb-header { background: white; padding: 15px 30px; border-bottom: 1px solid var(--slate-200); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-        .bc-pill { font-weight: 700; color: var(--primary-dark); background: #ecfdf5; padding: 4px 12px; border-radius: 999px; border: 1px solid #d1fae5; font-size: 14px; white-space: nowrap; }
+        .bc-pill { font-weight: 700; color: var(--primary-dark); background: #ecfdf5; padding: 4px 12px; border-radius: 999px; border: 1px solid #d1fae5; font-size: 14px; white-space: nowrap; max-width: 100%; }
         .bc-description { 
             font-size: 13px; color: #1e3a8a; border-left: 2px solid var(--slate-200); 
             padding-left: 15px; font-style: italic; font-weight: 500; cursor: help; 
@@ -66,15 +66,61 @@
         .table-viewport {
     flex: 1;
     overflow: auto;
-    padding: 0 40px 40px 20px; /* Increased right and bottom padding */
+    padding: 0 30px 30px 30px;
 }
+
+/* ---- DESKTOP COLLAPSIBLE COLUMNS ---- */
+#grid th.col-toggle-th {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+#grid th.col-toggle-th:hover {
+    background: #e0f2f1;
+}
+#grid th.col-toggle-th .col-chevron {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 9px;
+    color: var(--primary);
+    transition: transform 0.2s;
+    vertical-align: middle;
+}
+#grid th.col-collapsed {
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    padding: 12px 4px !important;
+    overflow: hidden;
+    background: #ecfdf5 !important;
+    border-right: 2px solid var(--primary) !important;
+}
+#grid th.col-collapsed .col-label-text { display: none; }
+#grid th.col-collapsed .col-chevron {
+    margin-left: 0;
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    transform: rotate(-90deg);
+}
+#grid td.col-collapsed-cell {
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #f0fdf4 !important;
+    border-right: 2px solid var(--primary) !important;
+}
+#grid td.col-collapsed-cell * { display: none !important; }
+
         #grid {
     border-collapse: collapse;
     background: white;
     width: 100%;
     font-size: 13px;
     border: 1px solid var(--slate-200);
-    margin-right: 400px; /* Adds extra scrollable space at the end */
 }
 /* Ensure the header and rows still look right for the main grid */
 #grid th {
@@ -87,18 +133,19 @@
     z-index: 30;
 }
         th { background: var(--slate-100); padding: 12px; border: 1px solid var(--slate-200); text-align: left; position: sticky; top: 0; z-index: 10; }
-        td { padding: 12px; border: 1px solid var(--slate-200); vertical-align: top; min-width: 280px; line-height: 1.4; color: var(--slate-900); }
+        td { padding: 12px; border: 1px solid var(--slate-200); vertical-align: top; min-width: 280px; line-height: 1.4; color: #000000; }
         
-        .row-header { background: white; font-weight: 700; position: sticky; left: 0; z-index: 15; border-right: 3px solid var(--primary); width: 320px; line-height: 1.2; color: var(--slate-900); }
+        .row-header { background: white; font-weight: 700; position: sticky; left: 0; z-index: 15; border-right: 3px solid var(--primary); width: 320px; line-height: 1.2; color: #000000; }
         .skill-link { color: var(--primary-dark); text-decoration: underline; cursor: pointer; display: inline-block; }
         .skill-link:hover { color: var(--blue-600); }
-        .tier-2 { display: block; font-size: 11px; color: #475569; font-weight: 500; margin-top: 8px; line-height: 1.5; } 
+        .tier-2 { display: block; font-size: 11px; color: #111111; font-weight: 500; margin-top: 8px; line-height: 1.5; } 
         .tier-3 { display: block; font-size: 10px; color: #555e6a; font-weight: 400; font-style: italic; margin-top: 3px; } 
-        .bullet { margin-bottom: 8px; padding-left: 10px; border-left: 2px solid #3b82f6; color: #334155; }
-        #toast { visibility: hidden; min-width: 250px; background-color: #334155; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .bullet { margin-bottom: 8px; padding-left: 10px; border-left: 2px solid #3b82f6; color: #111111; }
+        #toast { visibility: hidden; min-width: 250px; background-color: #111111; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         body.large-text aside select { font-size: 16px; }
         body.large-text .bc-pill { font-size: 18px; }
         body.large-text .bc-description { font-size: 17px; }
@@ -117,12 +164,58 @@
             font-size: 17px !important;
             line-height: 1.5 !important;
         }
+        body.large-text #grid th,
+        body.large-text #grid th .col-label-text {
+            font-size: 15px !important;
+            line-height: 1.4 !important;
+        }
         body.large-text .row-header {
             width: 380px !important;
         }
         body.large-text .tier-3 {
             font-size: 15px !important;
         }
+        body.large-text #grid th {
+            font-size: 17px !important;
+        }
+        /* --- SIDEBAR --- */
+        body.large-text aside h2 { font-size: 20px; }
+        body.large-text .filter-group label { font-size: 13px; }
+        body.large-text .btn-download { font-size: 16px; padding: 14px; }
+        body.large-text .btn-reset { font-size: 14px; padding: 10px; }
+        body.large-text #compact-view-group label,
+        body.large-text #compact-view-group label[for="view-toggle"] { font-size: 16px !important; }
+        body.large-text label[for="font-toggle"] { font-size: 18px !important; }
+        /* section headings above hr dividers */
+        body.large-text .sidebar-section-heading { font-size: 15px !important; }
+        /* --- STATS BAR --- */
+        body.large-text .count-badge { font-size: 14px; padding: 6px 14px; }
+        body.large-text .count-val { font-size: 12px; }
+        /* --- CWF PANEL --- */
+        body.large-text .cwf-toggle-label { font-size: 16px; }
+        body.large-text .cwf-header::before { font-size: 12px; }
+        /* --- MODALS (peer/sector/track/comparison) --- */
+        body.large-text .peer-item { font-size: 17px !important; line-height: 1.8 !important; }
+        body.large-text .modal-title { font-size: 22px !important; }
+        body.large-text .section-label { font-size: 16px !important; }
+        body.large-text .sector-subheader { font-size: 16px !important; }
+        body.large-text #peer-modal p,
+        body.large-text #peer-modal li,
+        body.large-text #peer-modal span,
+        body.large-text #peer-modal div { font-size: 16px; line-height: 1.7; }
+        body.large-text #peer-modal h3 { font-size: 22px !important; }
+        body.large-text #peer-modal h4 { font-size: 16px !important; }
+        body.large-text #peer-modal button { font-size: 15px !important; padding: 14px !important; }
+        /* skill detail modal */
+        body.large-text #detail-modal td,
+        body.large-text #detail-modal th { font-size: 15px !important; line-height: 1.6 !important; }
+        body.large-text #detail-modal h3 { font-size: 20px !important; }
+        /* comparison modal */
+        body.large-text .cwf-label { font-size: 16px !important; }
+        body.large-text .skill-common-badge { font-size: 15px !important; }
+        body.large-text .skill-overlap-tag { font-size: 13px !important; }
+        /* welcome / loading */
+        body.large-text #welcome-prompt { font-size: 18px; }
         .btn-download:hover:not(:disabled) {
             background: var(--primary-dark);
             transform: translateY(-1px);
@@ -179,8 +272,53 @@
     color: var(--blue-800);
     background: #dbeafe;
 }
-/* Base Peer Item styles */
-.peer-item { font-size: 13px; color: #1e293b; }
+/* Comparison modal text classes */
+.comp-skill-row { font-size: 12.5px; }
+.comp-shared-tag { font-size: 9px; }
+.comp-diff-label { font-size: 11px; }
+.comp-section-header { font-size: 11px; }
+.comp-role-label { font-size: 11px; text-transform: uppercase; color: var(--slate-500); font-weight: 800; margin-bottom: 4px; }
+.comp-role-name { font-size: 14px; font-weight: 700; }
+.cwf-label { font-size: 13.5px; }
+body.large-text .comp-skill-row { font-size: 16px !important; }
+body.large-text .comp-shared-tag { font-size: 12px !important; }
+body.large-text .comp-diff-label { font-size: 14px !important; }
+body.large-text .comp-section-header { font-size: 15px !important; }
+body.large-text .comp-role-label { font-size: 14px !important; }
+body.large-text .comp-role-name { font-size: 18px !important; }
+body.large-text .cwf-label { font-size: 17px !important; }
+/* Base modal text classes */
+.modal-skill-row-name { font-size: 13px; }
+.modal-skill-count { font-size: 14px; font-weight: 900; }
+.modal-skill-roles-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #555555; }
+.modal-no-results { font-size: 12px; font-style: italic; color: #555555; margin: 0; }
+.modal-close-btn { font-size: 14px; font-weight: 700; }
+.detail-modal-title { font-size: 16px; }
+.detail-modal-table { font-size: 12px; }
+.detail-modal-level { font-size: 12px; font-weight: 800; color: #059669; }
+.detail-modal-desc { font-size: 12px; line-height: 1.5; color: #111111; }
+.detail-modal-th { font-size: 12px; }
+/* Sidebar label classes */
+.sidebar-section-heading { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #10b981; margin: 4px 0 2px 0; }
+.sidebar-toggle-label { font-size: 13px !important; cursor: pointer; color: white; }
+.sidebar-font-label { font-size: 18px !important; cursor: pointer; color: white; }
+.sidebar-lock-tooltip { font-size: 11px; }
+.sidebar-loading-text { font-size: 13px; color: #64748b; font-weight: 500; }
+/* Large-text overrides for all above */
+body.large-text .modal-skill-row-name { font-size: 17px !important; }
+body.large-text .modal-skill-count { font-size: 18px !important; }
+body.large-text .modal-skill-roles-label { font-size: 13px !important; }
+body.large-text .modal-no-results { font-size: 16px !important; }
+body.large-text .modal-close-btn { font-size: 17px !important; padding: 14px !important; }
+body.large-text .detail-modal-title { font-size: 22px !important; }
+body.large-text .detail-modal-table { font-size: 16px !important; }
+body.large-text .detail-modal-level { font-size: 16px !important; }
+body.large-text .detail-modal-desc { font-size: 16px !important; line-height: 1.7 !important; }
+body.large-text .detail-modal-th { font-size: 16px !important; }
+body.large-text .sidebar-toggle-label { font-size: 17px !important; }
+body.large-text .sidebar-font-label { font-size: 20px !important; }
+body.large-text .sidebar-lock-tooltip { font-size: 14px !important; }
+body.large-text .sidebar-loading-text { font-size: 17px !important; }
 .modal-title { font-size: 18px; }
 .section-label { font-size: 12px; }
 .sector-subheader { font-size: 11px; }
@@ -227,74 +365,207 @@
       /* MOBILE MENU BUTTON */
 #mobile-menu-btn{
     display:none;
-    position:sticky;
-    top:0px;
-    left:10px;
-    z-index:1000;
-    background:var(--primary);
-    color:white;
-    border:none;
-    padding:10px 14px;
-    border-radius:0px;
-    font-weight:700;
-  /* Alignment */
-    text-align: right; 
-    padding: 12px 20px; /* Added 20px right padding so text isn't flush against the edge */
 }
 /* RESPONSIVE LAYOUT */
 @media (max-width: 900px){
-    body{
-        flex-direction:column;
-        overflow:auto;
-        height:auto;
+    /* Prevent horizontal bounce/overscroll */
+    html {
+        overflow-x: hidden;
+        max-width: 100vw;
+        overscroll-behavior-x: none;
+    }
+    body {
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+        overflow: visible; /* override desktop overflow:hidden so fixed topbar works on iOS */
+    }
+    /* Mobile top bar — fixed so it never scrolls away */
+    #mobile-topbar {
+        display: flex;
+        align-items: center;
+        background: var(--slate-900);
+        padding: 10px 16px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        flex-shrink: 0;
+        width: 100%;
+        box-sizing: border-box;
     }
     aside{
         position:fixed;
-        left:-100%;
+        left:-320px;
         top:0;
         height:100%;
-        width:280px;
-        transition:0.3s;
+        width:min(85vw, 300px);
+        transition: left 0.3s ease;
+        z-index: 5002;
     }
     body.sidebar-open aside{
         left:0;
     }
-    #mobile-menu-btn{
-        display:block;
-    }
     main{
         width:100%;
-        margin-top:0px;
+        max-width: 100vw;
+        margin-top:0;
+        padding-top: 52px; /* height of fixed topbar */
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: visible;
+        height: auto;
+    }
+    /* Shift welcome message lower on mobile */
+    #welcome-msg {
+        align-items: center !important;
+        padding-top: 120px !important;
     }
     .breadcrumb-header{
         flex-wrap:wrap;
         gap:8px;
-        padding:12px 16px;
+        padding:10px 16px;
+        box-sizing: border-box;
+        width: 100%;
+        align-items: flex-start;
+    }
+    /* Pills: don't clip on small screens */
+    .bc-pill {
+        white-space: normal;
+        word-break: break-word;
+        max-width: calc(100vw - 32px);
+        display: inline-block;
     }
     .bc-description{
         max-width:100%;
         white-space:normal;
+        border-left: none;
+        border-top: 1px solid var(--slate-200);
+        padding-left: 0;
+        padding-top: 6px;
+        padding-right: 0;
+        width: 100%;
+        margin-left: 0;
+        display: block;
+        box-sizing: border-box;
     }
     .cwf-wrapper{
-        margin:10px 16px;
+        margin:8px 16px;
     }
     .stats-bar{
         padding:5px 16px;
     }
+    /* Table: no horizontal scroll on mobile — use collapsible columns instead */
     .table-viewport {
-    flex: 1;
-    overflow: auto;
-    padding: 0 10px 10px 10px; 
-}
-    table{
-        min-width:700px;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: visible;
+        padding: 0 16px 24px 16px;
     }
-    td{
-        min-width:200px;
+/* Full-width table on mobile */
+    #grid {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+        font-size: 12px !important;
+        table-layout: fixed;
     }
+    /* Row header takes up fixed portion */
     .row-header{
-        width:200px;
-        color: var(--slate-900);
+        width: 38% !important;
+        min-width: 0 !important;
+        max-width: 38% !important;
+        font-size: 11.5px !important;
+        padding: 8px 6px !important;
+        color: #000000;
+        word-break: break-word;
+        white-space: normal;
+        background: white !important;
+        box-shadow: none;
+        position: static !important; /* remove sticky on mobile */
+    }
+    tbody tr:hover .row-header {
+        background: #f0fdf4 !important;
+    }
+    /* Data cells stack within table */
+    #grid td:not(.row-header) {
+        min-width: 0 !important;
+        font-size: 12px !important;
+        padding: 8px 6px !important;
+        word-break: break-word;
+        white-space: normal;
+    }
+    /* Column toggle header buttons */
+    #grid th.col-toggle-th {
+        font-size: 11px !important;
+        padding: 6px 6px !important;
+        white-space: normal;
+        word-break: break-word;
+        cursor: pointer;
+        user-select: none;
+        background: var(--slate-100);
+        position: relative;
+    }
+    #grid th.col-toggle-th .col-chevron {
+        display: inline-block;
+        margin-left: 4px;
+        font-size: 9px;
+        color: var(--primary);
+        transition: transform 0.2s;
+    }
+    #grid th.col-toggle-th.col-collapsed .col-chevron {
+        transform: rotate(-90deg);
+    }
+    #grid th:not(.col-toggle-th) {
+        font-size: 11px !important;
+        padding: 8px 6px !important;
+        white-space: nowrap;
+    }
+    /* Collapsed column: fully hide all cell contents */
+    #grid td.col-collapsed-cell {
+        padding: 0 !important;
+        overflow: hidden !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+        color: transparent !important;
+    }
+    #grid td.col-collapsed-cell * {
+        display: none !important;
+    }
+    #grid th.col-collapsed {
+        width: 28px !important;
+        min-width: 28px !important;
+        max-width: 28px !important;
+        padding: 8px 2px !important;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: clip;
+        font-size: 0 !important; /* hide text */
+        border-right: 2px solid var(--primary);
+    }
+    #grid th.col-collapsed .col-chevron {
+        font-size: 11px !important;
+        display: block;
+        text-align: center;
+    }
+    /* Hide verbose tier-3 on mobile */
+    .tier-3 {
+        display: none !important;
+    }
+    .tier-2 {
+        font-size: 10.5px !important;
+        margin-top: 5px !important;
     }
 }
 /* Update this existing rule to include #final-track */
@@ -387,7 +658,7 @@ body.large-text .bc-description:not(.expanded) {
     padding: 12px 15px;
     border-bottom: 1px solid var(--slate-200);
     font-weight: 700;
-    color: var(--slate-900);
+    color: #000000;
     min-height: 65px; /* Fixed height to keep contents aligned */
     display: flex;
     align-items: center; /* Vertically center the text/dropdown */
@@ -485,106 +756,278 @@ body.large-text .modal-large .skill-link {
     display:block;
 }
 
-/* Mobile layout */
-@media (max-width:768px){
+/* --- MOBILE FIXES --- */
+/* --- DESKTOP STYLES (Default) --- */
+#mobile-topbar {
+    display: none; /* Hidden on desktop */
+}
+.mobile-only, .sidebar-overlay {
+    display: none !important; /* Hide mobile-only components on desktop */
+}
 
-    /* Stack role columns */
-    .comparison-container{
-        flex-direction:column;
+/* --- MOBILE STYLES (Max-width: 900px) --- */
+@media (max-width: 900px) {
+    /* Mobile topbar filter button */
+    #mobile-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--slate-900);
+        padding: 10px 16px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        flex-shrink: 0;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    /* Critical Work Functions -> 2 columns */
-    .cwf-grid{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:8px;
+    #mobile-filter-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 9px 18px;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        box-shadow: 0 2px 8px rgba(16,185,129,0.35);
     }
 
-    /* Shared competencies -> 1 column */
-    .skills-grid{
-        grid-template-columns:1fr;
+    #mobile-topbar-title {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.3px;
     }
 
-    /* Modal full width */
-    #peer-modal{
-        width:95vw !important;
-        max-height:92vh !important;
-        padding:18px !important;
+    .mobile-only {
+        display: flex !important; /* Header inside sidebar */
+    }
+
+    /* Sidebar Transformation */
+    aside {
+        position: fixed !important;
+        left: calc(-1 * min(85vw, 300px)) !important;
+        top: 0;
+        height: 100vh;
+        width: min(85vw, 300px) !important;
+        transition: left 0.3s ease !important;
+        z-index: 5002 !important;
+        padding: 0 !important;
+    }
+
+    body.sidebar-open aside {
+        left: 0 !important;
+        transform: none !important;
+    }
+
+    /* Inner scroll for filters */
+    .filter-scroll-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Dimmed background overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.55);
+        z-index: 5001;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+    }
+    body.sidebar-open .sidebar-overlay {
+        display: block !important;
+    }
+    /* Hide the fixed topbar while sidebar is open so it doesn't overlap the Close button */
+    body.sidebar-open #mobile-topbar {
+        display: none !important;
     }
 }
     </style>
 </head>
 <body>
-<button id="mobile-menu-btn" onclick="toggleSidebar()">☰ Filters</button>
-<div id="toast">Skill copied! Paste it in the search bar.</div>
-
-<aside>
-    <h2 style="display: flex; align-items: center; gap: 12px; color: var(--primary);">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-        </svg>
-        <span style="letter-spacing: -0.5px; font-weight: 700;">SkillMap Portal</span>
-    </h2>
-    <div class="filter-group"><label>Sector <span id="sector-count-label" style="color: var(--primary); margin-left: 2px;"></span></label><select id="sel-sector" onchange="updateRoles()"></select></div>
-    <div class="filter-group"><label>Job Role in Selected Sector <span id="role-count-label" style="color: var(--primary); margin-left: 2px;"></span></label><select id="sel-role" onchange="render()"></select></div>
-    <hr style="border: 0; border-top: 1px solid #334155; margin: 5px 0;">
-    <div class="filter-group"><label>Row 1</label><select id="row1" onchange="render()"></select></div>
-    <div class="filter-group"><label>Row 2</label><select id="row2" onchange="render()"></select></div>
-    <div class="filter-group"><label>Row 3</label><select id="row3" onchange="render()"></select></div>
-    <hr style="border: 0; border-top: 1px solid #334155; margin: 5px 0;">
-    <div class="filter-group"><label>Cols 1</label><select id="col1" onchange="render()"></select></div>
-    <div class="filter-group"><label>Cols 2</label><select id="col2" onchange="render()"></select></div>
+    <div id="mobile-topbar">
+        <span id="mobile-topbar-title">SkillMap Portal</span>
+        <button id="mobile-filter-btn" onclick="toggleSidebar()">
+            🔍 Filters
+        </button>
+    </div>
     
-    <div class="filter-group"><label>Content</label><select id="val" onchange="render()"></select></div>
-    <div class="filter-group" style="flex-direction: row; align-items: center; gap: 8px; margin: 5px 0; background: var(--slate-800); padding: 8px; border-radius: 6px;">
-        <input type="checkbox" id="view-toggle" onchange="render()" style="width: 18px; height: 18px; cursor: pointer;">
-        <label for="view-toggle" style="font-size: 13px; cursor: pointer; color: white; text-transform: none; letter-spacing: normal;">Compact View </label>
-    </div>
-    <div class="filter-group" style="flex-direction: row; align-items: center; gap: 8px; margin: 10px 0; background: var(--slate-800); padding: 8px; border-radius: 6px;">
-        <input type="checkbox" id="font-toggle" onchange="toggleAccessibility()" style="width: 18px; height: 18px; cursor: pointer;">
-        <label for="font-toggle" style="font-size: 15px; cursor: pointer; color: white; text-transform: none; letter-spacing: normal;">Larger Text Mode</label>
-    </div>
+    <div id="toast">Skill copied! Paste it in the search bar.</div>
+    
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <button id="btn-pdf" class="btn-download" onclick="downloadPDF()" disabled>💾 Export PDF</button>
-    <button class="btn-reset" onclick="location.reload()">↺ Reset</button>
-</aside>
-
-<main>
-    <div id="welcome-msg" style="display:flex; justify-content:center; align-items:center; height:100%; color:#94a3b8;">Select a Sector and Role to begin.</div>
-    <div id="app-content" style="display:none; height: 100%; flex-direction: column;">
-        <div class="breadcrumb-header">
-    <span id="final-sector" class="bc-pill" onclick="showSectorAnalytics(this.innerText)"></span>
-    <span id="final-track" class="bc-pill" style="display:none; cursor:pointer;" onclick="showTrackAnalytics(this.innerText)"></span>
-    <span id="final-role" class="bc-pill" style="cursor:pointer;" onclick="showRoleComparison()"></span>
-    <span id="final-desc" class="bc-description" onclick="this.classList.toggle('expanded')"></span>
-</div>
-
-        <div id="cwf-wrapper" class="cwf-wrapper" style="display:none;">
-    <div id="cwf-toggle" class="cwf-toggle-btn" onclick="toggleCWF()">
-        <div class="cwf-toggle-label">
-            Critical Work Functions <span id="cwf-count-tag"></span>
-        </div>
-        <div id="cwf-icon">▼</div>
-    </div>
-            <div id="cwf-container" class="cwf-container"><div id="cwf-content"></div></div>
+    <aside id="main-sidebar">
+        <div class="mobile-only" style="display: none; justify-content: space-between; align-items: center; padding: 14px 16px; background: var(--slate-800); border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 10;">
+            <div style="color: white; font-weight: 700; font-size: 1.1rem; display:flex; align-items:center; gap:8px;">
+                <span style="color:var(--primary);">🔍</span> Filters
+            </div>
+            <button onclick="toggleSidebar()" style="background: transparent; color: #f87171; border: 1px solid #f87171; padding: 7px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; display:flex; align-items:center; gap:5px;">
+                ✕ Close
+            </button>
         </div>
 
-        <div class="stats-bar"><div class="count-badge">UNIQUE <span id="val-label"></span>:<span id="unique-count" class="count-val">0</span></div></div>
-        <div class="table-viewport"><table id="grid"><thead id="h"></thead><tbody id="b"></tbody></table></div>
-    </div>
-</main>
+        <div class="filter-scroll-container" style="padding: 20px 14px 20px 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable;">
+            <h2 style="display: flex; align-items: center; gap: 12px; color: var(--primary); margin-top: 0;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                <span style="letter-spacing: -0.5px; font-weight: 700;">SkillMap Portal</span>
+            </h2>
+
+            <div class="filter-group"><label>Sector <span id="sector-count-label" style="color: var(--primary); margin-left: 2px;"></span></label><select id="sel-sector" onchange="updateRoles()"></select></div>
+            <div class="filter-group"><label>Job Role <span id="role-count-label" style="color: var(--primary); margin-left: 2px;"></span></label><select id="sel-role" onchange="render()"></select></div>
+            
+            <hr style="border: 0; border-top: 1px solid #334155; margin: 5px 0;">
+            <div class="sidebar-section-heading">Row grouping</div>
+            <div class="filter-group"><label>Group by (primary)</label><select id="row1" onchange="render()"></select></div>
+            <div class="filter-group"><label>Then by</label><select id="row2" onchange="render()"></select></div>
+            <div class="filter-group"><label>Then by (detail)</label><select id="row3" onchange="render()"></select></div>
+            
+            <hr style="border: 0; border-top: 1px solid #334155; margin: 5px 0;">
+            <div class="sidebar-section-heading">Column grouping</div>
+            <div class="filter-group"><label>Break down by</label><select id="col1" onchange="render()"></select></div>
+            <div class="filter-group"><label>And by</label><select id="col2" onchange="render()"></select></div>
+            <div class="filter-group"><label>Show</label><select id="val" onchange="render()"></select></div>
+            
+            <div id="compact-view-group" class="filter-group" style="flex-direction: row; align-items: center; gap: 8px; margin: 5px 0; background: var(--slate-800); padding: 8px; border-radius: 6px; position: relative;">
+                <input type="checkbox" id="view-toggle" onchange="render()" style="width: 18px; height: 18px; cursor: pointer;" checked>
+                <label for="view-toggle" class="sidebar-toggle-label">Compact View</label>
+                <span id="compact-lock-icon" style="display:none; margin-left:auto; font-size:13px; cursor:help; color:#fbbf24;"
+                    onmouseenter="document.getElementById('compact-lock-tooltip').style.display='block'"
+                    onmouseleave="document.getElementById('compact-lock-tooltip').style.display='none'">🔒</span>
+                <div id="compact-lock-tooltip" class="sidebar-lock-tooltip" style="display:none; position:absolute; left:0; bottom:calc(100% + 6px); background:#1e293b; color:#f8fafc; padding:8px 11px; border-radius:7px; white-space:nowrap; z-index:999; border:1px solid #334155; pointer-events:none; box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                    🔒 Compact view is locked while <strong style="color:#fbbf24;">And by</strong> is active.<br>Select <strong style="color:#6ee7b7;">None</strong> in And by to unlock.
+                </div>
+            </div>
+            
+            <div class="filter-group" style="flex-direction: row; align-items: center; gap: 8px; margin: 10px 0; background: var(--slate-800); padding: 8px; border-radius: 6px;">
+                <input type="checkbox" id="font-toggle" onchange="toggleAccessibility()" style="width: 18px; height: 18px; cursor: pointer;">
+                <label for="font-toggle" class="sidebar-font-label">Larger Text Mode</label>
+            </div>
+
+            <button id="btn-pdf" class="btn-download" onclick="downloadPDF()" disabled>💾 Export PDF</button>
+            <button class="btn-reset" style="margin-top: auto;" onclick="location.reload()">↺ Reset</button>
+        </div>
+    </aside>
+
+    <main>
+        <div id="welcome-msg" style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; gap:16px; color:#555555;">
+            <div id="loading-indicator" style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+                <svg width="36" height="36" viewBox="0 0 36 36" style="animation: spin 0.9s linear infinite;" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                    <path d="M18 4 A14 14 0 0 1 32 18" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span class="sidebar-loading-text">Loading skill data…</span>
+            </div>
+            <div id="welcome-prompt" style="display:none;" class="sidebar-loading-text">Select a Sector and Role to begin.</div>
+        </div>
+
+        <div id="app-content" style="display:none; height: 100%; flex-direction: column;">
+            <div class="breadcrumb-header">
+                <span id="final-sector" class="bc-pill" role="button" tabindex="0" aria-label="View sector analytics" onclick="showSectorAnalytics(this.innerText)" onkeydown="if(event.key==='Enter'||event.key===' ')showSectorAnalytics(this.innerText)"></span>
+                <span id="final-track" class="bc-pill" style="display:none; cursor:pointer;" role="button" tabindex="0" aria-label="View track analytics" onclick="showTrackAnalytics(this.innerText)" onkeydown="if(event.key==='Enter'||event.key===' ')showTrackAnalytics(this.innerText)"></span>
+                <span id="final-role" class="bc-pill" style="cursor:pointer;" role="button" tabindex="0" aria-label="Compare this role" onclick="showRoleComparison()" onkeydown="if(event.key==='Enter'||event.key===' ')showRoleComparison()"></span>
+                <span id="final-desc" class="bc-description" role="button" tabindex="0" aria-label="Toggle role description" onclick="this.classList.toggle('expanded')" onkeydown="if(event.key==='Enter'||event.key===' ')this.classList.toggle('expanded')"></span>
+            </div>
+
+            <div id="cwf-wrapper" class="cwf-wrapper" style="display:none;">
+                <div id="cwf-toggle" class="cwf-toggle-btn" role="button" tabindex="0" aria-expanded="false" aria-label="Expand Critical Work Functions" onclick="toggleCWF()" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCWF()">
+                    <div class="cwf-toggle-label">Critical Work Functions <span id="cwf-count-tag"></span></div>
+                    <div id="cwf-icon">▼</div>
+                </div>
+                <div id="cwf-container" class="cwf-container"><div id="cwf-content"></div></div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="count-badge">UNIQUE <span id="val-label"></span>: <span id="unique-count" class="count-val">0</span></div>
+            </div>
+
+            <div class="table-viewport">
+                <table id="grid">
+                    <thead id="h"></thead>
+                    <tbody id="b"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
 <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
 <script>
     let skillData=[], jobData=[], jobDescData=[], cwfData=[];
     let skillHeaders=[], jobHeaders=[], descHeaders=[], cwfHeaders=[];
- 
-function toggleSidebar(){
-    document.body.classList.toggle("sidebar-open");
+
+    // Handle Modal "Bottom Sheet" Behavior
+    // Update your showModal function or add a global observer
+
+    const modal = document.querySelector('.peer-modal');
+    if (modal) observer.observe(modal, { attributes: true, attributeFilter: ['style'] });
+// --- UNIFIED MOBILE SIDEBAR LOGIC ---
+// --- IMPROVED MOBILE FILTER LOGIC ---
+function toggleSidebar() {
+    const isOpen = document.body.classList.contains("sidebar-open");
+    if (isOpen) {
+        document.body.classList.remove("sidebar-open");
+        document.body.style.overflow = ""; // Restore background scroll
+    } else {
+        document.body.classList.add("sidebar-open");
+        document.body.style.overflow = "hidden"; // Lock scroll for better focus
+    }
 }
+
+// We remove the event listeners that auto-close on 'change' 
+// and let the user click the "Close" button instead.
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Create the overlay if it doesn't exist
+    if (!document.querySelector('.sidebar-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        overlay.onclick = toggleSidebar; 
+        document.body.appendChild(overlay);
+    }
+    // 2. Auto-enable compact view on mobile
+    initMobileDefaults();
+
+    // 3. Re-check column overflow on window resize
+    window.addEventListener('resize', () => {
+        // reserved for future use
+    });
+});
+
+    // 2. Observer for Modals (to ensure bottom sheet animation works)
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach(node => {
+                if (node.id === 'modal-wrapper' || (node.querySelector && node.querySelector('.peer-modal'))) {
+                    const modal = document.getElementById('peer-modal');
+                    if (modal && window.innerWidth < 900) {
+                        setTimeout(() => modal.classList.add('active'), 10);
+                    }
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, { childList: true });
+
     function cleanText(str) {
         if (!str) return "";
         let filtered = "";
@@ -639,12 +1082,12 @@ function toggleSidebar(){
     });
     const renderSimpleList = (list) => list.length > 0 
         ? `<ul style="margin:0;padding-left:18px;line-height:1.6;">${list.map(p => `<li class="peer-item" style="margin-bottom:4px;">${p}</li>`).join('')}</ul>`
-        : `<p style="font-size:12px;font-style:italic;color:#94a3b8;margin:0;">No roles found.</p>`;
+        : `<p class="modal-no-results">No roles found.</p>`;
     let diffSectorsHtml = "";
     const sortedSectorNames = Object.keys(diffSectorGroups).sort();
     
     if (sortedSectorNames.length === 0) {
-        diffSectorsHtml = `<p style="font-size:12px;font-style:italic;color:#94a3b8;margin:0;">No roles found in other sectors.</p>`;
+        diffSectorsHtml = `<p class="modal-no-results">No roles found in other sectors.</p>`;
     } else {
         sortedSectorNames.forEach(secName => {
             const roles = Array.from(diffSectorGroups[secName]).sort();
@@ -671,12 +1114,12 @@ function toggleSidebar(){
             
             <div style="overflow-y:auto; margin-top:4px; padding-right:8px; border-top:1px solid #f1f5f9; padding-top:10px;">
                 <div style="margin-bottom:10px;">
-                    <h4 class="section-label" style="text-transform:uppercase; color:#64748b; letter-spacing:0.05em; margin: 0 0 8px 0; background:#f8fafc; padding:6px 10px; border-radius:4px; font-weight:700; font-size: 0.85rem;">Within ${currentSector}</h4>
+                    <h4 class="section-label" style="text-transform:uppercase; color:#111111; letter-spacing:0.05em; margin: 0 0 8px 0; background:#f8fafc; padding:6px 10px; border-radius:4px; font-weight:700; font-size: 0.85rem;">Within ${currentSector}</h4>
                     ${renderSimpleList(sameSector)}
                 </div>
                 
                 <div>
-                    <h4 class="section-label" style="text-transform:uppercase; color:#64748b; letter-spacing:0.05em; margin: 0 0 8px 0; background:#f8fafc; padding:6px 10px; border-radius:4px; font-weight:700; font-size: 0.85rem;">Across Other Sectors</h4>
+                    <h4 class="section-label" style="text-transform:uppercase; color:#111111; letter-spacing:0.05em; margin: 0 0 8px 0; background:#f8fafc; padding:6px 10px; border-radius:4px; font-weight:700; font-size: 0.85rem;">Across Other Sectors</h4>
                     <div style="padding-left:4px;">
                         ${diffSectorsHtml}
                     </div>
@@ -783,14 +1226,25 @@ swapHeaders(skillHeaders, "TSC_CCS Category", "TSC_CCS Code");
     document.getElementById('val').value =
         fH.find(h => h.toLowerCase().includes("proficiency") && h.toLowerCase().includes("desc")) || fH[2];
 
+    document.getElementById('loading-indicator').style.display = 'none';
+    document.getElementById('welcome-prompt').style.display = 'block';
+
 })
-.catch(error => console.error("Error loading skillmap data:", error));
+.catch(error => {
+    console.error("Error loading skillmap data:", error);
+    document.getElementById('loading-indicator').innerHTML =
+        '<span style="font-size:13px; color:#f87171; font-weight:500;">Failed to load data. Please refresh.</span>';
+});
 
     function toggleCWF() {
         const c = document.getElementById('cwf-container');
         const i = document.getElementById('cwf-icon');
+        const btn = document.getElementById('cwf-toggle');
         c.classList.toggle('expanded');
-        i.innerText = c.classList.contains('expanded') ? '▲' : '▼';
+        const isExpanded = c.classList.contains('expanded');
+        i.innerText = isExpanded ? '▲' : '▼';
+        btn.setAttribute('aria-expanded', isExpanded);
+        btn.setAttribute('aria-label', isExpanded ? 'Collapse Critical Work Functions' : 'Expand Critical Work Functions');
     }
     function updateRoles() {
         const sVal = document.getElementById('sel-sector').value;
@@ -866,17 +1320,17 @@ function showSectorAnalytics(sectorName) {
 
                     return `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0; border-left: 4px solid ${accentColor};">
-                        <span style="flex:1; font-size:13px; display: flex; align-items: center;">${skillDisplayName}</span>
+                        <span class="modal-skill-row-name" style="flex:1; display: flex; align-items: center;">${skillDisplayName}</span>
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; font-size:14px; font-weight:900; border:1px solid #10b981;">
+                            <span class="modal-skill-count" style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; border:1px solid #10b981;">
                                 ${skill.count}
                             </span>
-                            <span style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase;">Roles</span>
+                            <span class="modal-skill-roles-label">Roles</span>
                         </div>
                     </div>`;
                 }).join('')}
             </div>
-            <button onclick="closeModal()" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;">Close</button>
+            <button onclick="closeModal()" class="modal-close-btn" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;">Close</button>
         </div>`;
 
     const div = document.createElement('div');
@@ -940,17 +1394,17 @@ function showTrackAnalytics(trackName) {
 
                     return `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 16px; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0; border-left: 4px solid #cbd5e1;">
-                        <span style="flex:1; font-size:13px;">${skillDisplayName}</span>
+                        <span class="modal-skill-row-name" style="flex:1;">${skillDisplayName}</span>
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; font-size:14px; font-weight:900; border:1px solid #10b981;">
+                            <span class="modal-skill-count" style="background:#ecfdf5; color:#059669; padding:4px 10px; border-radius:6px; border:1px solid #10b981;">
                                 ${skill.count}
                             </span>
-                            <span style="font-size:10px; color:#94a3b8; font-weight:800; text-transform:uppercase;">Roles</span>
+                            <span class="modal-skill-roles-label">Roles</span>
                         </div>
                     </div>
-                `;}).join('') : `<p style="text-align:center; padding:20px; color:#94a3b8; font-style:italic;">No data found for this track.</p>`}
+                `;}).join('') : `<p class="modal-no-results" style="text-align:center; padding:20px;">No data found for this track.</p>`}
             </div>
-            <button onclick="closeModal()" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;">Close</button>
+            <button onclick="closeModal()" class="modal-close-btn" style="margin-top:20px;width:100%;background:#0f172a;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;">Close</button>
         </div>`;
 
     const div = document.createElement('div');
@@ -1020,10 +1474,10 @@ skillData.forEach(d => {
 
         return `
         <tr>
-            <td style="padding:10px 5px; border-bottom:1px solid #e2e8f0; font-weight:800; color:#059669; width:100px; text-align:center; background:#f0fdf4; font-size:12px;">
+            <td class="detail-modal-level" style="padding:10px 5px; border-bottom:1px solid #e2e8f0; width:100px; text-align:center; background:#f0fdf4;">
                 ${displayLvl}
             </td>
-            <td style="padding:12px; border-bottom:1px solid #e2e8f0; font-size:12px; line-height:1.5; color:#334155;">
+            <td class="detail-modal-desc" style="padding:12px; border-bottom:1px solid #e2e8f0;">
                 ${desc}
             </td>
         </tr>
@@ -1043,18 +1497,18 @@ skillData.forEach(d => {
                         width:550px; max-width:95vw; max-height:75vh; display:flex;flex-direction:column;
                         border:2px solid #10b981; overflow:hidden;">
 
-                <h3 style="margin:0 0 15px 0; color:#0f172a; border-bottom:2px solid #f1f5f9; padding-bottom:10px; font-size:16px;">
+                <h3 class="detail-modal-title" style="margin:0 0 15px 0; color:#0f172a; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
                     ${baseSkillName}
                 </h3>
 
                 <div style="overflow-y:auto; flex:1; border:1px solid #e2e8f0; border-radius:8px;">
-                    <table style="width:100%; border-collapse:collapse; background:white; table-layout:fixed; font-size:12px;">
+                    <table class="detail-modal-table" style="width:100%; border-collapse:collapse; background:white; table-layout:fixed;">
                         <thead style="background:#f8fafc; position:sticky; top:0; z-index:1;">
                             <tr>
-                                <th style="padding:10px 5px; border-bottom:2px solid #e2e8f0; text-align:center; text-transform:uppercase; color:#64748b; width:100px;">
+                                <th class="detail-modal-th" style="padding:10px 5px; border-bottom:2px solid #e2e8f0; text-align:center; text-transform:uppercase; color:#111111; width:100px;">
                                     Prof
                                 </th>
-                                <th style="padding:10px; border-bottom:2px solid #e2e8f0; text-align:left; text-transform:uppercase; color:#64748b;">
+                                <th class="detail-modal-th" style="padding:10px; border-bottom:2px solid #e2e8f0; text-align:left; text-transform:uppercase; color:#111111;">
                                     Proficiency Description
                                 </th>
                             </tr>
@@ -1064,7 +1518,7 @@ skillData.forEach(d => {
                 </div>
 
                 <button onclick="document.getElementById('detail-modal-wrapper').remove()" 
-                        style="margin-top:20px; background:#0f172a; color:white; border:none; padding:12px; border-radius:6px; font-weight:700; cursor:pointer; transition: opacity 0.2s;">
+                        class="modal-close-btn" style="margin-top:20px; background:#0f172a; color:white; border:none; padding:12px; border-radius:6px; cursor:pointer; transition: opacity 0.2s;">
                     Back to Top Skills
                 </button>
             </div>
@@ -1290,7 +1744,7 @@ column-count:1;
 .track-label {
     font-size: 12px;
     font-weight: 700;
-    color: #475569; /* Slate-600 */
+    color: #111111; /* Slate-600 */
     text-transform: uppercase;
     letter-spacing: 0.025em;
     cursor: pointer;
@@ -1423,7 +1877,7 @@ window.handleTrackToggle = function(checkbox) {
         } else {
             // Clear comparison content if the previously selected role is filtered out
             const contentArea = document.getElementById('comparison-content-area');
-            if (contentArea) contentArea.innerHTML = '<p style="color:#94a3b8; padding:20px;">Please select a role.</p>';
+            if (contentArea) contentArea.innerHTML = '<p style="color:#555555; padding:20px;">Please select a role.</p>';
         }
     }
 };
@@ -1470,7 +1924,7 @@ const getSkillMapForRole = (roleName) => {
 const getCWFHtml=(roleName,referenceFunctions=[])=>{
 
 if(!roleName)
-return '<p style="color:#94a3b8;font-style:italic;text-align:center;margin-top:50px;">Select a role...</p>';
+return '<p style="color:#555555;font-style:italic;text-align:center;margin-top:50px;">Select a role...</p>';
 
 const functions=[...new Set(
 cwfData
@@ -1491,7 +1945,7 @@ return a.localeCompare(b);
 
 let html=`
 
-<div style="font-size:11px;text-transform:uppercase;color:var(--slate-500);font-weight:800;letter-spacing:0.05em;margin-bottom:12px;padding-bottom:4px;border-bottom:1px dashed var(--slate-200);">
+<div class="comp-section-header" style="text-transform:uppercase;color:var(--slate-500);font-weight:800;letter-spacing:0.05em;margin-bottom:12px;padding-bottom:4px;border-bottom:1px dashed var(--slate-200);">
 Critical Work Functions
 </div>
 
@@ -1504,7 +1958,7 @@ const isCommon=referenceFunctions.includes(func);
 
 return `
 <div class="cwf-item ${isCommon?'is-common':''}" style="font-family:'Inter',sans-serif;margin-bottom:8px;">
-<div class="cwf-label" style="font-weight:700;font-size:13.5px;color:var(--slate-800);">
+<div class="cwf-label" style="font-weight:700;color:#000000;">
 ${isCommon?'<span style="color:#f97316;">● [Common] </span>':''}${func}
 </div>
 </div>
@@ -1613,19 +2067,19 @@ bgColor="#fafaf9"; borderColor="#f5f5f4"; textColor="#57534e";
 }
 
 return `
-<div style="background:${bgColor};border:1px solid ${borderColor};color:${textColor};padding:8px 12px;border-radius:6px;font-size:12.5px;display:flex;align-items:center;justify-content:space-between; gap: 10px;">
+<div class="comp-skill-row" style="background:${bgColor};border:1px solid ${borderColor};color:${textColor};padding:8px 12px;border-radius:6px;display:flex;align-items:center;justify-content:space-between; gap: 10px;">
     <div style="font-weight:600; line-height: 1.4;">
-        <span style="background:#f97316;color:white;font-size:9px;padding:2px 5px;border-radius:4px;text-transform:uppercase;margin-right:6px;vertical-align:middle;display:inline-block;">Shared</span>
+        <span class="comp-shared-tag" style="background:#f97316;color:white;padding:2px 5px;border-radius:4px;text-transform:uppercase;margin-right:6px;vertical-align:middle;display:inline-block;">Shared</span>
         <span style="vertical-align:middle;">${sA.fullName}</span>
         <span style="font-weight:400;color:${textColor};opacity:0.8;margin-left:4px;vertical-align:middle;">(${comparisonText})</span>
     </div>
-    <div style="font-size:11px;font-weight:700;background:rgba(255,255,255,0.7);padding:2px 8px;border-radius:4px;border:1px solid rgba(0,0,0,0.08);white-space:nowrap;flex-shrink:0;">
+    <div class="comp-diff-label" style="font-weight:700;background:rgba(255,255,255,0.7);padding:2px 8px;border-radius:4px;border:1px solid rgba(0,0,0,0.08);white-space:nowrap;flex-shrink:0;">
         ${diffLabel}
     </div>
 </div>`;
 })
 .join('')
-:'<p style="font-style:italic;color:#94a3b8;padding:10px;">No identical TSC/CCS titles found.</p>';
+:'<p style="font-style:italic;color:#555555;padding:10px;">No identical TSC/CCS titles found.</p>';
 
 document.getElementById('current-content-target').innerHTML=getCWFHtml(currentRole,selectedCWF);
 document.getElementById('compare-content-target').innerHTML=getCWFHtml(selectedRole,currentCWF);
@@ -1634,7 +2088,7 @@ document.getElementById('common-skills-target').innerHTML=`
 
 <div style="margin-top:20px;border-top:2px solid #f1f5f9;padding-top:15px;">
 
-<div style="font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;">
+<div class="comp-section-header" style="text-transform:uppercase;color:#111111;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;">
 Shared TSC/CCS Competencies (${commonKeys.length})
 </div>
 
@@ -1956,15 +2410,15 @@ const modalHtml=`
 
 <div class="comparison-column">
 <div class="comparison-header">
-<div style="font-size:11px;text-transform:uppercase;color:var(--slate-500);font-weight:800;margin-bottom:4px;">Current Role</div>
-<div style="font-size:14px;font-weight:700;">${currentRole}</div>
+<div class="comp-role-label">Current Role</div>
+<div class="comp-role-name">${currentRole}</div>
 </div>
 <div id="current-content-target"></div>
 </div>
 
 <div class="comparison-column">
 <div class="comparison-header">
-<div style="font-size:11px;text-transform:uppercase;color:var(--slate-500);font-weight:800;margin-bottom:4px;">
+<div class="comp-role-label">
 Select role for comparison
 </div>
 
@@ -2011,6 +2465,72 @@ document.getElementById('current-content-target').innerHTML=getCWFHtml(currentRo
 
 }
 
+function initMobileDefaults() {
+    const toggle = document.getElementById('view-toggle');
+    if (!toggle) return;
+    if (window.innerWidth > 900) {
+        // Desktop: uncheck compact view
+        toggle.checked = false;
+    }
+    // Mobile: already checked via HTML attribute — nothing to do
+}
+
+/* ---- COLLAPSIBLE COLUMNS (desktop + mobile) ---- */
+window._collapsedCols = window._collapsedCols || {};
+
+function initCollapsibleColumns() {
+    const table = document.getElementById('grid');
+    if (!table) return;
+
+    const headerCells = table.querySelectorAll('thead th');
+
+    headerCells.forEach((th, idx) => {
+        if (idx === 0) return; // skip row-header
+
+        // Wrap existing header text in a span for hiding on collapse
+        if (!th.querySelector('.col-label-text')) {
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'col-label-text';
+            while (th.firstChild) labelSpan.appendChild(th.firstChild);
+            th.appendChild(labelSpan);
+        }
+
+        // Add chevron if not present
+        if (!th.querySelector('.col-chevron')) {
+            const chevron = document.createElement('span');
+            chevron.className = 'col-chevron';
+            chevron.textContent = '▼';
+            th.appendChild(chevron);
+        }
+
+        th.classList.add('col-toggle-th');
+        th.onclick = () => toggleColumn(idx);
+
+        // Restore collapsed state
+        if (window._collapsedCols[idx]) {
+            applyCollapsed(idx, true, table);
+        }
+    });
+}
+
+function toggleColumn(colIdx) {
+    const isNowCollapsed = !window._collapsedCols[colIdx];
+    window._collapsedCols[colIdx] = isNowCollapsed;
+    const table = document.getElementById('grid');
+    applyCollapsed(colIdx, isNowCollapsed, table);
+}
+
+function applyCollapsed(colIdx, collapse, table) {
+    if (!table) return;
+    const th = table.querySelectorAll('thead th')[colIdx];
+    if (th) th.classList.toggle('col-collapsed', collapse);
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const cell = row.querySelectorAll('td')[colIdx];
+        if (cell) cell.classList.toggle('col-collapsed-cell', collapse);
+    });
+}
+
+
 function render() {
     const sVal = document.getElementById('sel-sector').value, rVal = document.getElementById('sel-role').value;
     if(!sVal || !rVal) return;
@@ -2018,13 +2538,34 @@ function render() {
     document.getElementById('welcome-msg').style.display = 'none';
     document.getElementById('app-content').style.display = 'flex';
     document.getElementById('btn-pdf').disabled = false;
+
+    // --- COL2 COMPACT VIEW LOCK ---
+    const col2Val = document.getElementById('col2').value;
+    const isCol2Active = col2Val && col2Val !== 'none' && col2Val !== '';
+    const viewToggle = document.getElementById('view-toggle');
+    const lockIcon = document.getElementById('compact-lock-icon');
+    if (isCol2Active) {
+        viewToggle.checked = true;
+        viewToggle.disabled = true;
+        viewToggle.style.opacity = '0.5';
+        viewToggle.style.cursor = 'not-allowed';
+        if (lockIcon) lockIcon.style.display = 'inline';
+    } else {
+        viewToggle.disabled = false;
+        viewToggle.style.opacity = '1';
+        viewToggle.style.cursor = 'pointer';
+        if (lockIcon) lockIcon.style.display = 'none';
+    }
     
     const finalSectorEl = document.getElementById('final-sector');
     finalSectorEl.innerText = sVal;
+    finalSectorEl.setAttribute('aria-label', `View sector analytics for ${sVal}`);
     finalSectorEl.style.cursor = "pointer";
     finalSectorEl.onclick = () => showSectorAnalytics(sVal);
     
-    document.getElementById('final-role').innerText = rVal;
+    const finalRoleEl = document.getElementById('final-role');
+    finalRoleEl.innerText = rVal;
+    finalRoleEl.setAttribute('aria-label', `Compare role: ${rVal}`);
     const isFlatView = document.getElementById('view-toggle').checked;
     const tscTitleKey = skillHeaders.find(h => h.toLowerCase().includes("title"));
     const classKey = skillHeaders.find(h => h.toLowerCase().includes('classification'));
@@ -2090,6 +2631,7 @@ function render() {
     if (roleData && roleData[tKey]) {
         const trackPill = document.getElementById('final-track');
         trackPill.innerText = roleData[tKey];
+        trackPill.setAttribute('aria-label', `View track analytics for ${roleData[tKey]}`);
         trackPill.style.display = 'inline-block';
     } else {
         document.getElementById('final-track').style.display = 'none';
@@ -2097,7 +2639,9 @@ function render() {
 
     const dR = descHeaders.find(h => h.toLowerCase().includes('role')), dD = descHeaders.find(h => h.toLowerCase().includes('desc'));
     const descRow = jobDescData.find(d => d[dR] === rVal);
-    document.getElementById('final-desc').innerText = descRow ? descRow[dD] : "";
+    const finalDescEl = document.getElementById('final-desc');
+    finalDescEl.innerText = descRow ? descRow[dD] : "";
+    finalDescEl.setAttribute('aria-label', descRow ? `Role description: ${descRow[dD].substring(0, 80)}… Click to expand` : 'No description available');
 
     const cR = cwfHeaders.find(h => h.toLowerCase().includes('role')), 
           cF = cwfHeaders.find(h => h.toLowerCase().includes('func')), 
@@ -2146,7 +2690,7 @@ function render() {
     document.getElementById('val-label').innerText = v.toUpperCase().replace(/\bTSC\b/gi, "TSC").replace(/\bCCS\b/gi, "CCS");
     const uniqueCountEl = document.getElementById('unique-count');
     const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val !== '-'))];
-    uniqueCountEl.style.fontSize = isLargeText ? "1.4em" : "1.1em";
+    uniqueCountEl.style.fontSize = isLargeText ? "1.05em" : "1.1em";
     uniqueCountEl.style.display = "inline-flex";
     uniqueCountEl.style.alignItems = "baseline"; 
     uniqueCountEl.style.gap = "8px"; 
@@ -2162,7 +2706,7 @@ function render() {
                 else if (cls.includes('ability')) counts.ability++;
             }
         });
-        uniqueCountEl.innerHTML = `<span>${uniqueSet.size}</span><span style="font-weight:800; color:#64748b; display:inline-flex; gap:4px;">(<span style="color:#2563eb;">K:${counts.knowledge}</span>, <span style="color:#16a34a;">A:${counts.ability}</span>)</span>`;
+        uniqueCountEl.innerHTML = `<span>${uniqueSet.size}</span><span style="font-weight:800; color:#111111; display:inline-flex; gap:4px;">(<span style="color:#2563eb;">K:${counts.knowledge}</span>, <span style="color:#16a34a;">A:${counts.ability}</span>)</span>`;
     } else if (v.toLowerCase().includes('proficiency')) {
         const levelCounts = {};
         filtered.forEach(d => {
@@ -2242,7 +2786,7 @@ function render() {
             const contentHtml = itemsToRender.map(item => {
                 if (item.isHeader) {
                     const topMargin = item.isFirst ? "0px" : "8px";
-                    return `<div style="font-weight:bold; color:#64748b; font-size:11px; margin: ${topMargin} 0 4px 4px; text-transform:uppercase;">${item.label}</div>`;
+                    return `<div style="font-weight:bold; color:#111111; font-size:${isLargeText ? '14px' : '11px'}; margin: ${topMargin} 0 4px 4px; text-transform:uppercase;">${item.label}</div>`;
                 }
                 return formatContentItem(formatValue(item.text, v, false), item.type);
             }).join('');
@@ -2253,7 +2797,7 @@ function render() {
         const rows = [...new Set(filtered.map(d => JSON.stringify([d[r1], r2!=='none'?d[r2]:'', r3!=='none'?d[r3]:''])))].map(s=>JSON.parse(s)).sort((a,b)=>(a[0]||"").localeCompare(b[0]||""));
         const cols = [...new Set(filtered.map(d => JSON.stringify([d[c1], c2!=='none'?d[c2]:''])))].map(s=>JSON.parse(s)).sort();
         
-        hHtml = `<tr><th style="background: #f1f5f9; color: #475569; font-size: 0.95em; text-align: left;">${cornerText}</th>` + 
+        hHtml = `<tr><th style="background: #f1f5f9; color: #111111; text-align: left;">${cornerText}</th>` + 
                 cols.map(c => `<th>${formatValue(c[0], c1, true)}${c[1]!=='none'?`<br><small>${formatValue(c[1], c2, true)}</small>`:''}</th>`).join('') + `</tr>`;
         
         rows.forEach(rp => {
@@ -2272,11 +2816,11 @@ function render() {
                             // Suppress headers if classification is already used as a column
                             if (!isClassInCols) {
                                 if (type.includes('knowledge') && !hasK) { 
-                                    cellContent += `<div style="font-weight:bold; font-size:10px; color:#64748b; margin:0 0 4px 0; text-transform:uppercase;">Knowledge</div>`; 
+                                    cellContent += `<div style="font-weight:bold; font-size:${isLargeText ? '14px' : '10px'}; color:#111111; margin:0 0 4px 0; text-transform:uppercase;">Knowledge</div>`; 
                                     hasK = true; 
                                 } else if (type.includes('ability') && !hasA) { 
                                     const topM = hasK ? "8px" : "0px";
-                                    cellContent += `<div style="font-weight:bold; font-size:10px; color:#64748b; margin:${topM} 0 4px 0; text-transform:uppercase;">Ability</div>`; 
+                                    cellContent += `<div style="font-weight:bold; font-size:${isLargeText ? '14px' : '10px'}; color:#111111; margin:${topM} 0 4px 0; text-transform:uppercase;">Ability</div>`; 
                                     hasA = true; 
                                 }
                             }
@@ -2295,6 +2839,10 @@ function render() {
     }
     document.getElementById('h').innerHTML = hHtml;
     document.getElementById('b').innerHTML = bHtml;
+
+    // Reset collapse state on each render and re-init collapsible columns
+    window._collapsedCols = {};
+    initCollapsibleColumns();
 }
 async function downloadPDF() {
     let isFooterPhase = false;
@@ -2317,7 +2865,9 @@ async function downloadPDF() {
     let decoded = doc.body.textContent || "";
     return decoded
         .replace(/\u00a0/g, ' ')             // Remove hidden unicode spaces
-        .replace(/[↗\n\r\t]/g, '')           // Remove arrows, newlines, tabs
+        .replace(/—/g, '--')                 // Convert em-dash to double-hyphen (Helvetica safe)
+        .replace(/–/g, '-')                  // Convert en-dash to single hyphen
+        .replace(/[^\x20-\x7E]/g, '')        // Strip ALL remaining non-ASCII chars (▼ ▶ ↗ ¼ etc.)
         .replace(/\s+/g, ' ')                // Collapse multiple spaces
         .trim();
 };
@@ -2552,7 +3102,29 @@ doc.autoTable({
 
     didParseCell: (data) => {
     const cellRaw = data.cell.raw;
-    if (!cellRaw || data.section !== 'body') return;
+    if (!cellRaw) return;
+
+    // --- STRIP CHEVRONS/SYMBOLS FROM HEADER CELLS ---
+    // The ▼/▶ collapse chevrons are Unicode and corrupt Helvetica in jsPDF.
+    // For head cells, extract only the .col-label-text span content (or full text minus chevrons).
+    if (data.section === 'head') {
+        const labelSpan = cellRaw.querySelector ? cellRaw.querySelector('.col-label-text') : null;
+        let headerLabel = labelSpan
+            ? (labelSpan.textContent || labelSpan.innerText || "")
+            : (cellRaw.textContent || cellRaw.innerText || "");
+        // Strip any remaining non-ASCII characters (▼ ▶ → ↗ and any mis-encoded glyphs like ¼ %)
+        // But first preserve em-dash/en-dash as ASCII equivalents
+        headerLabel = headerLabel
+            .replace(/—/g, '--')              // em-dash → double hyphen
+            .replace(/–/g, '-')               // en-dash → single hyphen
+            .replace(/[^\x20-\x7E]/g, '')     // strip all other non-ASCII
+            .replace(/\s+/g, ' ')
+            .trim();
+        data.cell.text = [headerLabel];
+        return;
+    }
+
+    if (data.section !== 'body') return;
 
     // --- NEW: COLOR PERSISTENCE LOGIC ---
     // Define your colors
@@ -2620,8 +3192,8 @@ doc.autoTable({
             const cleanedLine = sanitize(line);
             
             if (cleanedLine.length > 0) {
-                // If it's a Knowledge/Ability column, add a bullet point
-                finalLines.push(isKnowledgeAbilityCol ? "• " + cleanedLine : cleanedLine);
+                // If it's a Knowledge/Ability column, add a bullet point (use ASCII dash — Helvetica can't render •)
+                finalLines.push(isKnowledgeAbilityCol ? "- " + cleanedLine : cleanedLine);
                 // Add an empty string to create spacing between items
                 finalLines.push(""); 
             }
