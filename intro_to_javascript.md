@@ -38,9 +38,6 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 
 ## 1. 🧱 The Building Blocks of JavaScript
 
-<details>
-<summary>Click to expand</summary>
-
 Before diving into any specific topic, it helps to understand what JavaScript is actually made of. Every JavaScript program — no matter how big or small — is built from just a handful of core ingredients. Once you recognise these, reading code starts to feel a lot less like a foreign language.
 
 Think of it like cooking. You don't need to know every recipe in the world. You just need to understand what an ingredient *is* and what it *does* — then you can follow any recipe.
@@ -222,8 +219,6 @@ Once you see that chain, the rest of the guide is just filling in the details of
 | **Event** | Something the user does that triggers a response | Pressing a doorbell — the chime is the function | [Events](#13-events-listening-for-user-actions) |
 
 [⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
 
 ---
 
@@ -1471,6 +1466,8 @@ const key = JSON.parse(groupKey);
 
 <details>
 <summary>Click to expand</summary>
+
+![possible_scaling](possible_scaling.png)
 
 The SkillMap Portal is built entirely in **Vanilla JavaScript** — pure JS, no frameworks, no build tools. For a single-developer project loaded from a single HTML file, this is the right call. It's lean, fast, and has zero setup overhead.
 
