@@ -20,22 +20,33 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 1. [The Building Blocks of JavaScript](#1--the-building-blocks-of-javascript)
 2. [The Naming Confusion: Java vs JavaScript](#2--the-naming-confusion-java-vs-javascript)
 3. [JavaScript vs Python: Syntax & Element Management](#3--javascript-vs-python-syntax--element-management)
-4. [Variables: Jars and Labels](#4--variables-jars-and-labels)
-5. [Functions: Reusable Rules](#5--functions-reusable-rules)
-6. [DOM Interaction: Reading and Updating the Page](#6--dom-interaction-reading-and-updating-the-page)
-7. [Arrays & Array Methods: Working with Lists](#7--arrays--array-methods-working-with-lists)
-8. [Objects: Named Jars with Multiple Compartments](#8-objects-named-jars-with-multiple-compartments)
-9. [Loops: Repeating Rules Across Jars](#9--loops-repeating-rules-across-jars)
-10. [Conditionals: Decision Making](#10--conditionals-decision-making)
-11. [Asynchronous JavaScript: Fetching & Loading Data](#11--asynchronous-javascript-fetching--loading-data)
-12. [Template Literals: Building HTML Strings](#12--template-literals-building-html-strings)
-13. [Events: Listening for User Actions](#13-events-listening-for-user-actions)
-14. [Data Transformation & Regular Expressions](#14--data-transformation--regular-expressions)
-15. [Quick Reference: Key Commands](#15--quick-reference-key-commands)
-16. [Extending the SkillMap Portal: Future Possibilities](#16--extending-the-skillmap-portal-future-possibilities)
+4. [How the SkillMap Portal Uses JavaScript: Three Phases](#4--how-the-skillmap-portal-uses-javascript-three-phases)
 
 ---
 
+**⚙️ Phase 1 — Page Load: Fetching & Preparing Data**
+- [§5 — Asynchronous JavaScript: Fetching & Loading Data](#5--asynchronous-javascript-fetching--loading-data)
+- [§6 — Data Transformation & Regular Expressions](#6--data-transformation--regular-expressions)
+
+**🖼️ Phase 2 — Rendering the UI: Building What the User Sees**
+- [§7 — Variables: Jars and Labels](#7--variables-jars-and-labels)
+- [§8 — Arrays & Array Methods: Working with Lists](#8--arrays--array-methods-working-with-lists)
+- [§9 — Objects: Named Jars with Multiple Compartments](#9-objects-named-jars-with-multiple-compartments)
+- [§10 — Loops: Repeating Rules Across Jars](#10--loops-repeating-rules-across-jars)
+- [§11 — DOM Interaction: Reading and Updating the Page](#11--dom-interaction-reading-and-updating-the-page)
+- [§12 — Template Literals: Building HTML Strings](#12--template-literals-building-html-strings)
+
+**🎧 Phase 3 — User Interaction: Responding to What the User Does**
+- [§13 — Events: Listening for User Actions](#13-events-listening-for-user-actions)
+- [§14 — Functions: Reusable Rules](#14--functions-reusable-rules)
+- [§15 — Conditionals: Decision Making](#15--conditionals-decision-making)
+
+---
+
+16. [Quick Reference: Key Commands](#16--quick-reference-key-commands)
+17. [Extending the SkillMap Portal: Future Possibilities](#17--extending-the-skillmap-portal-future-possibilities)
+
+---
 ## 1. 🧱 The Building Blocks of JavaScript
 
 Before diving into any specific topic, it helps to understand what JavaScript is actually made of. Every JavaScript program — no matter how big or small — is built from just a handful of core ingredients. Once you recognise these, reading code starts to feel a lot less like a foreign language.
@@ -348,8 +359,214 @@ No external tool required — the code is *already on the page*, so access is in
 </details>
 
 ---
+## 4. 🗺️ How the SkillMap Portal Uses JavaScript: Three Phases
 
-## 4. 📦 Variables: Jars and Labels
+Every time a user opens the portal, JavaScript runs through three distinct phases. Understanding these phases is the quickest way to see how all the sections in this guide connect to each other.
+
+**Phase 1 — Page Load:** The portal fetches a compressed data file from the server, decompresses it, parses it into JavaScript objects, and populates the sector dropdown. This happens once, automatically, before the user does anything. *Relevant sections: §5 (Async), §6 (Data Transformation)*
+
+**Phase 2 — Rendering the UI:** Once data is loaded (or whenever the user picks a new role), the portal reads the selected values, filters thousands of skill rows, builds the table rows as HTML strings, and writes them into the page. *Relevant sections: §7 (Variables), §8 (Arrays), §9 (Objects), §10 (Loops), §11 (DOM), §12 (Template Literals)*
+
+**Phase 3 — User Interaction:** The portal listens for clicks, dropdown changes, and button presses. When an event fires, a function runs — reading the new state, making decisions, and updating the page. *Relevant sections: §13 (Events), §14 (Functions), §15 (Conditionals)*
+
+> In the SkillMap Portal: **User changes a dropdown** *(Phase 3 — event)* → **`render()` fires** *(Phase 3 — function)* → **reads selected values, filters rows** *(Phase 2 — arrays + variables)* → **builds HTML strings** *(Phase 2 — template literals)* → **writes to the DOM** *(Phase 2 — DOM interaction)*
+
+---
+
+## ⚙️ Phase 1 — Page Load: Fetching & Preparing Data
+
+Before the user sees anything useful, the portal needs to load and prepare its data. This phase runs automatically when the page opens and sets up everything the rest of the portal depends on.
+
+---
+
+## 5. ⏳ Asynchronous JavaScript: Fetching & Loading Data
+
+<details>
+<summary>Click to expand</summary>
+
+### What Is Asynchronous JavaScript?
+
+Most code runs **synchronously** — one line at a time, in order. But some tasks take time: fetching a file from a server, waiting for a database, reading from disk. If JavaScript stopped everything while waiting, the entire browser tab would freeze.
+
+**Asynchronous** JavaScript solves this by saying: "start this task, and when it finishes, run this function with the result — but don't pause everything else in the meantime." The rest of the page stays responsive while the slow operation completes in the background.
+
+Think of it like ordering food at a restaurant. You don't stand frozen at the counter waiting for the kitchen — you sit down, and a waiter brings the food when it's ready.
+
+---
+
+### The Problem: Waiting Without Freezing
+
+If loading a 3MB file took 2 seconds and JavaScript stopped everything while waiting, the browser would hang. Instead, JavaScript says "go fetch this, and when it's done, run *this* function."
+
+---
+
+### Promises and `.then()` Chaining
+
+A **Promise** represents a value that will be available in the future. `.then()` lets you chain steps that run one after another, each receiving the result of the previous step.
+
+```javascript
+// From index.html — the full data loading pipeline
+fetch("skillmap_data.json.gz")           // 1. Request the compressed file
+    .then(response => response.arrayBuffer())  // 2. When it arrives, read the raw bytes
+    .then(buffer => {
+        // 3. Decompress the gzip bytes into a string (using the Pako library)
+        const decompressed = pako.inflate(new Uint8Array(buffer), { to: "string" });
+
+        // 4. Parse the JSON string into a usable JavaScript object
+        const data = JSON.parse(decompressed);
+
+        // 5. Distribute the data into module-level variables
+        skillData    = data.job_roles.records;
+        skillHeaders = data.job_roles.columns;
+        jobData      = data.skills_map.records;
+        cwfData      = data.cwf.records;
+
+        // 6. Populate the Sector dropdown with unique sector names
+        const sectors = [...new Set(jobData.map(d => d[sKey]))].filter(Boolean).sort();
+        sectors.forEach(s => sSelect.add(new Option(s, s)));
+    })
+    .catch(error => console.error("Error loading skillmap data:", error));
+```
+
+> **What this shows:** This is the portal's entire data loading sequence, written as a Promise chain. Step 1 sends a network request for the compressed data file. When the response arrives (step 2), it reads the raw bytes into a buffer. Step 3 decompresses those bytes using the Pako library (gzip decompression). Step 4 parses the resulting JSON string into a real JavaScript object. Step 5 distributes the four datasets into module-level variables that the rest of the portal can use. Step 6 extracts unique sector names and populates the sector dropdown. The `.catch()` at the very end is a safety net — if anything in the chain fails (network error, bad JSON, etc.), the error is logged instead of crashing the page silently. Each `.then()` receives the output of the previous step as its input argument.
+
+---
+
+### Header Reordering After Load
+
+Once the data is parsed, the portal swaps specific column pairs into a better display order — without touching the underlying data:
+
+```javascript
+// From the data loading block
+const swapHeaders = (headers, name1, name2) => {
+    const idx1 = headers.indexOf(name1);
+    const idx2 = headers.indexOf(name2);
+    if (idx1 !== -1 && idx2 !== -1) {
+        // Destructuring swap — no temporary variable needed
+        [headers[idx1], headers[idx2]] = [headers[idx2], headers[idx1]];
+    }
+};
+
+// Classification should appear before Items
+swapHeaders(skillHeaders, "Knowledge / Ability Items", "Knowledge / Ability Classification");
+// Code should appear before Category
+swapHeaders(skillHeaders, "TSC_CCS Category", "TSC_CCS Code");
+```
+
+> **What this shows:** `swapHeaders` is a helper function that reorders two columns in the headers array by swapping their positions. It first finds the index (position) of each named header using `.indexOf()`. If both are found (neither returns `-1`), it swaps them using the destructuring trick `[a, b] = [b, a]` — this swaps two values without needing a temporary variable. The function is then called twice to fix two column ordering issues: Classification should come before Items in the display, and Code should come before Category. This is done purely on the `skillHeaders` array — the underlying data is unchanged.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
+---
+
+## 6. 🔤 Data Transformation & Regular Expressions
+
+<details>
+<summary>Click to expand</summary>
+
+### What Is Data Transformation?
+
+Raw data is rarely in exactly the right shape for display. Column names might have inconsistent casing. Skill titles might include level numbers you want to strip. Text meant for a PDF might contain special characters that break the font renderer. **Data transformation** is the process of cleaning and reshaping data into the form you actually need.
+
+JavaScript provides two main toolkits for this: **string methods** for straightforward text manipulation, and **regular expressions** for pattern-based matching and replacement.
+
+---
+
+### `String` Methods
+
+These are built-in tools you can call on any string. They're used constantly in the portal to normalise data before comparing or displaying it.
+
+```javascript
+// Normalize column names to find them by partial match
+h.toLowerCase().includes('sector')   // true if header contains "sector"
+h.toLowerCase().includes('level')    // true if header contains "level"
+
+str.trim()        // removes leading and trailing whitespace
+str.replace(x, y) // replace occurrences of x with y
+str.split('.')    // split a string into an array by delimiter
+```
+
+> **What this shows:** `.toLowerCase()` converts a string to all lowercase before comparing — this way "Sector", "SECTOR", and "sector" all match. `.includes()` checks whether a string contains a given substring anywhere inside it. These two are used together constantly in the portal to find the right column headers without needing to know their exact name. `.trim()` removes any accidental spaces at the start or end of a string — important when comparing values that came from raw data files. `.replace()` substitutes one pattern with another. `.split()` breaks a string into an array at each occurrence of a separator character.
+
+---
+
+### Regular Expressions (Regex)
+
+A **regular expression** (regex) is a pattern that describes a set of strings. Instead of searching for one specific word, you can search for *anything matching a certain pattern* — "any number", "any whitespace", "any character that isn't printable ASCII".
+
+Regex looks intimidating at first, but each piece has a specific meaning — and once you learn a handful of symbols, you can read most real-world patterns.
+
+```javascript
+// From showSectorAnalytics() — strip " Level 3" or " (Advanced)" from a skill title
+// to get just the base name
+const baseSkillName = rawTitle
+    .replace(/\s*level\s*\d+/gi, "")   // remove " Level 3", " level 12", etc.
+    .replace(/\s*\(.*?\)\s*/g, "")     // remove anything in parentheses
+    .trim();
+```
+
+> **What this shows:** Skill titles in the raw data often include level indicators like "Data Analysis Level 3" or "Data Analysis (Advanced)". To group skills by their base name regardless of level, these suffixes need to be stripped. The first `.replace()` uses a regex to find and remove anything matching "optional spaces + 'level' + optional spaces + one or more digits" — case-insensitively (`i` flag) and globally (`g` flag, meaning all occurrences). The second `.replace()` removes anything inside parentheses. After both, `.trim()` cleans any remaining edge whitespace. Result: `"Data Analysis Level 3"` becomes `"Data Analysis"`.
+
+```javascript
+// From cleanText() inside downloadPDF() — sanitize strings for PDF output
+return decoded
+    .replace(/\u00a0/g, ' ')           // replace non-breaking spaces with regular spaces
+    .replace(/—/g, '--')               // em-dash → double hyphen (Helvetica-safe)
+    .replace(/–/g, '-')                // en-dash → single hyphen
+    .replace(/[^\x20-\x7E]/g, '')     // strip every character outside printable ASCII
+    .replace(/\s+/g, ' ')             // collapse multiple spaces into one
+    .trim();
+```
+
+> **What this shows:** The PDF library (jsPDF with Helvetica font) can only render standard ASCII characters. Any special characters — non-breaking spaces, em-dashes, smart quotes, unicode symbols — will either show as garbled text or cause errors. This chain of replacements sanitises strings before they're written to the PDF. `\u00a0` is the unicode code for a non-breaking space. `—` and `–` are typographic dashes that Helvetica can't render, so they're replaced with plain hyphens. `[^\x20-\x7E]` matches any character *outside* the printable ASCII range (hex 20 to 7E) and replaces it with nothing — deleting it. Finally, `\s+` collapses any runs of multiple spaces into a single space.
+
+---
+
+**Reading the patterns:**
+
+| Pattern | Meaning |
+|---|---|
+| `\s*` | Zero or more whitespace characters |
+| `\d+` | One or more digits |
+| `g` flag | Apply globally (all matches, not just the first) |
+| `i` flag | Case-insensitive |
+| `.*?` | Any characters, as few as possible (lazy match) |
+| `[^\x20-\x7E]` | Any character *not* in the printable ASCII range |
+
+---
+
+### `JSON.parse()` and `JSON.stringify()`
+
+These two functions convert between JavaScript objects and their string representation.
+
+```javascript
+// Unpack a compressed JSON string into a usable object
+const data = JSON.parse(decompressed);
+
+// Encode an object as a string key (used to group rows by their row+column values)
+const groupKey = JSON.stringify({ r: [d[r1], d[r2], d[r3]], c: [d[c1], d[c2]] });
+
+// Later — decode it back
+const key = JSON.parse(groupKey);
+```
+
+> **What this shows:** `JSON.parse()` takes a JSON string (text that looks like `{"name":"Alex","age":30}`) and converts it into a real JavaScript object you can work with using dot notation and array methods. `JSON.stringify()` does the reverse — takes an object and turns it into a string. The portal uses `JSON.stringify` for a clever trick: it needs to group table rows by a combination of row values and column values. Since JavaScript `Map` keys are compared by reference (not value), two different objects `{a: 1}` and `{a: 1}` would be treated as different keys even though they're logically the same. By stringifying the object first, you get `'{"a":1}'` — a plain string — which compares correctly by value.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
+---
+
+## 🖼️ Phase 2 — Rendering the UI: Building What the User Sees
+
+Once data is loaded, the portal needs to build the interface. This phase covers all the tools used to hold data in memory, process it, and write it onto the page — from filtering thousands of skill rows to constructing each table cell as an HTML string.
+
+---
+
+## 7. 📦 Variables: Jars and Labels
 
 <details>
 <summary>Click to expand</summary>
@@ -461,236 +678,7 @@ In short: `const` is a label **glued** to the jar. `let` is a label on a **stick
 
 ---
 
-## 5. 🔧 Functions: Reusable Rules
-
-<details>
-<summary>Click to expand</summary>
-
-### What Is a Function?
-
-A **function** is a named block of instructions that you can run whenever you need them. Instead of writing the same ten lines of code in five different places, you write them once inside a function, give the function a name, and then call that name to run all those steps instantly.
-
-Think of it like a recipe card. You write the instructions once: "preheat oven, mix ingredients, bake for 30 minutes." Then any time you want cake, you just say "make cake" — you don't rewrite the whole recipe.
-
-```javascript
-// Basic shape of a function
-function doSomething(input) {
-    // steps here
-    return result;
-}
-```
-
-- The word `function` declares you're creating one.
-- The name (`doSomething`) is what you'll call to run it.
-- `input` in the parentheses is an **argument** — a value you pass *in* for the function to work with.
-- `return result` sends a value *back out* to whoever called the function.
-
----
-
-### From the Portal: `toggleCWF()`
-
-```javascript
-// Toggles the Critical Work Functions panel open/closed
-function toggleCWF() {
-    const c = document.getElementById('cwf-container');
-    const i = document.getElementById('cwf-icon');
-    c.classList.toggle('expanded');
-    // Ternary: if expanded show ▲, otherwise show ▼
-    i.innerText = c.classList.contains('expanded') ? '▲' : '▼';
-}
-```
-
-> **What this shows:** When the user clicks the "Critical Work Functions" header, `toggleCWF()` runs. It finds the panel container (`c`) and the arrow icon (`i`). `.classList.toggle('expanded')` adds the CSS class `expanded` if it isn't there, or removes it if it is — this is what animates the panel sliding open or closed. The last line updates the arrow to point up (▲) when open or down (▼) when closed. Without the function, you'd have to copy-paste these four lines everywhere the toggle appears.
-
----
-
-### From the Portal: `toggleColumn(colIdx)`
-
-```javascript
-// Collapses or expands a specific table column by its index
-function toggleColumn(colIdx) {
-    const isNowCollapsed = !window._collapsedCols[colIdx]; // flip the boolean
-    window._collapsedCols[colIdx] = isNowCollapsed;         // remember the new state
-    const table = document.getElementById('grid');
-    applyCollapsed(colIdx, isNowCollapsed, table);           // delegate the visual work
-}
-
-function applyCollapsed(colIdx, collapse, table) {
-    if (!table) return;
-    // Update the header cell
-    const th = table.querySelectorAll('thead th')[colIdx];
-    if (th) th.classList.toggle('col-collapsed', collapse);
-    // Update every body cell in that column
-    table.querySelectorAll('tbody tr').forEach(row => {
-        const cell = row.querySelectorAll('td')[colIdx];
-        if (cell) cell.classList.toggle('col-collapsed-cell', collapse);
-    });
-}
-```
-
-> **What this shows:** `toggleColumn` takes a column number (`colIdx`) as its input — this tells it *which* column to act on. It first flips the column's stored state from collapsed to expanded (or vice versa) using `!` (the "not" operator). Then it hands off the visual work to a second function, `applyCollapsed`. That second function goes through every header cell and every body cell in that column and toggles the `col-collapsed` CSS class, which is what actually hides or shows the column visually. Notice how `toggleColumn` decides *what* to do and `applyCollapsed` handles *how* — this **separation of concerns** makes both functions easier to read and maintain.
-
----
-
-### Arrow Functions: The Shorthand Form
-
-Arrow functions (`=>`) are a shorter syntax for writing functions, commonly used for small, one-purpose operations.
-
-```javascript
-// Traditional function
-function double(n) { return n * 2; }
-
-// Equivalent arrow function
-const double = (n) => n * 2;
-```
-
-> **What this shows:** Both versions do the same thing — take a number `n` and return it doubled. The arrow function is just shorter to write. The `=>` ("fat arrow") replaces `function` and `return` when there's a single expression. You'll see arrow functions used heavily inside array methods because they're quick to write inline.
-
-From the Portal, arrow functions appear constantly inside array methods:
-
-```javascript
-// Each d is a row of job data — find the one matching the selected role
-const roleData = jobData.find(d => d[rKey] === rVal && d[sKey] === sVal);
-
-// Get a friendly label for a column header
-const getFriendlyLabel = (label) => {
-    const l = label ? label.trim() : "";
-    if (l.toUpperCase().startsWith("TSC")) return "Competencies";
-    if (l.toUpperCase().startsWith("PROFICIENCY")) return "Proficiency";
-    return "K&A";
-};
-```
-
-> **What this shows:** The first example uses a one-liner arrow function to search `jobData` for the row whose role and sector columns both match the currently selected values. The second example is a slightly longer arrow function that translates raw column header names (like `"TSC_CCS Code"`) into cleaner display labels (like `"Competencies"`) — this is how the portal shows friendly column names in the table instead of the raw internal names from the data file.
-
-[⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
-
----
-
-## 6. 🌐 DOM Interaction: Reading and Updating the Page
-
-<details>
-<summary>Click to expand</summary>
-
-### What Is the DOM?
-
-When a browser loads an HTML file, it doesn't just display it — it builds an internal, live **map** of every element on the page. This map is called the **DOM (Document Object Model)**. Every heading, button, dropdown, table, and paragraph becomes a "node" in this map.
-
-JavaScript can reach into this map at any time to **read** what's currently on the page or **change** it. When you change something in the DOM, the browser instantly updates what the user sees — no page reload needed.
-
-Think of the DOM like a stage set. The HTML file is the blueprint. The DOM is the actual stage with all the props in place. JavaScript is the stagehand who can move, swap, or hide props while the show is running.
-
----
-
-### Step 1 — Locating a Jar
-
-```javascript
-document.getElementById('welcome-msg');
-```
-
-> **What this does:** `document` refers to the whole page. `.getElementById('welcome-msg')` searches the DOM for the single element whose `id` attribute is `welcome-msg`. It returns that element so you can do something with it. It does **not** create a new one — it finds an existing one.
-
----
-
-### Step 2 — Attaching a Label
-
-```javascript
-const welcome = document.getElementById('welcome-msg');
-```
-
-> **What this does:** Stores the reference to that element in a variable called `welcome`. Now instead of calling `document.getElementById('welcome-msg')` every single time, you just write `welcome`. This is faster, cleaner, and means if the ID ever changes, you only update one line.
-
----
-
-### Step 3 — Modifying the Jar
-
-```javascript
-welcome.style.display = 'none'; // hide the welcome message
-```
-
-> **What this does:** Sets the CSS `display` property of the element to `'none'`, which makes it invisible. The element still exists in memory — it's just not shown. You can bring it back any time with `'flex'` or `'block'`.
-
----
-
-### Types of DOM Interaction
-
-| Type | Example | Purpose |
-|---|---|---|
-| **Read** | `inputBox.value` | Observe current contents |
-| **Write** | `element.innerText = "New Title"` | Replace visible text |
-| **Style** | `element.style.color = "red"` | Change appearance |
-| **Control** | `element.style.display = "none"` | Include or exclude from render |
-| **Class** | `element.classList.toggle('expanded')` | Switch CSS classes on/off |
-| **HTML** | `element.innerHTML = "<b>Bold</b>"` | Replace with rich HTML content |
-
----
-
-### From the Portal: The `render()` Function
-
-`render()` is the heart of the portal. Every time a dropdown changes, `render()` fires and repaints the entire interface. Here is a slice of what it does using DOM interaction:
-
-```javascript
-function render() {
-    const sVal = document.getElementById('sel-sector').value;  // READ the sector
-    const rVal = document.getElementById('sel-role').value;    // READ the role
-    if (!sVal || !rVal) return;                                 // Guard clause — exit early if incomplete
-
-    // CONTROL: hide the welcome screen, show the data area
-    document.getElementById('welcome-msg').style.display = 'none';
-    document.getElementById('app-content').style.display = 'flex';
-
-    // CONTROL: unlock the Export PDF button
-    document.getElementById('btn-pdf').disabled = false;
-
-    // WRITE: update the breadcrumb pill text
-    document.getElementById('final-role').innerText = rVal;
-
-    // WRITE + STYLE: update the description text
-    const descRow = jobDescData.find(d => d[dR] === rVal);
-    document.getElementById('final-desc').innerText = descRow ? descRow[dD] : "";
-}
-```
-
-> **What this shows:** This function runs every time the user picks a sector or role. It first reads the current values of both dropdowns. If either is empty, it stops immediately (guard clause). Then it hides the welcome message and shows the main content area. It unlocks the PDF export button (which was disabled until a role was chosen). It updates the role name shown in the breadcrumb pill at the top. Finally, it looks up the job description for that role and displays it — or clears the field if no description is found.
-
-> **Key Idea:** The DOM is a **live system**. Updates appear instantly without a page refresh because the browser immediately recalculates the layout after each change.
-
----
-
-### From the Portal: Dynamically Building the CWF Panel
-
-Rather than hardcoding HTML, JavaScript creates DOM elements programmatically and appends them to the page:
-
-```javascript
-// For each Critical Work Function group, build and attach a DOM node
-for (const [fn, ts] of Object.entries(groups)) {
-    const g = document.createElement('div');   // create a new <div> jar
-    g.className = "cwf-group";                 // assign a CSS class
-    g.innerHTML = `<div class="cwf-header">${fn}</div><ul class="task-list"></ul>`;
-
-    // For each task in this function, create a list item and append it
-    ts.forEach(t => {
-        const li = document.createElement('li');
-        li.className = "task-item";
-        li.innerText = t;
-        g.querySelector('ul').appendChild(li); // attach <li> to the <ul> inside g
-    });
-
-    cont.appendChild(g); // attach the whole group to the page container
-}
-```
-
-> **What this shows:** Instead of writing HTML directly into the file, this code builds the Critical Work Functions panel entirely in JavaScript. For each function group (like "Manage Data" or "Analyse Requirements"), it creates a new `<div>`, gives it a heading, then loops through each task under that function and creates a `<li>` list item for it. Each item is attached to the list, and the whole group is then attached to the panel container on the page. This pattern — `createElement` → set content → `appendChild` — is a core DOM building block used any time content needs to be generated dynamically from data.
-
-[⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
-
----
-
-## 7. 📋 Arrays & Array Methods: Working with Lists
+## 8. 📋 Arrays & Array Methods: Working with Lists
 
 <details>
 <summary>Click to expand</summary>
@@ -824,7 +812,7 @@ const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val
 
 ---
 
-## 8. Objects: Named Jars with Multiple Compartments
+## 9. Objects: Named Jars with Multiple Compartments
 
 <details>
 <summary>Click to expand</summary>
@@ -910,7 +898,7 @@ const { jsPDF } = window.jspdf;
 
 ---
 
-## 9. 🔄 Loops: Repeating Rules Across Jars
+## 10. 🔄 Loops: Repeating Rules Across Jars
 
 <details>
 <summary>Click to expand</summary>
@@ -985,7 +973,420 @@ for (const [fn, ts] of Object.entries(groups)) {
 
 ---
 
-## 10. 🔀 Conditionals: Decision Making
+## 11. 🌐 DOM Interaction: Reading and Updating the Page
+
+<details>
+<summary>Click to expand</summary>
+
+### What Is the DOM?
+
+When a browser loads an HTML file, it doesn't just display it — it builds an internal, live **map** of every element on the page. This map is called the **DOM (Document Object Model)**. Every heading, button, dropdown, table, and paragraph becomes a "node" in this map.
+
+JavaScript can reach into this map at any time to **read** what's currently on the page or **change** it. When you change something in the DOM, the browser instantly updates what the user sees — no page reload needed.
+
+Think of the DOM like a stage set. The HTML file is the blueprint. The DOM is the actual stage with all the props in place. JavaScript is the stagehand who can move, swap, or hide props while the show is running.
+
+---
+
+### Step 1 — Locating a Jar
+
+```javascript
+document.getElementById('welcome-msg');
+```
+
+> **What this does:** `document` refers to the whole page. `.getElementById('welcome-msg')` searches the DOM for the single element whose `id` attribute is `welcome-msg`. It returns that element so you can do something with it. It does **not** create a new one — it finds an existing one.
+
+---
+
+### Step 2 — Attaching a Label
+
+```javascript
+const welcome = document.getElementById('welcome-msg');
+```
+
+> **What this does:** Stores the reference to that element in a variable called `welcome`. Now instead of calling `document.getElementById('welcome-msg')` every single time, you just write `welcome`. This is faster, cleaner, and means if the ID ever changes, you only update one line.
+
+---
+
+### Step 3 — Modifying the Jar
+
+```javascript
+welcome.style.display = 'none'; // hide the welcome message
+```
+
+> **What this does:** Sets the CSS `display` property of the element to `'none'`, which makes it invisible. The element still exists in memory — it's just not shown. You can bring it back any time with `'flex'` or `'block'`.
+
+---
+
+### Types of DOM Interaction
+
+| Type | Example | Purpose |
+|---|---|---|
+| **Read** | `inputBox.value` | Observe current contents |
+| **Write** | `element.innerText = "New Title"` | Replace visible text |
+| **Style** | `element.style.color = "red"` | Change appearance |
+| **Control** | `element.style.display = "none"` | Include or exclude from render |
+| **Class** | `element.classList.toggle('expanded')` | Switch CSS classes on/off |
+| **HTML** | `element.innerHTML = "<b>Bold</b>"` | Replace with rich HTML content |
+
+---
+
+### From the Portal: The `render()` Function
+
+`render()` is the heart of the portal. Every time a dropdown changes, `render()` fires and repaints the entire interface. Here is a slice of what it does using DOM interaction:
+
+```javascript
+function render() {
+    const sVal = document.getElementById('sel-sector').value;  // READ the sector
+    const rVal = document.getElementById('sel-role').value;    // READ the role
+    if (!sVal || !rVal) return;                                 // Guard clause — exit early if incomplete
+
+    // CONTROL: hide the welcome screen, show the data area
+    document.getElementById('welcome-msg').style.display = 'none';
+    document.getElementById('app-content').style.display = 'flex';
+
+    // CONTROL: unlock the Export PDF button
+    document.getElementById('btn-pdf').disabled = false;
+
+    // WRITE: update the breadcrumb pill text
+    document.getElementById('final-role').innerText = rVal;
+
+    // WRITE + STYLE: update the description text
+    const descRow = jobDescData.find(d => d[dR] === rVal);
+    document.getElementById('final-desc').innerText = descRow ? descRow[dD] : "";
+}
+```
+
+> **What this shows:** This function runs every time the user picks a sector or role. It first reads the current values of both dropdowns. If either is empty, it stops immediately (guard clause). Then it hides the welcome message and shows the main content area. It unlocks the PDF export button (which was disabled until a role was chosen). It updates the role name shown in the breadcrumb pill at the top. Finally, it looks up the job description for that role and displays it — or clears the field if no description is found.
+
+> **Key Idea:** The DOM is a **live system**. Updates appear instantly without a page refresh because the browser immediately recalculates the layout after each change.
+
+---
+
+### From the Portal: Dynamically Building the CWF Panel
+
+Rather than hardcoding HTML, JavaScript creates DOM elements programmatically and appends them to the page:
+
+```javascript
+// For each Critical Work Function group, build and attach a DOM node
+for (const [fn, ts] of Object.entries(groups)) {
+    const g = document.createElement('div');   // create a new <div> jar
+    g.className = "cwf-group";                 // assign a CSS class
+    g.innerHTML = `<div class="cwf-header">${fn}</div><ul class="task-list"></ul>`;
+
+    // For each task in this function, create a list item and append it
+    ts.forEach(t => {
+        const li = document.createElement('li');
+        li.className = "task-item";
+        li.innerText = t;
+        g.querySelector('ul').appendChild(li); // attach <li> to the <ul> inside g
+    });
+
+    cont.appendChild(g); // attach the whole group to the page container
+}
+```
+
+> **What this shows:** Instead of writing HTML directly into the file, this code builds the Critical Work Functions panel entirely in JavaScript. For each function group (like "Manage Data" or "Analyse Requirements"), it creates a new `<div>`, gives it a heading, then loops through each task under that function and creates a `<li>` list item for it. Each item is attached to the list, and the whole group is then attached to the panel container on the page. This pattern — `createElement` → set content → `appendChild` — is a core DOM building block used any time content needs to be generated dynamically from data.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
+---
+
+## 12. 📝 Template Literals: Building HTML Strings
+
+<details>
+<summary>Click to expand</summary>
+
+### What Are Template Literals?
+
+A **template literal** is a special kind of string that uses backticks (`` ` ``) instead of quotes. The key feature: you can embed any JavaScript expression directly inside the string using `${}`.
+
+Before template literals, building strings with variables meant messy concatenation with `+` signs:
+
+```javascript
+// Old way (concatenation — hard to read)
+const html = "<div class='" + myClass + "'>" + myText + "</div>";
+
+// New way (template literal — clear and clean)
+const html = `<div class='${myClass}'>${myText}</div>`;
+```
+
+> **What this shows:** Both lines produce the same result — an HTML string with a dynamic class and text. But the template literal is far easier to read and write, especially as the string gets longer or more variables are involved. `${}` is a placeholder: whatever JavaScript expression you put inside gets evaluated and inserted at that exact spot in the string.
+
+Template literals are especially useful for building HTML dynamically, since HTML strings are often long and contain many variables.
+
+---
+
+### From the Portal: Building the Skill Search URL
+
+```javascript
+// From searchSkill() — builds and opens a live search URL
+function searchSkill(skillName) {
+    navigator.clipboard.writeText(skillName).then(() => {
+        const toast = document.getElementById("toast");
+        toast.innerText = `Searching portal for: ${skillName}`;  // template literal
+        toast.className = "show";
+
+        const searchUrl = `https://courses.myskillsfuture.gov.sg/search?q=${encodeURIComponent(skillName)}&termOrigin=ORGANIC`;
+
+        setTimeout(() => {
+            toast.className = "";
+            window.open(searchUrl, "_blank"); // open in a new tab
+        }, 500);
+    });
+}
+```
+
+> **What this shows:** When a user clicks a skill name, `searchSkill()` runs. It first copies the skill name to the clipboard. Then it shows a small toast notification using a template literal to embed `skillName` into the message text. It builds the search URL by embedding the encoded skill name into the URL string — `encodeURIComponent` makes the skill name URL-safe (replacing spaces with `%20`, etc.). After a brief 500ms pause (so the user can see the toast), the notification disappears and the search URL opens in a new tab. The two template literals keep the string construction clean — no `+` operators needed.
+
+---
+
+### From the Portal: Building the Peer Roles Modal
+
+Template literals shine when building large HTML blocks:
+
+```javascript
+// From showPeerRoles() — the entire modal is built as one template literal
+const modalHtml = `
+    <div id="peer-overlay" onclick="closeModal()" style="position:fixed; ..."></div>
+    <div id="peer-modal" class="${accessibilityClass}" style="...">
+        <h3 class="modal-title">
+            Skill Portability: ${title} (L${level})
+        </h3>
+        <div>
+            <h4>Within ${currentSector}</h4>
+            ${renderSimpleList(sameSector)}
+        </div>
+        <button onclick="closeModal()">Close</button>
+    </div>`;
+
+const div = document.createElement('div');
+div.id = "modal-wrapper";
+div.innerHTML = modalHtml;        // inject the built HTML into the page
+document.body.appendChild(div);  // attach to the live DOM
+```
+
+> **What this shows:** The entire peer roles modal — overlay, container, heading, content, and close button — is built as a single template literal. All the `${}` placeholders are filled at runtime: `accessibilityClass` applies the right CSS class for large-text mode, `title` is the skill name, `level` is the proficiency level, `currentSector` is the currently selected sector, and `renderSimpleList(sameSector)` calls another function whose return value (more HTML) is inserted inline. Once built, `modalHtml` is assigned to a new `<div>`'s `innerHTML`, and that `<div>` is appended to `document.body`. This is a common pattern: build HTML as a string, inject it, mount it.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
+---
+
+## 🎧 Phase 3 — User Interaction: Responding to What the User Does
+
+The portal is built to react. Every dropdown change, button click, and toggle triggers a chain of JavaScript — an event fires, a function runs, decisions are made, and the page updates. This phase covers the three tools that make that possible: events (listening), functions (doing), and conditionals (deciding).
+
+---
+
+## 13. 🎯 Events: Listening for User Actions
+
+<details>
+<summary>Click to expand</summary>
+
+### What Are Events?
+
+An **event** is anything the user does on the page — clicking a button, selecting from a dropdown, pressing a key, resizing the window. By default, JavaScript does nothing when these things happen. You have to explicitly tell it to **listen** for an event and **respond** with a function.
+
+Think of events as doorbells. The doorbell (event) is wired up to a chime (function). When someone presses the button (user action), the chime plays (function runs).
+
+---
+
+### Inline Event Handlers
+
+The simplest approach — write the handler directly in the HTML attribute:
+
+```html
+<!-- From index.html — the sector dropdown calls updateRoles() on change -->
+<select id="sel-sector" onchange="updateRoles()"></select>
+
+<!-- The role dropdown triggers a full render -->
+<select id="sel-role" onchange="render()"></select>
+
+<!-- The CWF expand/collapse button -->
+<div id="cwf-toggle" onclick="toggleCWF()">Critical Work Functions</div>
+```
+
+> **What this shows:** Each HTML element has an event attribute (`onchange`, `onclick`) set to the name of a JavaScript function as a string. When the user changes the sector dropdown, the browser calls `updateRoles()`. When the role dropdown changes, it calls `render()`. When the CWF header is clicked, it calls `toggleCWF()`. This is the most direct way to connect user actions to code — it's easy to read because the connection is visible right in the HTML.
+
+---
+
+### Assigning Handlers in JavaScript
+
+You can also assign event handlers from the script side. This keeps HTML cleaner and allows you to target elements that don't exist yet when the page first loads (like dynamically created table headers):
+
+```javascript
+// From initCollapsibleColumns() — clicking a column header collapses it
+th.onclick = () => toggleColumn(idx);
+
+// From render() — clicking the sector pill opens analytics for that sector
+const finalSectorEl = document.getElementById('final-sector');
+finalSectorEl.onclick = () => showSectorAnalytics(sVal);
+```
+
+> **What this shows:** The first example assigns an `onclick` handler to a table header cell (`th`) that was just created dynamically. Since the header didn't exist in the original HTML, you can't write `onclick=` directly in the HTML — so it's assigned from JavaScript instead. The arrow function `() => toggleColumn(idx)` captures the current value of `idx` (the column index) in a closure, so each header knows exactly which column it controls. The second example does the same for the sector pill — when clicked, it opens the sector analytics panel for the currently selected sector.
+
+---
+
+### `DOMContentLoaded` — Run Code After the Page Loads
+
+```javascript
+// From index.html — set up defaults only after the DOM is fully parsed
+document.addEventListener('DOMContentLoaded', () => {
+    initMobileDefaults();
+
+    window.addEventListener('resize', () => {
+        // reserved for future use
+    });
+});
+```
+
+> **What this shows:** `DOMContentLoaded` fires when the browser has finished parsing all the HTML and the DOM is ready — but before images and stylesheets have fully loaded. Wrapping setup code inside this event ensures you're never trying to find a DOM element that doesn't exist yet. `initMobileDefaults()` sets appropriate initial values for mobile screen sizes. A `resize` listener is also registered here (reserved for future use) — it would fire any time the browser window is resized. Nesting the `resize` listener inside `DOMContentLoaded` ensures the `window` object is fully available before attaching to it.
+
+---
+
+### `MutationObserver` — Watch for DOM Changes
+
+For more advanced scenarios, the portal watches for newly added elements:
+
+```javascript
+// Watches for modal elements being added to the body
+// and adds the 'active' class for mobile animation
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach(node => {
+            if (node.id === 'modal-wrapper') {
+                const modal = document.getElementById('peer-modal');
+                if (modal && window.innerWidth < 900) {
+                    setTimeout(() => modal.classList.add('active'), 10);
+                }
+            }
+        });
+    });
+});
+observer.observe(document.body, { childList: true });
+```
+
+> **What this shows:** A `MutationObserver` watches the DOM for changes and fires a callback when they happen. Here it's watching `document.body` for any new child elements being added (`childList: true`). When a new element is added and its `id` is `'modal-wrapper'` (the peer roles modal), and the screen is narrow (mobile, under 900px wide), it adds the `'active'` CSS class after a 10ms delay — this triggers the slide-up animation on mobile. The delay gives the browser time to render the modal before the animation class is applied. This is more advanced than a simple `onclick`, but it solves the specific problem of animating content that's added dynamically rather than already on the page.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
+---
+
+## 14. 🔧 Functions: Reusable Rules
+
+<details>
+<summary>Click to expand</summary>
+
+### What Is a Function?
+
+A **function** is a named block of instructions that you can run whenever you need them. Instead of writing the same ten lines of code in five different places, you write them once inside a function, give the function a name, and then call that name to run all those steps instantly.
+
+Think of it like a recipe card. You write the instructions once: "preheat oven, mix ingredients, bake for 30 minutes." Then any time you want cake, you just say "make cake" — you don't rewrite the whole recipe.
+
+```javascript
+// Basic shape of a function
+function doSomething(input) {
+    // steps here
+    return result;
+}
+```
+
+- The word `function` declares you're creating one.
+- The name (`doSomething`) is what you'll call to run it.
+- `input` in the parentheses is an **argument** — a value you pass *in* for the function to work with.
+- `return result` sends a value *back out* to whoever called the function.
+
+---
+
+### From the Portal: `toggleCWF()`
+
+```javascript
+// Toggles the Critical Work Functions panel open/closed
+function toggleCWF() {
+    const c = document.getElementById('cwf-container');
+    const i = document.getElementById('cwf-icon');
+    c.classList.toggle('expanded');
+    // Ternary: if expanded show ▲, otherwise show ▼
+    i.innerText = c.classList.contains('expanded') ? '▲' : '▼';
+}
+```
+
+> **What this shows:** When the user clicks the "Critical Work Functions" header, `toggleCWF()` runs. It finds the panel container (`c`) and the arrow icon (`i`). `.classList.toggle('expanded')` adds the CSS class `expanded` if it isn't there, or removes it if it is — this is what animates the panel sliding open or closed. The last line updates the arrow to point up (▲) when open or down (▼) when closed. Without the function, you'd have to copy-paste these four lines everywhere the toggle appears.
+
+---
+
+### From the Portal: `toggleColumn(colIdx)`
+
+```javascript
+// Collapses or expands a specific table column by its index
+function toggleColumn(colIdx) {
+    const isNowCollapsed = !window._collapsedCols[colIdx]; // flip the boolean
+    window._collapsedCols[colIdx] = isNowCollapsed;         // remember the new state
+    const table = document.getElementById('grid');
+    applyCollapsed(colIdx, isNowCollapsed, table);           // delegate the visual work
+}
+
+function applyCollapsed(colIdx, collapse, table) {
+    if (!table) return;
+    // Update the header cell
+    const th = table.querySelectorAll('thead th')[colIdx];
+    if (th) th.classList.toggle('col-collapsed', collapse);
+    // Update every body cell in that column
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const cell = row.querySelectorAll('td')[colIdx];
+        if (cell) cell.classList.toggle('col-collapsed-cell', collapse);
+    });
+}
+```
+
+> **What this shows:** `toggleColumn` takes a column number (`colIdx`) as its input — this tells it *which* column to act on. It first flips the column's stored state from collapsed to expanded (or vice versa) using `!` (the "not" operator). Then it hands off the visual work to a second function, `applyCollapsed`. That second function goes through every header cell and every body cell in that column and toggles the `col-collapsed` CSS class, which is what actually hides or shows the column visually. Notice how `toggleColumn` decides *what* to do and `applyCollapsed` handles *how* — this **separation of concerns** makes both functions easier to read and maintain.
+
+---
+
+### Arrow Functions: The Shorthand Form
+
+Arrow functions (`=>`) are a shorter syntax for writing functions, commonly used for small, one-purpose operations.
+
+```javascript
+// Traditional function
+function double(n) { return n * 2; }
+
+// Equivalent arrow function
+const double = (n) => n * 2;
+```
+
+> **What this shows:** Both versions do the same thing — take a number `n` and return it doubled. The arrow function is just shorter to write. The `=>` ("fat arrow") replaces `function` and `return` when there's a single expression. You'll see arrow functions used heavily inside array methods because they're quick to write inline.
+
+From the Portal, arrow functions appear constantly inside array methods:
+
+```javascript
+// Each d is a row of job data — find the one matching the selected role
+const roleData = jobData.find(d => d[rKey] === rVal && d[sKey] === sVal);
+
+// Get a friendly label for a column header
+const getFriendlyLabel = (label) => {
+    const l = label ? label.trim() : "";
+    if (l.toUpperCase().startsWith("TSC")) return "Competencies";
+    if (l.toUpperCase().startsWith("PROFICIENCY")) return "Proficiency";
+    return "K&A";
+};
+```
+
+> **What this shows:** The first example uses a one-liner arrow function to search `jobData` for the row whose role and sector columns both match the currently selected values. The second example is a slightly longer arrow function that translates raw column header names (like `"TSC_CCS Code"`) into cleaner display labels (like `"Competencies"`) — this is how the portal shows friendly column names in the table instead of the raw internal names from the data file.
+
+[⬆ Back to Table of Contents](#-table-of-contents)
+
+</details>
+
+---
+
+## 15. 🔀 Conditionals: Decision Making
 
 <details>
 <summary>Click to expand</summary>
@@ -1096,366 +1497,7 @@ if (isCol2Active) {
 
 ---
 
-## 11. ⏳ Asynchronous JavaScript: Fetching & Loading Data
-
-<details>
-<summary>Click to expand</summary>
-
-### What Is Asynchronous JavaScript?
-
-Most code runs **synchronously** — one line at a time, in order. But some tasks take time: fetching a file from a server, waiting for a database, reading from disk. If JavaScript stopped everything while waiting, the entire browser tab would freeze.
-
-**Asynchronous** JavaScript solves this by saying: "start this task, and when it finishes, run this function with the result — but don't pause everything else in the meantime." The rest of the page stays responsive while the slow operation completes in the background.
-
-Think of it like ordering food at a restaurant. You don't stand frozen at the counter waiting for the kitchen — you sit down, and a waiter brings the food when it's ready.
-
----
-
-### The Problem: Waiting Without Freezing
-
-If loading a 3MB file took 2 seconds and JavaScript stopped everything while waiting, the browser would hang. Instead, JavaScript says "go fetch this, and when it's done, run *this* function."
-
----
-
-### Promises and `.then()` Chaining
-
-A **Promise** represents a value that will be available in the future. `.then()` lets you chain steps that run one after another, each receiving the result of the previous step.
-
-```javascript
-// From index.html — the full data loading pipeline
-fetch("skillmap_data.json.gz")           // 1. Request the compressed file
-    .then(response => response.arrayBuffer())  // 2. When it arrives, read the raw bytes
-    .then(buffer => {
-        // 3. Decompress the gzip bytes into a string (using the Pako library)
-        const decompressed = pako.inflate(new Uint8Array(buffer), { to: "string" });
-
-        // 4. Parse the JSON string into a usable JavaScript object
-        const data = JSON.parse(decompressed);
-
-        // 5. Distribute the data into module-level variables
-        skillData    = data.job_roles.records;
-        skillHeaders = data.job_roles.columns;
-        jobData      = data.skills_map.records;
-        cwfData      = data.cwf.records;
-
-        // 6. Populate the Sector dropdown with unique sector names
-        const sectors = [...new Set(jobData.map(d => d[sKey]))].filter(Boolean).sort();
-        sectors.forEach(s => sSelect.add(new Option(s, s)));
-    })
-    .catch(error => console.error("Error loading skillmap data:", error));
-```
-
-> **What this shows:** This is the portal's entire data loading sequence, written as a Promise chain. Step 1 sends a network request for the compressed data file. When the response arrives (step 2), it reads the raw bytes into a buffer. Step 3 decompresses those bytes using the Pako library (gzip decompression). Step 4 parses the resulting JSON string into a real JavaScript object. Step 5 distributes the four datasets into module-level variables that the rest of the portal can use. Step 6 extracts unique sector names and populates the sector dropdown. The `.catch()` at the very end is a safety net — if anything in the chain fails (network error, bad JSON, etc.), the error is logged instead of crashing the page silently. Each `.then()` receives the output of the previous step as its input argument.
-
----
-
-### Header Reordering After Load
-
-Once the data is parsed, the portal swaps specific column pairs into a better display order — without touching the underlying data:
-
-```javascript
-// From the data loading block
-const swapHeaders = (headers, name1, name2) => {
-    const idx1 = headers.indexOf(name1);
-    const idx2 = headers.indexOf(name2);
-    if (idx1 !== -1 && idx2 !== -1) {
-        // Destructuring swap — no temporary variable needed
-        [headers[idx1], headers[idx2]] = [headers[idx2], headers[idx1]];
-    }
-};
-
-// Classification should appear before Items
-swapHeaders(skillHeaders, "Knowledge / Ability Items", "Knowledge / Ability Classification");
-// Code should appear before Category
-swapHeaders(skillHeaders, "TSC_CCS Category", "TSC_CCS Code");
-```
-
-> **What this shows:** `swapHeaders` is a helper function that reorders two columns in the headers array by swapping their positions. It first finds the index (position) of each named header using `.indexOf()`. If both are found (neither returns `-1`), it swaps them using the destructuring trick `[a, b] = [b, a]` — this swaps two values without needing a temporary variable. The function is then called twice to fix two column ordering issues: Classification should come before Items in the display, and Code should come before Category. This is done purely on the `skillHeaders` array — the underlying data is unchanged.
-
-[⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
-
----
-
-## 12. 📝 Template Literals: Building HTML Strings
-
-<details>
-<summary>Click to expand</summary>
-
-### What Are Template Literals?
-
-A **template literal** is a special kind of string that uses backticks (`` ` ``) instead of quotes. The key feature: you can embed any JavaScript expression directly inside the string using `${}`.
-
-Before template literals, building strings with variables meant messy concatenation with `+` signs:
-
-```javascript
-// Old way (concatenation — hard to read)
-const html = "<div class='" + myClass + "'>" + myText + "</div>";
-
-// New way (template literal — clear and clean)
-const html = `<div class='${myClass}'>${myText}</div>`;
-```
-
-> **What this shows:** Both lines produce the same result — an HTML string with a dynamic class and text. But the template literal is far easier to read and write, especially as the string gets longer or more variables are involved. `${}` is a placeholder: whatever JavaScript expression you put inside gets evaluated and inserted at that exact spot in the string.
-
-Template literals are especially useful for building HTML dynamically, since HTML strings are often long and contain many variables.
-
----
-
-### From the Portal: Building the Skill Search URL
-
-```javascript
-// From searchSkill() — builds and opens a live search URL
-function searchSkill(skillName) {
-    navigator.clipboard.writeText(skillName).then(() => {
-        const toast = document.getElementById("toast");
-        toast.innerText = `Searching portal for: ${skillName}`;  // template literal
-        toast.className = "show";
-
-        const searchUrl = `https://courses.myskillsfuture.gov.sg/search?q=${encodeURIComponent(skillName)}&termOrigin=ORGANIC`;
-
-        setTimeout(() => {
-            toast.className = "";
-            window.open(searchUrl, "_blank"); // open in a new tab
-        }, 500);
-    });
-}
-```
-
-> **What this shows:** When a user clicks a skill name, `searchSkill()` runs. It first copies the skill name to the clipboard. Then it shows a small toast notification using a template literal to embed `skillName` into the message text. It builds the search URL by embedding the encoded skill name into the URL string — `encodeURIComponent` makes the skill name URL-safe (replacing spaces with `%20`, etc.). After a brief 500ms pause (so the user can see the toast), the notification disappears and the search URL opens in a new tab. The two template literals keep the string construction clean — no `+` operators needed.
-
----
-
-### From the Portal: Building the Peer Roles Modal
-
-Template literals shine when building large HTML blocks:
-
-```javascript
-// From showPeerRoles() — the entire modal is built as one template literal
-const modalHtml = `
-    <div id="peer-overlay" onclick="closeModal()" style="position:fixed; ..."></div>
-    <div id="peer-modal" class="${accessibilityClass}" style="...">
-        <h3 class="modal-title">
-            Skill Portability: ${title} (L${level})
-        </h3>
-        <div>
-            <h4>Within ${currentSector}</h4>
-            ${renderSimpleList(sameSector)}
-        </div>
-        <button onclick="closeModal()">Close</button>
-    </div>`;
-
-const div = document.createElement('div');
-div.id = "modal-wrapper";
-div.innerHTML = modalHtml;        // inject the built HTML into the page
-document.body.appendChild(div);  // attach to the live DOM
-```
-
-> **What this shows:** The entire peer roles modal — overlay, container, heading, content, and close button — is built as a single template literal. All the `${}` placeholders are filled at runtime: `accessibilityClass` applies the right CSS class for large-text mode, `title` is the skill name, `level` is the proficiency level, `currentSector` is the currently selected sector, and `renderSimpleList(sameSector)` calls another function whose return value (more HTML) is inserted inline. Once built, `modalHtml` is assigned to a new `<div>`'s `innerHTML`, and that `<div>` is appended to `document.body`. This is a common pattern: build HTML as a string, inject it, mount it.
-
-[⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
-
----
-
-## 13. Events: Listening for User Actions
-
-<details>
-<summary>Click to expand</summary>
-
-### What Are Events?
-
-An **event** is anything the user does on the page — clicking a button, selecting from a dropdown, pressing a key, resizing the window. By default, JavaScript does nothing when these things happen. You have to explicitly tell it to **listen** for an event and **respond** with a function.
-
-Think of events as doorbells. The doorbell (event) is wired up to a chime (function). When someone presses the button (user action), the chime plays (function runs).
-
----
-
-### Inline Event Handlers
-
-The simplest approach — write the handler directly in the HTML attribute:
-
-```html
-<!-- From index.html — the sector dropdown calls updateRoles() on change -->
-<select id="sel-sector" onchange="updateRoles()"></select>
-
-<!-- The role dropdown triggers a full render -->
-<select id="sel-role" onchange="render()"></select>
-
-<!-- The CWF expand/collapse button -->
-<div id="cwf-toggle" onclick="toggleCWF()">Critical Work Functions</div>
-```
-
-> **What this shows:** Each HTML element has an event attribute (`onchange`, `onclick`) set to the name of a JavaScript function as a string. When the user changes the sector dropdown, the browser calls `updateRoles()`. When the role dropdown changes, it calls `render()`. When the CWF header is clicked, it calls `toggleCWF()`. This is the most direct way to connect user actions to code — it's easy to read because the connection is visible right in the HTML.
-
----
-
-### Assigning Handlers in JavaScript
-
-You can also assign event handlers from the script side. This keeps HTML cleaner and allows you to target elements that don't exist yet when the page first loads (like dynamically created table headers):
-
-```javascript
-// From initCollapsibleColumns() — clicking a column header collapses it
-th.onclick = () => toggleColumn(idx);
-
-// From render() — clicking the sector pill opens analytics for that sector
-const finalSectorEl = document.getElementById('final-sector');
-finalSectorEl.onclick = () => showSectorAnalytics(sVal);
-```
-
-> **What this shows:** The first example assigns an `onclick` handler to a table header cell (`th`) that was just created dynamically. Since the header didn't exist in the original HTML, you can't write `onclick=` directly in the HTML — so it's assigned from JavaScript instead. The arrow function `() => toggleColumn(idx)` captures the current value of `idx` (the column index) in a closure, so each header knows exactly which column it controls. The second example does the same for the sector pill — when clicked, it opens the sector analytics panel for the currently selected sector.
-
----
-
-### `DOMContentLoaded` — Run Code After the Page Loads
-
-```javascript
-// From index.html — set up defaults only after the DOM is fully parsed
-document.addEventListener('DOMContentLoaded', () => {
-    initMobileDefaults();
-
-    window.addEventListener('resize', () => {
-        // reserved for future use
-    });
-});
-```
-
-> **What this shows:** `DOMContentLoaded` fires when the browser has finished parsing all the HTML and the DOM is ready — but before images and stylesheets have fully loaded. Wrapping setup code inside this event ensures you're never trying to find a DOM element that doesn't exist yet. `initMobileDefaults()` sets appropriate initial values for mobile screen sizes. A `resize` listener is also registered here (reserved for future use) — it would fire any time the browser window is resized. Nesting the `resize` listener inside `DOMContentLoaded` ensures the `window` object is fully available before attaching to it.
-
----
-
-### `MutationObserver` — Watch for DOM Changes
-
-For more advanced scenarios, the portal watches for newly added elements:
-
-```javascript
-// Watches for modal elements being added to the body
-// and adds the 'active' class for mobile animation
-const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach(node => {
-            if (node.id === 'modal-wrapper') {
-                const modal = document.getElementById('peer-modal');
-                if (modal && window.innerWidth < 900) {
-                    setTimeout(() => modal.classList.add('active'), 10);
-                }
-            }
-        });
-    });
-});
-observer.observe(document.body, { childList: true });
-```
-
-> **What this shows:** A `MutationObserver` watches the DOM for changes and fires a callback when they happen. Here it's watching `document.body` for any new child elements being added (`childList: true`). When a new element is added and its `id` is `'modal-wrapper'` (the peer roles modal), and the screen is narrow (mobile, under 900px wide), it adds the `'active'` CSS class after a 10ms delay — this triggers the slide-up animation on mobile. The delay gives the browser time to render the modal before the animation class is applied. This is more advanced than a simple `onclick`, but it solves the specific problem of animating content that's added dynamically rather than already on the page.
-
-[⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
-
----
-
-## 14. 🔤 Data Transformation & Regular Expressions
-
-<details>
-<summary>Click to expand</summary>
-
-### What Is Data Transformation?
-
-Raw data is rarely in exactly the right shape for display. Column names might have inconsistent casing. Skill titles might include level numbers you want to strip. Text meant for a PDF might contain special characters that break the font renderer. **Data transformation** is the process of cleaning and reshaping data into the form you actually need.
-
-JavaScript provides two main toolkits for this: **string methods** for straightforward text manipulation, and **regular expressions** for pattern-based matching and replacement.
-
----
-
-### `String` Methods
-
-These are built-in tools you can call on any string. They're used constantly in the portal to normalise data before comparing or displaying it.
-
-```javascript
-// Normalize column names to find them by partial match
-h.toLowerCase().includes('sector')   // true if header contains "sector"
-h.toLowerCase().includes('level')    // true if header contains "level"
-
-str.trim()        // removes leading and trailing whitespace
-str.replace(x, y) // replace occurrences of x with y
-str.split('.')    // split a string into an array by delimiter
-```
-
-> **What this shows:** `.toLowerCase()` converts a string to all lowercase before comparing — this way "Sector", "SECTOR", and "sector" all match. `.includes()` checks whether a string contains a given substring anywhere inside it. These two are used together constantly in the portal to find the right column headers without needing to know their exact name. `.trim()` removes any accidental spaces at the start or end of a string — important when comparing values that came from raw data files. `.replace()` substitutes one pattern with another. `.split()` breaks a string into an array at each occurrence of a separator character.
-
----
-
-### Regular Expressions (Regex)
-
-A **regular expression** (regex) is a pattern that describes a set of strings. Instead of searching for one specific word, you can search for *anything matching a certain pattern* — "any number", "any whitespace", "any character that isn't printable ASCII".
-
-Regex looks intimidating at first, but each piece has a specific meaning — and once you learn a handful of symbols, you can read most real-world patterns.
-
-```javascript
-// From showSectorAnalytics() — strip " Level 3" or " (Advanced)" from a skill title
-// to get just the base name
-const baseSkillName = rawTitle
-    .replace(/\s*level\s*\d+/gi, "")   // remove " Level 3", " level 12", etc.
-    .replace(/\s*\(.*?\)\s*/g, "")     // remove anything in parentheses
-    .trim();
-```
-
-> **What this shows:** Skill titles in the raw data often include level indicators like "Data Analysis Level 3" or "Data Analysis (Advanced)". To group skills by their base name regardless of level, these suffixes need to be stripped. The first `.replace()` uses a regex to find and remove anything matching "optional spaces + 'level' + optional spaces + one or more digits" — case-insensitively (`i` flag) and globally (`g` flag, meaning all occurrences). The second `.replace()` removes anything inside parentheses. After both, `.trim()` cleans any remaining edge whitespace. Result: `"Data Analysis Level 3"` becomes `"Data Analysis"`.
-
-```javascript
-// From cleanText() inside downloadPDF() — sanitize strings for PDF output
-return decoded
-    .replace(/\u00a0/g, ' ')           // replace non-breaking spaces with regular spaces
-    .replace(/—/g, '--')               // em-dash → double hyphen (Helvetica-safe)
-    .replace(/–/g, '-')                // en-dash → single hyphen
-    .replace(/[^\x20-\x7E]/g, '')     // strip every character outside printable ASCII
-    .replace(/\s+/g, ' ')             // collapse multiple spaces into one
-    .trim();
-```
-
-> **What this shows:** The PDF library (jsPDF with Helvetica font) can only render standard ASCII characters. Any special characters — non-breaking spaces, em-dashes, smart quotes, unicode symbols — will either show as garbled text or cause errors. This chain of replacements sanitises strings before they're written to the PDF. `\u00a0` is the unicode code for a non-breaking space. `—` and `–` are typographic dashes that Helvetica can't render, so they're replaced with plain hyphens. `[^\x20-\x7E]` matches any character *outside* the printable ASCII range (hex 20 to 7E) and replaces it with nothing — deleting it. Finally, `\s+` collapses any runs of multiple spaces into a single space.
-
----
-
-**Reading the patterns:**
-
-| Pattern | Meaning |
-|---|---|
-| `\s*` | Zero or more whitespace characters |
-| `\d+` | One or more digits |
-| `g` flag | Apply globally (all matches, not just the first) |
-| `i` flag | Case-insensitive |
-| `.*?` | Any characters, as few as possible (lazy match) |
-| `[^\x20-\x7E]` | Any character *not* in the printable ASCII range |
-
----
-
-### `JSON.parse()` and `JSON.stringify()`
-
-These two functions convert between JavaScript objects and their string representation.
-
-```javascript
-// Unpack a compressed JSON string into a usable object
-const data = JSON.parse(decompressed);
-
-// Encode an object as a string key (used to group rows by their row+column values)
-const groupKey = JSON.stringify({ r: [d[r1], d[r2], d[r3]], c: [d[c1], d[c2]] });
-
-// Later — decode it back
-const key = JSON.parse(groupKey);
-```
-
-> **What this shows:** `JSON.parse()` takes a JSON string (text that looks like `{"name":"Alex","age":30}`) and converts it into a real JavaScript object you can work with using dot notation and array methods. `JSON.stringify()` does the reverse — takes an object and turns it into a string. The portal uses `JSON.stringify` for a clever trick: it needs to group table rows by a combination of row values and column values. Since JavaScript `Map` keys are compared by reference (not value), two different objects `{a: 1}` and `{a: 1}` would be treated as different keys even though they're logically the same. By stringifying the object first, you get `'{"a":1}'` — a plain string — which compares correctly by value.
-
-[⬆ Back to Table of Contents](#-table-of-contents)
-
-</details>
-
----
-
-## 15. 📚 Quick Reference: Key Commands
+## 16. 📚 Quick Reference: Key Commands
 
 <details>
 <summary>Click to expand</summary>
@@ -1495,7 +1537,7 @@ const key = JSON.parse(groupKey);
 
 ---
 
-## 16. 🌍 Extending the SkillMap Portal: Future Possibilities
+## 17. 🌍 Extending the SkillMap Portal: Future Possibilities
 
 <details>
 <summary>Click to expand</summary>
