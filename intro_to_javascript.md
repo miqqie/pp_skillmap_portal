@@ -20,7 +20,7 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 1. [The Building Blocks of JavaScript](#1--the-building-blocks-of-javascript)
 2. [The Naming Confusion: Java vs JavaScript](#2--the-naming-confusion-java-vs-javascript)
 3. [JavaScript vs Python: Syntax & Element Management](#3--javascript-vs-python-syntax--element-management)
-4. [How the SkillMap Portal Uses JavaScript: Three Phases](#4--how-the-skillmap-portal-uses-javascript-three-phases)
+4. [How the SkillMap Portal Uses JavaScript: Three Phases](#4-️-how-the-skillmap-portal-uses-javascript-three-phases)
 
 ---
 
@@ -30,14 +30,14 @@ Every example in this guide comes directly from `index.html` in the SkillMap Por
 
 **🖼️ Phase 2 — Rendering the UI: Building What the User Sees**
 - [§7 — Variables: Jars and Labels](#7--variables-jars-and-labels)
-- [§8 — Arrays & Array Methods: Working with Lists](#8--arrays--array-methods-working-with-lists)
+- [§8 — Arrays & Array Methods: Working with Lists](#arrays-array-methods-working-with-lists)
 - [§9 — Objects: Named Jars with Multiple Compartments](#9-objects-named-jars-with-multiple-compartments)
 - [§10 — Loops: Repeating Rules Across Jars](#10--loops-repeating-rules-across-jars)
 - [§11 — DOM Interaction: Reading and Updating the Page](#11--dom-interaction-reading-and-updating-the-page)
 - [§12 — Template Literals: Building HTML Strings](#12--template-literals-building-html-strings)
 
 **🎧 Phase 3 — User Interaction: Responding to What the User Does**
-- [§13 — Events: Listening for User Actions](#13-events-listening-for-user-actions)
+- [§13 — Events: Listening for User Actions](#13--events-listening-for-user-actions)
 - [§14 — Functions: Reusable Rules](#14--functions-reusable-rules)
 - [§15 — Conditionals: Decision Making](#15--conditionals-decision-making)
 
@@ -93,7 +93,7 @@ let pageNumber = 1;                      // a label that will move as pages incr
 
 Variables make your code readable and reusable. Instead of writing `"Software Engineer"` twenty times, you write `roleName` — and if it ever changes, you only update it in one place.
 
-→ *Deep dive: [Variables: Jars and Labels](#4-variables-jars-and-labels)*
+→ *Deep dive: [Variables: Jars and Labels](#7--variables-jars-and-labels)*
 
 ---
 
@@ -170,7 +170,7 @@ showWelcome(); // runs those steps right now
 
 Functions are how JavaScript avoids repeating itself. The SkillMap Portal has functions for rendering the table, opening modals, toggling panels, exporting PDFs — each one is a self-contained set of instructions with a clear name.
 
-→ *Deep dive: [Functions: Reusable Rules](#5-functions-reusable-rules)*
+→ *Deep dive: [Functions: Reusable Rules](#14--functions-reusable-rules)*
 
 ---
 
@@ -196,7 +196,7 @@ for (let i = 1; i <= totalPages; i++) {
 }
 ```
 
-→ *Deep dive: [Conditionals: Decision Making](#10-conditionals-decision-making) · [Loops: Repeating Rules Across Jars](#9-loops-repeating-rules-across-jars)*
+→ *Deep dive: [Conditionals: Decision Making](#15--conditionals-decision-making) · [Loops: Repeating Rules Across Jars](#10--loops-repeating-rules-across-jars)*
 
 ---
 
@@ -214,7 +214,7 @@ document.getElementById('final-role').innerText = "Software Engineer";
 
 The DOM is what makes JavaScript visual. Without it, JavaScript would just crunch numbers silently in the background. With it, every change you make shows up instantly on screen.
 
-→ *Deep dive: [DOM Interaction: Reading and Updating the Page](#6-dom-interaction-reading-and-updating-the-page)*
+→ *Deep dive: [DOM Interaction: Reading and Updating the Page](#11--dom-interaction-reading-and-updating-the-page)*
 
 ---
 
@@ -232,7 +232,7 @@ th.onclick = () => toggleColumn(idx);
 
 Events are the bridge between the user and the code. Without events, nothing would ever happen — the page would just sit there.
 
-→ *Deep dive: [Events: Listening for User Actions](#13-events-listening-for-user-actions)*
+→ *Deep dive: [Events: Listening for User Actions](#13--events-listening-for-user-actions)*
 
 ---
 
@@ -252,15 +252,15 @@ Once you see that chain, the rest of the guide is just filling in the details of
 
 | Building Block | What It Is | Real-World Analogy | Go Deeper |
 |---|---|---|---|
-| Value | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe | [Variables](#4--variables-jars-and-labels) |
-| Variable | A named label attached to a value | A sticky note on a jar | [Variables](#4--variables-jars-and-labels) |
+| Value | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe | [Variables](#7--variables-jars-and-labels) |
+| Variable | A named label attached to a value | A sticky note on a jar | [Variables](#7--variables-jars-and-labels) |
 | Array | An ordered list of values | A numbered shelf of jars | [Arrays & Array Methods](#7--arrays--array-methods-working-with-lists) |
 | Object | A collection of named values grouped together | A jar with labelled compartments | [Objects](#8-objects-named-jars-with-multiple-compartments) |
-| Function | A named set of reusable instructions | A named recipe you can follow any time | [Functions](#5--functions-reusable-rules) |
-| Conditional | A decision — do this or do that depending on the situation | A fork in the road | [Conditionals](#10--conditionals-decision-making) |
-| Loop | A repeated instruction — do this for every item or until done | An assembly line | [Loops](#9--loops-repeating-rules-across-jars) |
-| DOM | The live map of everything visible on the page | The stage that the audience sees | [DOM Interaction](#6--dom-interaction-reading-and-updating-the-page) |
-| Event | Something the user does that triggers a response | Pressing a doorbell — the chime is the function | [Events](#13-events-listening-for-user-actions) |
+| Function | A named set of reusable instructions | A named recipe you can follow any time | [Functions](#14--functions-reusable-rules) |
+| Conditional | A decision — do this or do that depending on the situation | A fork in the road | [Conditionals](#15--conditionals-decision-making) |
+| Loop | A repeated instruction — do this for every item or until done | An assembly line | [Loops](#10--loops-repeating-rules-across-jars) |
+| DOM | The live map of everything visible on the page | The stage that the audience sees | [DOM Interaction](#11--dom-interaction-reading-and-updating-the-page) |
+| Event | Something the user does that triggers a response | Pressing a doorbell — the chime is the function | [Events](#13--events-listening-for-user-actions) |
 
 [⬆ Back to Table of Contents](#-table-of-contents)
 
@@ -359,6 +359,8 @@ No external tool required — the code is *already on the page*, so access is in
 </details>
 
 ---
+<a id="4--how-the-skillmap-portal-uses-javascript-three-phases"></a>
+
 ## 4. 🗺️ How the SkillMap Portal Uses JavaScript: Three Phases
 
 Every time a user opens the portal, JavaScript runs through three distinct phases. Understanding these phases is the quickest way to see how all the sections in this guide connect to each other.
@@ -678,6 +680,8 @@ In short: `const` is a label **glued** to the jar. `let` is a label on a **stick
 
 ---
 
+<a id="arrays-array-methods-working-with-lists"></a>
+
 ## 8. 📋 Arrays & Array Methods: Working with Lists
 
 <details>
@@ -811,6 +815,8 @@ const uniqueItems = [...new Set(filtered.map(d => d[v]).filter(val => val && val
 </details>
 
 ---
+
+<a id="9-objects-named-jars-with-multiple-compartments"></a>
 
 ## 9. Objects: Named Jars with Multiple Compartments
 
