@@ -254,8 +254,8 @@ Once you see that chain, the rest of the guide is just filling in the details of
 |---|---|---|---|
 | Value | A raw piece of data — a number, word, yes/no, or nothing | An ingredient in a recipe | [Variables](#7--variables-jars-and-labels) |
 | Variable | A named label attached to a value | A sticky note on a jar | [Variables](#7--variables-jars-and-labels) |
-| Array | An ordered list of values | A numbered shelf of jars | [Arrays & Array Methods](#7--arrays--array-methods-working-with-lists) |
-| Object | A collection of named values grouped together | A jar with labelled compartments | [Objects](#8-objects-named-jars-with-multiple-compartments) |
+| Array | An ordered list of values | A numbered shelf of jars | [Arrays & Array Methods](#8--arrays--array-methods-working-with-lists) |
+| Object | A collection of named values grouped together | A jar with labelled compartments | [Objects](#9-objects-named-jars-with-multiple-compartments) |
 | Function | A named set of reusable instructions | A named recipe you can follow any time | [Functions](#14--functions-reusable-rules) |
 | Conditional | A decision — do this or do that depending on the situation | A fork in the road | [Conditionals](#15--conditionals-decision-making) |
 | Loop | A repeated instruction — do this for every item or until done | An assembly line | [Loops](#10--loops-repeating-rules-across-jars) |
