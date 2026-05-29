@@ -354,6 +354,8 @@ if (!sVal || !rVal) return;
 
 No external tool required — the code is *already on the page*, so access is instant.
 
+Bonus: For a comparison between Streamlit (that runs on Python) vs Javascript, please refer to [streamlit_vs_javascript.md](streamlit_vs_javascript.md)
+
 [⬆ Back to Table of Contents](#-table-of-contents)
 
 </details>
